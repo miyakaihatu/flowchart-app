@@ -3,78 +3,724 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>相談フローチャート</title>
-  <link rel="stylesheet" href="./style.css" />
+  <title>性感レベルチェック</title>
+  <style>
+    :root{
+      --bg1:#fff3f7;
+      --bg2:#f4f6ff;
+      --ink:#1b1f2a;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --line:rgba(18, 23, 37, .10);
+      --accent:#ff4fa3;
+      --accent2:#7c5cff;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow: 0 10px 30px rgba(16, 24, 40, .10);
+      --radius: 18px;
+      font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    }
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, var(--bg1), transparent 55%),
+        radial-gradient(1200px 700px at 80% 10%, var(--bg2), transparent 55%),
+        linear-gradient(180deg, #ffffff, #fafbff);
+      min-height:100vh;
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px;}
+    header{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+      margin-top:8px;
+    }
+    .title{
+      display:grid;gap:6px;
+    }
+    h1{
+      margin:0;
+      font-size:26px;
+      letter-spacing:.02em;
+    }
+    .sub{margin:0;color:var(--muted);line-height:1.6;}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,79,163,.10);
+      border:1px solid rgba(255,79,163,.18);
+      color:#b0125f;
+      font-size:12px;
+      white-space:nowrap;
+      height:fit-content;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin-top:14px;
+    }
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+    .progress{
+      height:10px;background:rgba(124,92,255,.10);
+      border-radius:999px;overflow:hidden;
+      border:1px solid rgba(124,92,255,.18);
+      flex:1;min-width:220px;
+    }
+    .bar{
+      height:100%;width:0%;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      transition:width .25s ease;
+    }
+    .step{
+      font-size:12px;color:var(--muted);white-space:nowrap;
+    }
+
+    .qTitle{
+      margin:12px 0 6px;
+      font-size:18px;
+    }
+    .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width:860px){ .grid{grid-template-columns:1fr;} }
+
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+    button{
+      appearance:none;border:none;cursor:pointer;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:600;
+      background:rgba(27,31,42,.06);
+      color:var(--ink);
+      border:1px solid rgba(27,31,42,.10);
+    }
+    button:hover{background:rgba(27,31,42,.08);}
+    .primary{
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      color:white;border:none;
+    }
+    .primary:hover{filter:brightness(1.02);}
+    .ghost{background:transparent;}
+    .ghost:hover{background:rgba(27,31,42,.04);}
+
+    .optList{display:grid;gap:10px;margin-top:12px;}
+    .opt{
+      text-align:left;
+      padding:12px 12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(27,31,42,.10);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .opt small{color:var(--muted);font-weight:500;}
+    .opt:hover{border-color:rgba(255,79,163,.45); box-shadow:0 6px 18px rgba(255,79,163,.10);}
+    .opt.selected{border-color:rgba(255,79,163,.70); box-shadow:0 8px 22px rgba(255,79,163,.14);}
+
+    .likert{
+      display:grid;gap:10px;margin-top:10px;
+    }
+    .likert button{
+      text-align:left;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      background:#fff;
+    }
+    .tag{
+      font-size:12px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(27,31,42,.10);
+      color:var(--muted);
+      background:rgba(27,31,42,.03);
+      white-space:nowrap;
+    }
+    .box{
+      white-space:pre-wrap;
+      background:rgba(124,92,255,.06);
+      border:1px solid rgba(124,92,255,.18);
+      border-radius:14px;
+      padding:12px;
+      margin:0;
+      line-height:1.7;
+      color:#222;
+    }
+    .resultTitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .badge{
+      padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;color:white;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .level{
+      font-size:20px;font-weight:800;margin:0;
+    }
+    .note{
+      font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 0;
+    }
+    .divider{height:1px;background:rgba(27,31,42,.08);margin:14px 0;}
+    .kicker{
+      font-weight:800;margin:0 0 6px;
+    }
+    .list{margin:0;padding-left:18px;color:#2a2f3a;line-height:1.7;}
+    .warnBox{
+      margin-top:10px;
+      background:rgba(245,158,11,.10);
+      border:1px solid rgba(245,158,11,.25);
+      border-radius:14px;
+      padding:12px;
+      color:#5a3b00;
+    }
+    .dangerBox{
+      margin-top:10px;
+      background:rgba(239,68,68,.10);
+      border:1px solid rgba(239,68,68,.25);
+      border-radius:14px;
+      padding:12px;
+      color:#5a0f0f;
+    }
+    footer{
+      margin:14px 2px 4px;color:var(--muted);font-size:12px;line-height:1.6;
+    }
+    .hidden{display:none;}
+  </style>
 </head>
 <body>
-  <main class="app">
-    <header class="header">
-      <h1>相談フローチャート</h1>
-      <p class="sub">情報が薄い相談でも、最低限の“方向性”まで自動で整える。</p>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>性感レベルチェック</h1>
+        <p class="sub">「いまの感じ方」をやさしく整理して、次の一手を出すだけのツール。<br>※ブラウザ内で完結（保存・送信なし）。</p>
+      </div>
+      <div class="pill">🌸 女の子向けのやさしい設計</div>
     </header>
 
-    <section class="card" id="qa">
-      <div class="progress">
-        <div class="bar" id="bar"></div>
+    <section class="card" id="screenIntro">
+      <div class="row">
+        <div class="progress" aria-label="progress"><div class="bar" id="bar"></div></div>
+        <div class="step" id="stepText">ステップ 0 / 10</div>
       </div>
 
-      <h2 class="question" id="question">読み込み中…</h2>
+      <h2 class="qTitle">このチェックで分かること</h2>
+      <p class="hint">
+        「外は感じるけど中はよく分からない」「そもそも感じづらい」みたいな状態を、ざっくりレベル分けして整理する。
+        <br>診断じゃない。体調や痛みが絡むときは、まず安全を優先。
+      </p>
 
-      <div class="options" id="options"></div>
-
-      <div class="textwrap hidden" id="textwrap">
-        <textarea id="text" rows="4" placeholder="ここに入力"></textarea>
-        <button class="btn primary" id="textNext">次へ</button>
+      <div class="warnBox">
+        <b>大事：</b>痛み・出血・強い乾燥・しみる・怖さ（トラウマっぽい反応）がある場合は、無理に進めず専門家（婦人科/相談窓口）を優先。
       </div>
 
-      <div class="actions">
-        <button class="btn" id="back">戻る</button>
-        <button class="btn danger" id="reset">最初から</button>
+      <div class="btns">
+        <button class="primary" id="startBtn">はじめる</button>
+      </div>
+
+      <p class="note">※18歳未満（または不明）の場合は、このツールは利用できない設計にしてる。</p>
+    </section>
+
+    <section class="card hidden" id="screenQuiz">
+      <div class="row">
+        <div class="progress"><div class="bar" id="bar2"></div></div>
+        <div class="step" id="stepText2">ステップ 1 / 10</div>
+      </div>
+
+      <div id="questionArea">
+        <!-- JSで差し込む -->
+      </div>
+
+      <div class="btns">
+        <button class="ghost" id="backBtn">戻る</button>
+        <button class="primary" id="nextBtn">次へ</button>
+        <button class="ghost" id="resetBtn">最初から</button>
       </div>
     </section>
 
-    <section class="card hidden" id="result">
-      <h2>結果</h2>
+    <section class="card hidden" id="screenResult">
+      <div class="resultTitle">
+        <span class="badge">結果</span>
+        <p class="level" id="levelLabel">—</p>
+      </div>
+      <p class="hint" id="levelDesc">—</p>
 
-      <div class="resultGrid">
-        <div>
-          <h3>要約</h3>
-          <pre class="box" id="summary"></pre>
-        </div>
+      <div class="divider"></div>
 
-        <div>
-          <h3>次に聞くと強い質問</h3>
-          <pre class="box" id="nextQs"></pre>
-        </div>
+      <p class="kicker">おすすめの次の一手（仮）</p>
+      <ul class="list" id="nextSteps"></ul>
 
-        <div>
-          <h3>コピペ返信（優しめ）</h3>
-          <pre class="box" id="replySoft"></pre>
-        </div>
+      <div id="safetyBox" class="hidden"></div>
 
-        <div>
-          <h3>コピペ返信（短め）</h3>
-          <pre class="box" id="replyShort"></pre>
-        </div>
+      <div class="divider"></div>
 
-        <div class="full">
-          <h3>ChatGPTに投げる用プロンプト</h3>
-          <pre class="box" id="prompt"></pre>
-        </div>
+      <p class="kicker">ChatGPTに投げる用まとめ（コピペ）</p>
+      <pre class="box" id="gptPrompt"></pre>
+
+      <div class="btns">
+        <button class="primary" id="copyBtn">まとめをコピー</button>
+        <button class="ghost" id="restartBtn">もう一回</button>
       </div>
 
-      <div class="actions">
-        <button class="btn" id="copyAll">全部コピー</button>
-        <button class="btn primary" id="restart">もう一回</button>
-      </div>
+      <p class="note">この結果は“当日の体調・相手・環境”でも上下する。固定ラベルにしない方が良い。</p>
     </section>
 
-    <footer class="footer">
-      <small>※ 医療・危機対応が必要そうな場合は、返信より受診/相談窓口を優先。</small>
+    <footer>
+      ※これは医療ツールではない。痛み/出血/炎症/強い不安がある場合は自己判断で進めず、受診や相談を優先。
     </footer>
-  </main>
+  </div>
 
-  <script src="./tree.js"></script>
-  <script src="./app.js"></script>
+  <script>
+    // -------------------------
+    // 質問設計（スコア方式）
+    // 0〜4点（高いほど“感じやすい/整ってる”）
+    // 一部は逆転（痛み・緊張・乾燥）
+    // -------------------------
+    const QUESTIONS = [
+      {
+        id: "age",
+        type: "single",
+        title: "18歳以上ですか？（不明なら「いいえ」）",
+        desc: "安全のため。18歳未満はこのツールを使えない設計です。",
+        options: [
+          { label: "はい（18歳以上）", value: "yes", score: 0 },
+          { label: "いいえ / 不明", value: "no", score: 0 }
+        ]
+      },
+      {
+        id: "outer",
+        type: "likert",
+        title: "外側の刺激で、心地よさを感じますか？",
+        desc: "“気持ちよさ”が「ある/ない」より、どれくらい起きやすいか。",
+        reverse: false
+      },
+      {
+        id: "inner",
+        type: "likert",
+        title: "中の刺激で、心地よさを感じますか？",
+        desc: "「分からない」も正常。分からないならそのまま選べばOK。",
+        reverse: false
+      },
+      {
+        id: "arousal",
+        type: "likert",
+        title: "気持ちが入ってくるまで、時間が必要ですか？",
+        desc: "“遅い”は悪じゃない。ただの特性。",
+        reverse: true  // 時間が必要＝感じにくさに寄与しやすいので軽く逆転
+      },
+      {
+        id: "tension",
+        type: "likert",
+        title: "途中で緊張して、力が入ったり冷めたりしますか？",
+        desc: "不安・気まずさ・焦りがあると起きやすい。",
+        reverse: true
+      },
+      {
+        id: "dryness",
+        type: "likert",
+        title: "乾燥や摩擦っぽさが気になりますか？",
+        desc: "気になるなら、それは“条件”の問題であって、本人の価値の問題じゃない。",
+        reverse: true
+      },
+      {
+        id: "pain",
+        type: "likert",
+        title: "痛み・しみる・違和感が出ますか？",
+        desc: "ここが高いなら、快感の議論の前に安全とケア。",
+        reverse: true,
+        flag: "pain"
+      },
+      {
+        id: "selfknow",
+        type: "likert",
+        title: "自分が心地いいポイントやペースが、だいたい分かっていますか？",
+        desc: "分からないなら、分からないでOK。伸びしろ。",
+        reverse: false
+      },
+      {
+        id: "comm",
+        type: "likert",
+        title: "相手に「速さ/圧/角度/休憩」などを伝えられますか？",
+        desc: "言えないのも普通。言えるほど改善スピードが上がる。",
+        reverse: false
+      },
+      {
+        id: "bodymind",
+        type: "likert",
+        title: "行為中、頭の中が静かになって“身体に集中”できますか？",
+        desc: "考え事が多いと、感覚は弱くなりやすい。",
+        reverse: false
+      }
+    ];
+
+    const LIKERT = [
+      { label: "当てはまらない", score: 0, tag:"0" },
+      { label: "あまり当てはまらない", score: 1, tag:"1" },
+      { label: "どちらとも言えない", score: 2, tag:"2" },
+      { label: "わりと当てはまる", score: 3, tag:"3" },
+      { label: "とても当てはまる", score: 4, tag:"4" },
+    ];
+
+    // -------------------------
+    // 画面要素
+    // -------------------------
+    const intro = document.getElementById("screenIntro");
+    const quiz = document.getElementById("screenQuiz");
+    const result = document.getElementById("screenResult");
+
+    const bar = document.getElementById("bar");
+    const stepText = document.getElementById("stepText");
+    const bar2 = document.getElementById("bar2");
+    const stepText2 = document.getElementById("stepText2");
+
+    const questionArea = document.getElementById("questionArea");
+    const startBtn = document.getElementById("startBtn");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const levelLabel = document.getElementById("levelLabel");
+    const levelDesc = document.getElementById("levelDesc");
+    const nextStepsEl = document.getElementById("nextSteps");
+    const safetyBox = document.getElementById("safetyBox");
+    const gptPrompt = document.getElementById("gptPrompt");
+    const copyBtn = document.getElementById("copyBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    // -------------------------
+    // 状態
+    // -------------------------
+    let idx = 0; // QUESTIONS index
+    let answers = {}; // id -> {rawScore, chosenLabel}
+    let flags = { pain:false };
+
+    function setIntroProgress() {
+      bar.style.width = "0%";
+      stepText.textContent = "ステップ 0 / 10";
+    }
+
+    function setQuizProgress() {
+      const total = QUESTIONS.length - 1; // age含めると10だが、視覚的には10に合わせる
+      const step = Math.min(QUESTIONS.length, idx + 1);
+      const pct = Math.round((step / QUESTIONS.length) * 100);
+      bar2.style.width = pct + "%";
+      stepText2.textContent = `ステップ ${step} / ${QUESTIONS.length}`;
+    }
+
+    function resetAll() {
+      idx = 0;
+      answers = {};
+      flags = { pain:false };
+      intro.classList.remove("hidden");
+      quiz.classList.add("hidden");
+      result.classList.add("hidden");
+      setIntroProgress();
+    }
+
+    function showQuiz() {
+      intro.classList.add("hidden");
+      quiz.classList.remove("hidden");
+      result.classList.add("hidden");
+      renderQuestion();
+    }
+
+    function showResult() {
+      intro.classList.add("hidden");
+      quiz.classList.add("hidden");
+      result.classList.remove("hidden");
+
+      const { totalScore, maxScore, details } = computeScore();
+      const level = scoreToLevel(totalScore, maxScore, details);
+
+      levelLabel.textContent = level.title;
+      levelDesc.textContent = level.desc;
+
+      // next steps
+      nextStepsEl.innerHTML = "";
+      level.steps.forEach(t=>{
+        const li = document.createElement("li");
+        li.textContent = t;
+        nextStepsEl.appendChild(li);
+      });
+
+      // safety box
+      safetyBox.className = "";
+      safetyBox.innerHTML = "";
+      safetyBox.classList.add("hidden");
+      if (flags.pain) {
+        safetyBox.classList.remove("hidden");
+        safetyBox.classList.add("dangerBox");
+        safetyBox.innerHTML = `<b>安全優先：</b>痛み/しみる/違和感が強めに出てる可能性。快感の話の前に、摩擦・乾燥・炎症・体調を先にケア。続く/悪化するなら受診を推奨。`;
+      } else if (details.drynessReverseHigh || details.tensionReverseHigh) {
+        safetyBox.classList.remove("hidden");
+        safetyBox.classList.add("warnBox");
+        safetyBox.innerHTML = `<b>ヒント：</b>「感じない」より「条件が整ってない」寄りのサインがある。環境・時間・ペース調整で改善しやすい。`;
+      }
+
+      // prompt
+      gptPrompt.textContent = buildPrompt(totalScore, maxScore, level.title, details);
+    }
+
+    function renderQuestion() {
+      setQuizProgress();
+      const q = QUESTIONS[idx];
+      questionArea.innerHTML = "";
+
+      const h = document.createElement("h2");
+      h.className = "qTitle";
+      h.textContent = q.title;
+
+      const p = document.createElement("p");
+      p.className = "hint";
+      p.textContent = q.desc || "";
+
+      questionArea.appendChild(h);
+      if (q.desc) questionArea.appendChild(p);
+
+      const list = document.createElement("div");
+
+      if (q.type === "single") {
+        list.className = "optList";
+        q.options.forEach(opt=>{
+          const b = document.createElement("button");
+          b.className = "opt";
+          b.innerHTML = `<span>${opt.label}</span><small>選択</small>`;
+          b.onclick = ()=>{
+            answers[q.id] = { rawScore: opt.score, chosenLabel: opt.label, reverse: false };
+            // age gate
+            if (q.id === "age" && opt.value === "no") {
+              // 即終了（安全設計）
+              showBlocked();
+              return;
+            }
+            // 次へ
+            next();
+          };
+          list.appendChild(b);
+        });
+      }
+
+      if (q.type === "likert") {
+        list.className = "likert";
+        LIKERT.forEach(opt=>{
+          const b = document.createElement("button");
+          b.className = "opt";
+          b.innerHTML = `<span>${opt.label}</span><span class="tag">${opt.tag}</span>`;
+          b.onclick = ()=>{
+            // reverseなら反転 (0<->4)
+            let s = opt.score;
+            if (q.reverse) s = 4 - s;
+            answers[q.id] = { rawScore: s, chosenLabel: opt.label, reverse: q.reverse };
+
+            if (q.flag === "pain") {
+              // pain質問は「当てはまる」側でフラグ
+              // reverseしてるので rawScoreが低いほど痛み強い元選択に近いが、ここは元選択で見る
+              // opt.score (元) が 3 or 4 なら痛み高い
+              flags.pain = (opt.score >= 3);
+            }
+            // 選択状態表示
+            [...list.querySelectorAll("button")].forEach(x=>x.classList.remove("selected"));
+            b.classList.add("selected");
+          };
+          list.appendChild(b);
+        });
+
+        const note = document.createElement("p");
+        note.className = "note";
+        note.textContent = "※どれか一つ選んでから「次へ」。迷ったら真ん中でOK。";
+        questionArea.appendChild(list);
+        questionArea.appendChild(note);
+        return;
+      }
+
+      questionArea.appendChild(list);
+    }
+
+    function showBlocked() {
+      quiz.classList.add("hidden");
+      intro.classList.remove("hidden");
+      // 代替メッセージ
+      const box = intro.querySelector(".warnBox");
+      box.className = "dangerBox";
+      box.innerHTML = "<b>利用できません：</b>18歳未満（または不明）の場合、このツールは使えない設計です。安全のため、ここで終了。";
+      // ボタン文言変更
+      startBtn.textContent = "最初に戻る";
+      startBtn.onclick = ()=>{
+        // ボックス戻す
+        box.className = "warnBox";
+        box.innerHTML = "<b>大事：</b>痛み・出血・強い乾燥・しみる・怖さ（トラウマっぽい反応）がある場合は、無理に進めず専門家（婦人科/相談窓口）を優先。";
+        startBtn.textContent = "はじめる";
+        startBtn.onclick = ()=>{ idx = 0; answers = {}; flags = {pain:false}; showQuiz(); };
+      };
+    }
+
+    function next() {
+      const q = QUESTIONS[idx];
+      if (q.type === "likert" && !answers[q.id]) {
+        // 未回答は進めない
+        nextBtn.textContent = "まず選んでね";
+        setTimeout(()=> nextBtn.textContent = "次へ", 700);
+        return;
+      }
+      idx++;
+      if (idx >= QUESTIONS.length) {
+        showResult();
+      } else {
+        renderQuestion();
+      }
+    }
+
+    function back() {
+      if (idx <= 0) return;
+      idx--;
+      renderQuestion();
+    }
+
+    function computeScore() {
+      // ageは採点しない
+      let total = 0;
+      let max = 0;
+      const details = {
+        // 逆転項目の“影響が強い”フラグ（条件問題っぽいとき）
+        drynessReverseHigh: false,
+        tensionReverseHigh: false
+      };
+
+      QUESTIONS.forEach(q=>{
+        if (q.id === "age") return;
+        max += 4;
+        const a = answers[q.id];
+        if (!a) return;
+        total += a.rawScore;
+
+        // 乾燥・緊張が強い（元の選択が高い）なら条件問題の可能性
+        if (q.id === "dryness") {
+          // reverseしてるので rawScoreが低いほど乾燥が強い元選択
+          // なので、元の選択が3/4に相当するのは rawScore <=1
+          details.drynessReverseHigh = (a.rawScore <= 1);
+        }
+        if (q.id === "tension") {
+          details.tensionReverseHigh = (a.rawScore <= 1);
+        }
+      });
+
+      return { totalScore: total, maxScore: max, details };
+    }
+
+    function scoreToLevel(total, max, details) {
+      // 0〜36（9問×4）想定
+      // レベルは仮設計：上から「中イキできる」〜「中も外も全く感じない」
+      const pct = max ? (total / max) : 0;
+
+      // safety優先: 痛みが強いなら快感評価を下げるというより「別軸」に寄せる
+      // ここではレベルは出すが、次の一手を安全寄りにする
+      if (pct >= 0.82) {
+        return {
+          title: "中イキできる（中の感覚も分かる）",
+          desc: "中・外どちらも感覚が入りやすい状態。条件が整うと深まりやすい。",
+          steps: [
+            "“再現条件”をメモ（時間帯・前戯の長さ・体位・呼吸・雰囲気）",
+            "良かったときの「ペース/圧/角度」を言語化して共有できると安定する",
+            "疲れ・ストレス・睡眠不足の日は落ちる前提で、無理に追わない"
+          ]
+        };
+      }
+      if (pct >= 0.66) {
+        return {
+          title: "外は感じる＋中も時々分かる",
+          desc: "基本は良い。条件が合うと中も入るけど、毎回ではないタイプ。",
+          steps: [
+            "中が入る時の共通点だけ拾う（時間/緊張/乾燥/コミュ）",
+            "“変えるなら1要素だけ”で実験すると伸びる（速さだけ、角度だけ等）",
+            "中の感覚は「圧」より「安心＋リズム」で伸びることが多い"
+          ]
+        };
+      }
+      if (pct >= 0.50) {
+        return {
+          title: "外は感じるが、中はよく分からない",
+          desc: "めちゃくちゃ多いゾーン。中の感覚がまだ“言語化されてない”だけのこともある。",
+          steps: [
+            "まずは外の快感を安定させる（焦り・緊張・乾燥のケア）",
+            "“中を感じる”を目標にしすぎない。安心と没入が先",
+            "「気持ちよさの波が来る前」を逃さないペース（一定・ゆっくり）を試す"
+          ]
+        };
+      }
+      if (pct >= 0.34) {
+        return {
+          title: "たまに気持ちいいが、波が弱い/途切れやすい",
+          desc: "感覚はあるけど、条件が揃いにくい。体調や緊張に影響されやすい。",
+          steps: [
+            "“入るまでの時間”を確保（急がない設計にする）",
+            "乾燥/摩擦があるなら最優先でケア（潤い不足は全てを台無しにする）",
+            "会話や安心感が足りないと上がりにくい。まず空気を整える"
+          ]
+        };
+      }
+      if (pct >= 0.18) {
+        return {
+          title: "ほぼ感じない（感じ方がつかめない）",
+          desc: "本人のせいじゃない。緊張・乾燥・痛み・環境・過去経験など、別要因が絡んでることが多い。",
+          steps: [
+            "“快感”より先に“安心と安全”を作る（嫌な要素を減らす）",
+            "刺激を強くするより、情報量を減らして一定のリズムを作る",
+            "セルフで「心地よい/嫌」を把握して、相手に伝える素材にする"
+          ]
+        };
+      }
+      return {
+        title: "中も外も全く感じない（今は入ってこない）",
+        desc: "この状態は“気合で解決”じゃない。体調・ホルモン・乾燥・痛み・心理の影響が強い可能性が高い。",
+        steps: [
+          "痛み/乾燥/炎症があるなら、快感の話はストップしてケア最優先",
+          "一度「医療で除外できる要因」を消す（体調面の安心は強い）",
+          "安心できる環境で、プレッシャーなしに“心地よい”の再発見から"
+        ]
+      };
+    }
+
+    function buildPrompt(total, max, levelTitle, details) {
+      const lines = [];
+      lines.push("あなたは女性向けの相談対応者。目的は“相手が安心できる次の一手”を提案すること。");
+      lines.push("");
+      lines.push(`【チェック結果】${levelTitle}`);
+      lines.push(`- スコア: ${total} / ${max}`);
+      lines.push(`- 乾燥/摩擦っぽさが強い可能性: ${details.drynessReverseHigh ? "高い" : "低い/不明"}`);
+      lines.push(`- 緊張で途切れやすい可能性: ${details.tensionReverseHigh ? "高い" : "低い/不明"}`);
+      lines.push(`- 痛み/しみる/違和感: ${flags.pain ? "ありそう（安全優先）" : "強くはなさそう"}`);
+      lines.push("");
+      lines.push("【依頼】");
+      lines.push("1) 共感の一文（短く）");
+      lines.push("2) 決めつけない整理（2〜3行）");
+      lines.push("3) 次に確認する質問を2つだけ");
+      lines.push("4) 次の一手を3つ（安全優先、セルフケア、コミュニケーション）");
+      lines.push("");
+      lines.push("禁止：断定診断、説教、同意が曖昧な踏み込み、痛みがあるのに進める提案。");
+      return lines.join("\n");
+    }
+
+    // -------------------------
+    // イベント
+    // -------------------------
+    startBtn.onclick = ()=>{ idx = 0; answers = {}; flags = {pain:false}; showQuiz(); };
+    nextBtn.onclick = ()=> next();
+    backBtn.onclick = ()=> back();
+    resetBtn.onclick = ()=> resetAll();
+    restartBtn.onclick = ()=> resetAll();
+
+    copyBtn.onclick = async ()=>{
+      try{
+        await navigator.clipboard.writeText(gptPrompt.textContent);
+        copyBtn.textContent = "コピーした";
+        setTimeout(()=> copyBtn.textContent = "まとめをコピー", 1200);
+      }catch(e){
+        alert("クリップボード権限がないっぽい。手動でコピペして。");
+      }
+    };
+
+    // init
+    setIntroProgress();
+  </script>
 </body>
 </html>
