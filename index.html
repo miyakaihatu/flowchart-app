@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>性感チェック</title>
   <style>
+    /* CSSはそのまま引き継いでいます */
     :root{
       --bg1:#fff3f7;
       --bg2:#f4f6ff;
@@ -138,6 +139,7 @@
       background:rgba(27,31,42,.06);
       border:1px solid rgba(27,31,42,.10);
       display:inline-block;
+      box-sizing: border-box;
     }
     .ctaBtn.primary{
       background:linear-gradient(90deg, var(--accent), var(--accent2));
@@ -173,7 +175,7 @@
   <div class="wrap">
     <header>
       <h1>性感チェック</h1>
-      <p class="sub">状態を整理して「次に何をするか」を決めるための簡易チェック。回答したら自動で次へ。</p>
+      <p class="sub">あなたの現在の状態を整理して、「最短で変わるための次の一手」を見つけるチェックテストです。</p>
     </header>
 
     <section class="card" id="screenIntro">
@@ -183,7 +185,7 @@
       </div>
 
       <h2 class="qTitle">使い方</h2>
-      <p class="hint">6問だけ。迷ったら真ん中寄りでOK。結果は「自己解決」「相談」「直接の案内」に振り分けます。</p>
+      <p class="hint">全6問。直感で一番近いものを選んでください。結果をもとに「自己解決」「相談」「直接の案内」に振り分けます。</p>
 
       <div class="warnBox">
         <b>安全優先：</b>痛み・出血・しみる・強い乾燥・怖さがある場合は、無理に進めず必要なら医療/相談を優先。
@@ -193,7 +195,7 @@
         <button class="primary" id="startBtn">はじめる</button>
       </div>
 
-      <p class="hint" style="margin-top:10px;">※18歳未満（または不明）の場合、このツールは利用できない設計。</p>
+      <p class="hint" style="margin-top:10px;">※18歳未満（または不明）の場合、このツールは利用できない設計です。</p>
     </section>
 
     <section class="card hidden" id="screenQuiz">
@@ -248,7 +250,7 @@
       <div class="divider"></div>
 
       <p class="kicker">この結果をコピーして相談する</p>
-      <p class="hint">ボタンを押すと、DMに貼れる要約がコピーされます。</p>
+      <p class="hint">ボタンを押すと、DMにそのまま貼れる要約テキストがコピーされます。</p>
       <div class="btns">
         <button class="primary" id="copyBtn">診断結果をコピー</button>
         <button class="ghost" id="restartBtn">もう一回</button>
@@ -257,7 +259,7 @@
     </section>
 
     <footer>
-      ※医療ツールではありません。痛み/出血/炎症/強い不安がある場合は自己判断で進めず、受診や相談を優先。
+      ※医療ツールではありません。痛み/出血/炎症/強い不安がある場合は自己判断で進めず、受診や相談を優先してください。
     </footer>
   </div>
 
@@ -268,14 +270,14 @@
     // あなたの導線URLをここに入れる（必須）
     // ------------------------------------------------------------
     const LINKS = {
-      note_self:   "#", // 自己解決記事（初心者向け）
-      note_inner:  "#", // 中の感覚を伸ばす記事（中向け）
-      dm:          "#", // DM/LINE
+      note_self:   "#", // 自己開発・初心者向けnote
+      note_inner:  "#", // 中イキ開発・中級者向けnote
+      dm:          "#", // DM/LINEのURL
       booking:     "#"  // 施術/体験の案内・予約フォーム
     };
 
     // ------------------------------------------------------------
-    // 質問フロー（Gemini案ベース：経験値 / 悩み / どうしたい）
+    // 質問フロー（解像度を高めた実践的な選択肢）
     // ------------------------------------------------------------
     const FLOW = [
       {
@@ -289,60 +291,63 @@
       },
       {
         id: "outerExp",
-        title: "自分の身体を触って「心地いい」と感じたことはある？",
-        desc: "経験値のチェック（外側の感覚が入りやすいか）。",
+        title: "外側（クリなど）の感度について、一番近いものは？",
+        desc: "あなたの現在の「感じる力」のベースをチェックします。",
         options: [
-          { value:"yes", label:"ある" },
-          { value:"sometimes", label:"たまに/波がある" },
-          { value:"no", label:"ほぼない/分からない" }
+          { value:"good", label:"自分でも相手でも、気持ちよくイケる" },
+          { value:"self_only", label:"セルフ（自分）ならイケるが、人だとイマイチ" },
+          { value:"almost", label:"気持ちいいけど、イッたことはない（寸止め感）" },
+          { value:"none", label:"気持ちよさがわからない（無感覚・くすぐったい）" },
+          { value:"pain", label:"痛い・不快・あまり触られたくない" }
         ]
       },
       {
         id: "innerExp",
-        title: "中（膣内）の心地よさを「分かる/経験がある」？",
-        desc: "開発度のチェック（分からなくても普通）。",
+        title: "中（膣内）の感覚について、一番近いものは？",
+        desc: "中イキや、中への刺激の受け取り方をチェックします。",
         options: [
-          { value:"yes", label:"分かる/経験がある" },
-          { value:"maybe", label:"たまに/うっすら" },
-          { value:"no", label:"分からない/未経験" }
-        ]
-      },
-      {
-        id: "mainIssue",
-        title: "今いちばん気になっているのは？",
-        desc: "悩みのチェック。",
-        options: [
-          { value:"pain", label:"痛み・しみる・違和感が気になる" },
-          { value:"low", label:"感じにくさ（入ってこない）が気になる" },
-          { value:"deeper", label:"もっと深い気持ちよさを知りたい" },
-          { value:"partner", label:"相性/レス/パートナーとの悩み" },
-          { value:"unknown", label:"よく分からない（整理したい）" }
+          { value:"ik", label:"中でイッたことがある（さらに深めたい）" },
+          { value:"feel", label:"奥がジンジンする・気持ちいい感覚はある（あと一歩）" },
+          { value:"none", label:"入ってる・擦れる感覚しかしない（快感はない）" },
+          { value:"pain", label:"痛い・しみる・苦痛・入りにくい" }
         ]
       },
       {
         id: "tension",
-        title: "行為中の「緊張・不安・考え事」はどれくらいある？",
-        desc: "身体より“状態”がブレーキになってるかのチェック。",
+        title: "行為中の「頭の中」や「身体の力み」はどう？",
+        desc: "メンタルや緊張がブレーキになっていないかチェックします。",
         options: [
-          { value:"high", label:"多い（途中で冷めたり力が入る）" },
-          { value:"mid",  label:"時々ある" },
-          { value:"low",  label:"少ない（比較的集中できる）" }
+          { value:"high", label:"「イカなきゃ」「変じゃないかな」など色々考えてしまう" },
+          { value:"mid",  label:"最初は緊張するが、徐々にリラックスできる" },
+          { value:"low",  label:"頭を空っぽにして、感覚に集中できている" }
+        ]
+      },
+      {
+        id: "mainIssue",
+        title: "今いちばん解決したい・求めていることは？",
+        desc: "このチェックのゴール（目的）です。",
+        options: [
+          { value:"zero", label:"「気持ちいい」って何？という状態から抜け出したい" },
+          { value:"mid_ik", label:"外はイケるから、とにかく「中イキ」を味わってみたい" },
+          { value:"partner", label:"相手との行為でちゃんと感じられるようになりたい" },
+          { value:"pain", label:"痛みや不快感をなくして、普通に楽しめるようになりたい" },
+          { value:"deeper", label:"もっと深い絶頂や、連続でイケる身体になりたい" }
         ]
       },
       {
         id: "wish",
         title: "今後どうしていきたい？",
-        desc: "導線の分岐（ここが出口）。",
+        desc: "結果をもとに、次にどう動くかを決めます。",
         options: [
           { value:"self", label:"まずは自分で試してみたい（自己解決）" },
-          { value:"consult", label:"一度相談して整理したい（相談）" },
-          { value:"direct", label:"プロに任せたい/体験したい（直接の案内）" }
+          { value:"consult", label:"一度相談して原因を整理したい（相談）" },
+          { value:"direct", label:"プロに任せたい/直接開発を受けたい（直接の案内）" }
         ]
       }
     ];
 
     // ------------------------------------------------------------
-    // DOM
+    // DOM要素の取得
     // ------------------------------------------------------------
     const intro = document.getElementById("screenIntro");
     const quiz = document.getElementById("screenQuiz");
@@ -375,11 +380,8 @@
     const copyPreview = document.getElementById("copyPreview");
     const toast = document.getElementById("toast");
 
-    // ------------------------------------------------------------
-    // State
-    // ------------------------------------------------------------
     let i = 0;
-    let ans = {}; // id -> {value,label}
+    let ans = {}; 
 
     function setIntroProgress(){
       barIntro.style.width = "0%";
@@ -431,13 +433,12 @@
         b.onclick = ()=>{
           ans[q.id] = { value: opt.value, label: opt.label };
 
-          // 18+ gate
+          // 18歳未満ブロック
           if (q.id === "age" && opt.value === "no"){
             showBlocked();
             return;
           }
 
-          // 自動で次へ（体感スムーズ）
           setTimeout(next, 120);
         };
         list.appendChild(b);
@@ -453,7 +454,7 @@
       intro.classList.remove("hidden");
       const box = intro.querySelector(".warnBox");
       box.className = "dangerBox";
-      box.innerHTML = "<b>利用できません：</b>18歳未満（または不明）の場合、このツールは使えない設計です。安全のためここで終了。";
+      box.innerHTML = "<b>利用できません：</b>18歳未満（または不明）の場合、このツールは使えない設計です。安全のためここで終了します。";
       startBtn.textContent = "最初に戻る";
       startBtn.onclick = ()=>{
         box.className = "warnBox";
@@ -478,130 +479,137 @@
     function showToast(text){
       toast.textContent = text;
       toast.classList.add("show");
-      setTimeout(()=>toast.classList.remove("show"), 900);
+      setTimeout(()=>toast.classList.remove("show"), 1500);
     }
 
+    // ------------------------------------------------------------
+    // 結果算出ロジック（解像度を高めた分岐）
+    // ------------------------------------------------------------
     function computeResult(){
       const outer = ans.outerExp?.value || "unknown";
       const inner = ans.innerExp?.value || "unknown";
-      const issue = ans.mainIssue?.value || "unknown";
       const tension = ans.tension?.value || "unknown";
+      const issue = ans.mainIssue?.value || "unknown";
       const wish = ans.wish?.value || "unknown";
 
-      const painFlag = (issue === "pain");
+      const painFlag = (outer === "pain" || inner === "pain" || issue === "pain");
       const mentalFlag = (tension === "high");
-      const wantDirect = (wish === "direct");
-      const wantConsult = (wish === "consult");
-      const wantSelf = (wish === "self");
-
-      // タイプ分岐（結果名は“導線の言い訳”になるように設計）
+      
       let type = "";
       let desc = "";
       let advice = [];
       let primary = "consult"; // self / consult / direct
       let selfLink = LINKS.note_self;
 
+      // 1. 痛み・不快感がある場合（最優先）
       if (painFlag){
-        type = "安全優先：痛み/違和感ケア優先タイプ";
-        desc = "快感や開発の前に、まず安全とコンディションを整える段階。無理は逆効果になりやすい。";
+        type = "安全・ケア優先：リセットタイプ";
+        desc = "快感や開発を求める前に、身体の痛みや不快感を取り除くのが最優先の段階です。";
         advice = [
-          "痛み・しみる・違和感がある日は“攻めない”が正解（まずストップ基準を作る）",
-          "乾燥/摩擦/体調/不安など「条件」を1つずつ除外していく",
-          "続く/悪化するなら受診で原因を先に潰す（安心は加速になる）"
+          "痛み・しみる・違和感がある日は“絶対に無理をしない”ルールを作る",
+          "潤い不足（乾燥）、緊張、体調不良など、痛みの原因を一つずつ潰す",
+          "無理に感じようとせず、まずは「痛くない・リラックスできる」状態を目指す"
         ];
         primary = "consult";
-      } else if (wantDirect){
-        // 直接案内希望
-        type = (inner === "no")
-          ? "未知の扉：中の感覚を開きたい（体験希望）"
-          : "伸ばしに行く：感覚を深めたい（体験希望）";
-        desc = "遠回りせずに、いまの状態に合わせて“何を優先するか”を決めて進める段階。";
+      } 
+      // 2. 外も中も全く感じない or くすぐったい層
+      else if ((outer === "none" && inner === "none") || issue === "zero"){
+        type = "ゼロイチ覚醒：感覚の土台づくりタイプ";
+        desc = "「感じない」のではなく、脳と身体の神経がまだ繋がっていない状態（くすぐったいのもその一種）です。焦らず地図を作る段階。";
         advice = [
-          "いきなり結果を追うより、まず“入り口（安心/ペース/条件）”を揃える",
-          "上手くいった時の条件（時間/雰囲気/リズム）を再現できる形にする",
-          "恥ずかしさや緊張が強いなら、それ前提の進め方にする（押さない）"
+          "いきなり「イカなきゃ」と焦らず、まずは「触られて心地よい場所」を探す",
+          "刺激の強さよりも、安心感と温かさを優先する",
+          "くすぐったい場合は、面でゆっくり圧をかけるように触れる"
+        ];
+        primary = (wish === "direct") ? "direct" : "self";
+        selfLink = LINKS.note_self;
+      }
+      // 3. セルフならイケる層（委ねるのが苦手）
+      else if (outer === "self_only" || (mentalFlag && issue === "partner")){
+        type = "委ねる練習：セルフロック解除タイプ";
+        desc = "自分の身体の使い方は分かっていますが、相手の前だと「思考」が邪魔をしてブロックがかかっている状態です。";
+        advice = [
+          "「変に思われないか」「イカなきゃ」という頭の中の実況中継をストップする",
+          "相手の指や動きを、自分の指だと思い込む（脳の錯覚を利用）",
+          "まずは相手の前でセルフをして、安心感と興奮を上書きする"
+        ];
+        primary = "consult";
+      }
+      // 4. 外も中も惜しい（寸止め）層
+      else if (outer === "almost" || inner === "feel"){
+        type = "寸止め打破：あと一歩で開花タイプ";
+        desc = "身体の準備はほぼ整っています。あと少しの「条件」が揃えば一気にリミッターが外れる段階です。";
+        advice = [
+          "気持ちよくなってきた時に「無意識に息を止める・力を入れる」癖がないか確認",
+          "上手くいきそうな時のリズムや角度を“絶対に変えない”ようキープする",
+          "イキそうになったら、あえて息を深く吐いて身体の力を抜く"
+        ];
+        primary = (wish === "direct") ? "direct" : "self";
+        selfLink = LINKS.note_inner;
+      }
+      // 5. 外はバッチリ、中イキを開発したい層
+      else if (outer === "good" && inner === "none" && issue === "mid_ik"){
+        type = "未知の扉：中イキ特化開発タイプ";
+        desc = "外の快感回路は完成しているので、あとは中への神経を繋げるだけ。「ただのピストン」から卒業する段階です。";
+        advice = [
+          "外で十分に高めてからでないと、中は開発されにくい（準備運動必須）",
+          "激しいピストンではなく、特定のポイント（Gスポットなど）をゆっくり押圧する",
+          "中の刺激を「痛みや排泄感」ではなく「快感」だと脳に教え込む"
+        ];
+        primary = (wish === "self") ? "self" : "direct";
+        selfLink = LINKS.note_inner;
+      }
+      // 6. すでに中イキ経験あり、さらに深めたい層
+      else if (inner === "ik" || issue === "deeper"){
+        type = "底なし沼：ディープ快感追求タイプ";
+        desc = "すでに基本の開発は完了しています。より深く、連続した絶頂や潮吹きなどを目指せるポテンシャルがあります。";
+        advice = [
+          "自分の性感帯の「一番気持ちいいスポット」を正確に言語化・共有する",
+          "イッた後もすぐ止めず、波を繋げる感覚を掴む",
+          "プロの技術や新しいアプローチを取り入れることで未知の領域へ"
         ];
         primary = "direct";
-      } else if (wantConsult || mentalFlag){
-        // 相談優先 or メンタルブロック寄り
-        type = "整理して前に進む：お悩み相談タイプ";
-        desc = "身体の問題というより、緊張・不安・関係性・環境などがブレーキになってる可能性が高い。";
+        selfLink = LINKS.note_inner;
+      }
+      // その他・デフォルト
+      else {
+        type = "現状整理：オーダーメイド相談タイプ";
+        desc = "複数の要素が絡み合っている可能性があります。まずは現状を整理して、あなただけの正解を見つける段階です。";
         advice = [
-          "いまの詰まりを“身体/心理/環境/相手”に分解して原因候補を絞る",
-          "いきなり開発ではなく、まず安心して受け取れる状態を作る",
-          "相談で「次に試す一手」を決めると、ムダな遠回りが減る"
-        ];
-        primary = "consult";
-      } else if (wantSelf){
-        // 自己解決
-        if (outer === "no" && inner === "no"){
-          type = "まずは身体を知る：自己解決（入口づくり）";
-          desc = "“感じない”というより、まだ感覚の地図ができてない可能性がある。焦らず作っていく段階。";
-          advice = [
-            "刺激を強くするより、条件（安心/時間/環境）を整える",
-            "“心地よい/嫌”の判別を先に作る（正解探しをやめる）",
-            "続けるなら「一度に変えるのは1要素だけ」で試す"
-          ];
-          selfLink = LINKS.note_self;
-          primary = "self";
-        } else if (inner === "no"){
-          type = "中は未経験：自己解決（中の入口を作る）";
-          desc = "外の感覚があるなら伸びる土台はある。中は“焦らない設計”で入りやすくなる。";
-          advice = [
-            "外の安定を作ってから、中は“条件の揃った時だけ”試す",
-            "一定のリズムと安心感を優先（変えすぎない）",
-            "中の感覚は「刺激量」より「受け取れる状態」で伸びることが多い"
-          ];
-          selfLink = LINKS.note_inner;
-          primary = "self";
-        } else {
-          type = "伸ばせる：自己解決（精度アップ）";
-          desc = "基礎はある。再現条件を固めていくとブレが減る段階。";
-          advice = [
-            "上手くいった条件をメモして再現（時間/雰囲気/ペース）",
-            "変えるなら1要素だけ（速さだけ、角度だけ、など）",
-            "無理に追わず、体調が良い日に伸ばす"
-          ];
-          selfLink = LINKS.note_inner;
-          primary = "self";
-        }
-      } else {
-        // 保険
-        type = "整理したい：まずは相談タイプ";
-        desc = "現状の情報が少ない。先に整理すると最短で進める。";
-        advice = [
-          "何がブレーキかを先に絞る（体調/緊張/環境/相手）",
-          "安全と安心の設計を作る",
-          "次に試す一手を決める"
+          "何が一番のブレーキになっているか（心か、身体か、環境か）を特定する",
+          "自分一人で悩まず、専門的な視点からのアドバイスを取り入れる"
         ];
         primary = "consult";
       }
 
-      // コピー文（DMに貼る前提で短く）
+      // 希望(wish)による最終調整
+      if(wish === "direct") primary = "direct";
+      if(wish === "self" && primary !== "consult") primary = "self";
+      if(wish === "consult") primary = "consult";
+
+      // コピー用テキスト
       const copyText =
 `【性感チェック結果】
 タイプ：${type}
 外側：${ans.outerExp?.label || "未回答"}
-中：${ans.innerExp?.label || "未回答"}
-いちばん気になること：${ans.mainIssue?.label || "未回答"}
-緊張/不安：${ans.tension?.label || "未回答"}
-今後の希望：${ans.wish?.label || "未回答"}`;
+中側：${ans.innerExp?.label || "未回答"}
+頭の中：${ans.tension?.label || "未回答"}
+一番の目的：${ans.mainIssue?.label || "未回答"}
+希望：${ans.wish?.label || "未回答"}
 
-      // CTA文
-      const selfDesc =
-        (primary === "self")
-          ? "今の状態に合った“自己解決ルート”を読む（遠回りを減らす）。"
-          : "まず自分で試したい人向けの入口記事。";
+これをもとに相談・案内をお願いします。`;
 
-      const consultDesc =
-        (primary === "consult")
-          ? "この結果を貼って相談すれば、最初から核心に入れる。"
-          : "自分だけだと判断が難しい時の整理ルート。";
+      const selfDesc = (primary === "self")
+        ? "今の状態に合った自己開発ルート。ここから試すのが一番近道です。"
+        : "まずは自分のペースで試してみたい人向けの記事です。";
 
-      const directDesc =
-        (primary === "direct")
-          ? "体験/施術の案内へ。状況に合わせて進め方を設計する。"
-          : "プロに任せたい人向けの案内ページ。";
+      const consultDesc = (primary === "consult")
+        ? "結果をコピーしてDMに貼るだけ。状態がわかるので最適なアドバイスが可能です。"
+        : "自分だけだと判断が難しい・行き詰まった時の相談窓口です。";
+
+      const directDesc = (primary === "direct")
+        ? "あなたの状態に合わせた、直接の性感開発・体験の案内はこちら。"
+        : "プロに任せて一気に扉を開きたい人向けの案内です。";
 
       return { type, desc, advice, copyText, primary, selfLink, selfDesc, consultDesc, directDesc, painFlag, mentalFlag };
     }
@@ -616,7 +624,6 @@
       typeTitle.textContent = r.type;
       typeDesc.textContent = r.desc;
 
-      // advice list
       adviceList.innerHTML = "";
       r.advice.forEach(t=>{
         const li = document.createElement("li");
@@ -624,20 +631,18 @@
         adviceList.appendChild(li);
       });
 
-      // safety box
       safetyBox.className = "hidden";
       safetyBox.innerHTML = "";
       if (r.painFlag){
         safetyBox.classList.remove("hidden");
         safetyBox.classList.add("dangerBox");
-        safetyBox.innerHTML = "<b>安全優先：</b>痛み/違和感が絡む場合は、開発より先にケア。無理は悪化の原因になることがある。";
+        safetyBox.innerHTML = "<b>安全優先：</b>痛み/違和感が絡む場合は、開発より先にケアを。我慢して続けると身体が拒絶反応を起こす可能性があります。";
       } else if (r.mentalFlag){
         safetyBox.classList.remove("hidden");
         safetyBox.classList.add("warnBox");
-        safetyBox.innerHTML = "<b>ヒント：</b>緊張/不安がブレーキになってる可能性。身体の問題に見えて“状態の問題”のことが多い。";
+        safetyBox.innerHTML = "<b>ヒント：</b>「イカなきゃ」という焦りや緊張がブレーキになっています。身体より先に“頭を休ませる”のが鍵です。";
       }
 
-      // CTA set
       ctaSelfDesc.textContent = r.selfDesc;
       ctaConsultDesc.textContent = r.consultDesc;
       ctaDirectDesc.textContent = r.directDesc;
@@ -646,23 +651,18 @@
       ctaConsult.href = LINKS.dm;
       ctaDirect.href = LINKS.booking;
 
-      // primary highlight
       ctaSelf.classList.remove("primary");
       ctaConsult.classList.remove("primary");
-      ctaDirect.classList.add("primary"); // default
+      ctaDirect.classList.remove("primary");
 
-      // 3つとも主張が強いと鬱陶しいので、主役だけ強調
       if (r.primary === "self"){
         ctaSelf.classList.add("primary");
-        ctaDirect.classList.remove("primary");
       } else if (r.primary === "consult"){
         ctaConsult.classList.add("primary");
-        ctaDirect.classList.remove("primary");
       } else {
         ctaDirect.classList.add("primary");
       }
 
-      // copy preview
       copyPreview.textContent = r.copyText;
     }
 
@@ -670,21 +670,18 @@
       const text = copyPreview.textContent;
       try{
         await navigator.clipboard.writeText(text);
-        showToast("コピーした");
+        showToast("結果をコピーしました！DMに貼り付けてください");
       }catch(e){
-        // だめなら選択して手動コピーできるようにする
-        showToast("コピーできないので手動で");
+        showToast("コピーできない環境です。手動でコピーしてください");
       }
     }
 
-    // events
     startBtn.onclick = ()=>{ i=0; ans={}; showQuiz(); };
     backBtn.onclick = ()=> back();
     resetBtn.onclick = ()=> resetAll();
     restartBtn.onclick = ()=> resetAll();
     copyBtn.onclick = ()=> copyResult();
 
-    // init
     setIntroProgress();
   </script>
 </body>
