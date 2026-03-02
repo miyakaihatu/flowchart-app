@@ -1,127 +1,80 @@
-{\rtf1\ansi\ansicpg932\cocoartf2639
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset128 HiraginoSans-W3;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>相談フローチャート</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1>相談フローチャート</h1>
+      <p class="sub">情報が薄い相談でも、最低限の“方向性”まで自動で整える。</p>
+    </header>
 
-\f0\fs24 \cf0 <!doctype html>\
-<html lang="ja">\
-<head>\
-  <meta charset="utf-8" />\
-  <meta name="viewport" content="width=device-width, initial-scale=1" />\
-  <title>
-\f1 \'91\'8a\'92\'6b\'83\'74\'83\'8d\'81\'5b\'83\'60\'83\'83\'81\'5b\'83\'67
-\f0 </title>\
-  <link rel="stylesheet" href="./style.css" />\
-</head>\
-<body>\
-  <main class="app">\
-    <header class="header">\
-      <h1>
-\f1 \'91\'8a\'92\'6b\'83\'74\'83\'8d\'81\'5b\'83\'60\'83\'83\'81\'5b\'83\'67
-\f0 </h1>\
-      <p class="sub">
-\f1 \'8f\'ee\'95\'f1\'82\'aa\'94\'96\'82\'a2\'91\'8a\'92\'6b\'82\'c5\'82\'e0\'81\'41\'8d\'c5\'92\'e1\'8c\'c0\'82\'cc
-\f0 \'93
-\f1 \'95\'fb\'8c\'fc\'90\'ab
-\f0 \'94
-\f1 \'82\'dc\'82\'c5\'8e\'a9\'93\'ae\'82\'c5\'90\'ae\'82\'a6\'82\'e9\'81\'42
-\f0 </p>\
-    </header>\
-\
-    <section class="card" id="qa">\
-      <div class="progress">\
-        <div class="bar" id="bar"></div>\
-      </div>\
-\
-      <h2 class="question" id="question">
-\f1 \'93\'c7\'82\'dd\'8d\'9e\'82\'dd\'92\'86
-\f0 \'85</h2>\
-\
-      <div class="options" id="options"></div>\
-\
-      <div class="textwrap hidden" id="textwrap">\
-        <textarea id="text" rows="4" placeholder="
-\f1 \'82\'b1\'82\'b1\'82\'c9\'93\'fc\'97\'cd
-\f0 "></textarea>\
-        <button class="btn primary" id="textNext">
-\f1 \'8e\'9f\'82\'d6
-\f0 </button>\
-      </div>\
-\
-      <div class="actions">\
-        <button class="btn" id="back">
-\f1 \'96\'df\'82\'e9
-\f0 </button>\
-        <button class="btn danger" id="reset">
-\f1 \'8d\'c5\'8f\'89\'82\'a9\'82\'e7
-\f0 </button>\
-      </div>\
-    </section>\
-\
-    <section class="card hidden" id="result">\
-      <h2>
-\f1 \'8c\'8b\'89\'ca
-\f0 </h2>\
-\
-      <div class="resultGrid">\
-        <div>\
-          <h3>
-\f1 \'97\'76\'96\'f1
-\f0 </h3>\
-          <pre class="box" id="summary"></pre>\
-        </div>\
-\
-        <div>\
-          <h3>
-\f1 \'8e\'9f\'82\'c9\'95\'b7\'82\'ad\'82\'c6\'8b\'ad\'82\'a2\'8e\'bf\'96\'e2
-\f0 </h3>\
-          <pre class="box" id="nextQs"></pre>\
-        </div>\
-\
-        <div>\
-          <h3>
-\f1 \'83\'52\'83\'73\'83\'79\'95\'d4\'90\'4d\'81\'69\'97\'44\'82\'b5\'82\'df\'81\'6a
-\f0 </h3>\
-          <pre class="box" id="replySoft"></pre>\
-        </div>\
-\
-        <div>\
-          <h3>
-\f1 \'83\'52\'83\'73\'83\'79\'95\'d4\'90\'4d\'81\'69\'92\'5a\'82\'df\'81\'6a
-\f0 </h3>\
-          <pre class="box" id="replyShort"></pre>\
-        </div>\
-\
-        <div class="full">\
-          <h3>ChatGPT
-\f1 \'82\'c9\'93\'8a\'82\'b0\'82\'e9\'97\'70\'83\'76\'83\'8d\'83\'93\'83\'76\'83\'67
-\f0 </h3>\
-          <pre class="box" id="prompt"></pre>\
-        </div>\
-      </div>\
-\
-      <div class="actions">\
-        <button class="btn" id="copyAll">
-\f1 \'91\'53\'95\'94\'83\'52\'83\'73\'81\'5b
-\f0 </button>\
-        <button class="btn primary" id="restart">
-\f1 \'82\'e0\'82\'a4\'88\'ea\'89\'f1
-\f0 </button>\
-      </div>\
-    </section>\
-\
-    <footer class="footer">\
-      <small>\uc0\u8251  
-\f1 \'88\'e3\'97\'c3\'81\'45\'8a\'eb\'8b\'40\'91\'ce\'89\'9e\'82\'aa\'95\'4b\'97\'76\'82\'bb\'82\'a4\'82\'c8\'8f\'ea\'8d\'87\'82\'cd\'81\'41\'95\'d4\'90\'4d\'82\'e6\'82\'e8\'8e\'f3\'90\'66
-\f0 /
-\f1 \'91\'8a\'92\'6b\'91\'8b\'8c\'fb\'82\'f0\'97\'44\'90\'e6\'81\'42
-\f0 </small>\
-    </footer>\
-  </main>\
-\
-  <script src="./tree.js"></script>\
-  <script src="./app.js"></script>\
-</body>\
-</html>}
+    <section class="card" id="qa">
+      <div class="progress">
+        <div class="bar" id="bar"></div>
+      </div>
+
+      <h2 class="question" id="question">読み込み中…</h2>
+
+      <div class="options" id="options"></div>
+
+      <div class="textwrap hidden" id="textwrap">
+        <textarea id="text" rows="4" placeholder="ここに入力"></textarea>
+        <button class="btn primary" id="textNext">次へ</button>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="back">戻る</button>
+        <button class="btn danger" id="reset">最初から</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="result">
+      <h2>結果</h2>
+
+      <div class="resultGrid">
+        <div>
+          <h3>要約</h3>
+          <pre class="box" id="summary"></pre>
+        </div>
+
+        <div>
+          <h3>次に聞くと強い質問</h3>
+          <pre class="box" id="nextQs"></pre>
+        </div>
+
+        <div>
+          <h3>コピペ返信（優しめ）</h3>
+          <pre class="box" id="replySoft"></pre>
+        </div>
+
+        <div>
+          <h3>コピペ返信（短め）</h3>
+          <pre class="box" id="replyShort"></pre>
+        </div>
+
+        <div class="full">
+          <h3>ChatGPTに投げる用プロンプト</h3>
+          <pre class="box" id="prompt"></pre>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="copyAll">全部コピー</button>
+        <button class="btn primary" id="restart">もう一回</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <small>※ 医療・危機対応が必要そうな場合は、返信より受診/相談窓口を優先。</small>
+    </footer>
+  </main>
+
+  <script src="./tree.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
