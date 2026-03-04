@@ -512,13 +512,13 @@ function computeResult(){
     if(tension==="past")advice.push("⚠️ 過去の経験が影響している場合、無理せずカウンセリングの併用も視野に");
     if(tension==="duty")advice.push("💡 「相手のため」ではなく「自分が気持ちいい」を優先する許可を自分に出す");
   }
-  if(freq==="vibrator")advice.push("🔋 グッズ依存の場合、手の刺激では強度不足になりがち。徐々にグッズの強度を下げて手の感覚を育てる練習を");
+  if(freq==="vibrator")advice.push("🔋 おもちゃ依存の場合、手の刺激では強度不足になりがち。徐々にグッズの強度を下げて手の感覚を育てる練習を");
   if(comm==="silent"||comm==="afraid")advice.push("🗣 パートナーに伝えられないことが大きなブレーキ。まずは「ここが好き」の一言から");
 
   // 直接希望の後押し
   if(wish==="direct"){
     primary="direct";
-    advice.push("【💡直接の[セッション]では】一人では辿り着けない「脳の錯覚」や「プロのアプローチ」を使い、あなたの今の状態に合わせた最短ルートで扉を開きます。");
+    advice.push("【💡性感開発施術では】一人ではわからない部分を伝え、今の状態に合わせた最適な方法で導きます。");
   }
   if(wish==="self"&&primary!=="consult")primary="self";
   if(wish==="consult")primary="consult";
@@ -527,7 +527,7 @@ function computeResult(){
   const copyText=`【感覚チェック結果】
 タイプ：${type}
 外側の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
-奥側の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
+中側の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
 濡れやすさ：${ans.arousal?.label||"未回答"}
 頭の中：${ans.tension?.label||"未回答"}
 パートナーとの伝え合い：${ans.partnerComm?.label||"未回答"}
@@ -539,7 +539,7 @@ function computeResult(){
 
   const selfDesc=(primary==="self")?"今の状態に合った自己解決ルート。ここから試すのが一番近道です。":"まずは自分のペースで試してみたい人向けの記事です。";
   const consultDesc=(primary==="consult")?"結果をコピーしてDMに貼るだけ。状態がわかるので最適なアドバイスが可能です。":"自分だけだと判断が難しい・行き詰まった時の相談窓口です。";
-  const directDesc=(primary==="direct")?"あなたの状態に合わせた、直接の[セッション]や体験の案内はこちら。":"プロに任せて一気に扉を開きたい人向けの案内です。";
+  const directDesc=(primary==="direct")?"あなたの状態に合わせた、直接の開発施術の案内はこちら。":"miyaに任せて一気に開発されてみたい方向けの案内です。";
 
   return{type,desc,advice,copyText,primary,selfLink,selfDesc,consultDesc,directDesc,painFlag,mentalFlag,scores};
 }
@@ -558,7 +558,7 @@ function showResult(){
   const sa=$("scoreArea");sa.innerHTML="";
   const bars=[
     {label:"外側感度",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
-    {label:"奥側感度",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
+    {label:"中側感度",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
     {label:"リラックス度",score:r.scores.relaxScore,color:"linear-gradient(90deg,#10b981,#34d399)"},
     {label:"身体の準備",score:r.scores.bodyScore,color:"linear-gradient(90deg,#f59e0b,#fbbf24)"},
     {label:"セルフ理解度",score:r.scores.selfKnowScore,color:"linear-gradient(90deg,#ec4899,#f472b6)"},
