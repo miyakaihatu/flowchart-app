@@ -63,7 +63,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>感覚チェック</h1>
+    <h1>感度チェック簡易判定ツール</h1>
     <p class="sub">あなたの現在の状態を整理して、「最短で変わるための次の一手」を見つけるチェックテストです。</p>
   </header>
 
@@ -170,9 +170,9 @@ const QUESTIONS=[
       {value:"focus",label:"途中で集中が切れてしまい、ゼロに戻る"}
     ]},
 
-  {id:"innerExp",title:"[奥側]の感覚について、一番近いものは？",desc:"奥への刺激の受け取り方をチェックします。",
+  {id:"innerExp",title:"[中側]の感覚について、一番近いものは？",desc:"中への刺激の受け取り方をチェックします。",
     options:[
-      {value:"ik",label:"[奥のピーク]を経験したことがある（さらに深めたい）"},
+      {value:"ik",label:"[中イキ]を経験したことがある（さらに深めたい）"},
       {value:"deep_feel",label:"奥がジンジンする・響くような快感がある"},
       {value:"slight",label:"奥に何か感じるが、快感かどうか微妙"},
       {value:"pressure",label:"圧迫感・入ってる感覚はあるが、快感はない"},
@@ -181,7 +181,7 @@ const QUESTIONS=[
       {value:"no_exp",label:"奥の刺激の経験がない / 試したことがない"}
     ]},
 
-  // 奥が「痛い」→ 深掘り
+  // 中が「痛い」→ 深掘り
   {id:"innerPainDetail",title:"奥の痛みについてもう少し教えてください。",
     desc:"痛みの種類によって対処法が異なります。",
     condition:a=>a.innerExp?.value==="pain",
@@ -237,7 +237,7 @@ const QUESTIONS=[
     options:[
       {value:"zero",label:"「気持ちいい」って何？という状態から抜け出したい"},
       {value:"outer_first",label:"まず[外側]で安定して[ピーク]にいけるようになりたい"},
-      {value:"mid_ik",label:"[外側]はOKだから、[奥のピーク]を味わってみたい"},
+      {value:"mid_ik",label:"[外側]はOKだから、[中イキ]を味わってみたい"},
       {value:"partner",label:"相手との行為でちゃんと感じられるようになりたい"},
       {value:"pain_fix",label:"痛みや不快感をなくして、普通に楽しめるようになりたい"},
       {value:"deeper",label:"もっと深い[ピーク]や、連続で達する身体になりたい"},
@@ -349,7 +349,7 @@ function calcScores(){
   const outerMap={good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5,pain:0};
   let outerScore=outerMap[outer]??30;
 
-  // 奥側感度スコア (0-100)
+  // 中側感度スコア (0-100)
   const innerMap={ik:100,deep_feel:70,slight:40,pressure:20,none:10,pain:0,no_exp:5};
   let innerScore=innerMap[inner]??20;
 
