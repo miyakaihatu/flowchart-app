@@ -524,7 +524,7 @@ function computeResult(){
   if(wish==="consult")primary="consult";
 
   // コピー用テキスト
-  const copyText=`【感覚チェック結果】
+  const copyText=`【感度チェック結果】
 タイプ：${type}
 外側の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
 中側の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
