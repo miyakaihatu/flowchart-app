@@ -318,8 +318,12 @@ function renderQ(){
       if(isClicking) return; 
       isClicking = true;
       
-      // ボタン連打や他のボタンのタッチを物理的に無効化
-      list.style.pointerEvents = "none";
+      // ▼▼ 修正箇所 ▼▼
+      // BraveやiOSのブラウザ等で、タップ直後に `pointer-events: none` を設定すると
+      // 描画エンジンがフリーズ（パニック）するバグがあるため、この行を削除しています。
+      // 上の `isClicking` フラグだけでボタンの二重タップは完全に防げます。
+      // list.style.pointerEvents = "none";
+      // ▲▲ 修正箇所 ▲▲
 
       b.style.borderColor="rgba(255,79,163,.45)";
       b.style.boxShadow="0 6px 18px rgba(255,79,163,.10)";
@@ -327,7 +331,7 @@ function renderQ(){
       ans[q.id]={value:opt.value,label:opt.label};
       if(q.id==="age"&&opt.value==="no"){showBlocked();return;}
       
-      // スマホのブラウザが処理を完了するまで「300ミリ秒」待ってから画面を消す（ここが重要！）
+      // スマホのブラウザが処理を完了するまで「300ミリ秒」待ってから画面を消す
       setTimeout(()=>{currentIdx++;renderQ();}, 300);
     };
     list.appendChild(b);
