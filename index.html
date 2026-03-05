@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>感度チェック簡易判定ツール</title>
   <style>
     :root{
@@ -12,6 +12,18 @@
       --shadow:0 10px 30px rgba(16,24,40,.10);--radius:18px;
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
+
+    /* ▼▼ スマホの全選択・ズーム暴発（フリーズ）を防ぐコード ▼▼ */
+    body, .wrap {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    button, .opt {
+      touch-action: manipulation;
+    }
+    /* ▲▲ ここまで ▲▲ */
+
     body{margin:0;color:var(--ink);background:radial-gradient(1200px 700px at 20% 10%,var(--bg1),transparent 55%),radial-gradient(1200px 700px at 80% 10%,var(--bg2),transparent 55%),linear-gradient(180deg,#fff,#fafbff);min-height:100vh;}
     .wrap{max-width:980px;margin:0 auto;padding:18px;}
     header{display:grid;gap:6px;margin-top:8px;}
@@ -255,9 +267,10 @@ const QUESTIONS=[
 // ============================================================
 // State
 // ============================================================
-let flowPath=[];   // 実際に表示したquestion idの配列
+let flowPath=[];   
 let ans={};
-let currentIdx=0;  // flowPath上のインデックス
+let currentIdx=0;  
+let isClicking=false; // 連打フリーズ防止用フラグ
 
 const $=id=>document.getElementById(id);
 const intro=$("screenIntro"),quiz=$("screenQuiz"),res=$("screenResult");
@@ -272,14 +285,15 @@ function buildFlowPath(){
 function getQById(id){return QUESTIONS.find(q=>q.id===id);}
 
 function resetAll(){
-  currentIdx=0;ans={};flowPath=[];
+  currentIdx=0;ans={};flowPath=[];isClicking=false;
   intro.classList.remove("hidden");quiz.classList.add("hidden");res.classList.add("hidden");
 }
 function showQuiz(){
   intro.classList.add("hidden");quiz.classList.remove("hidden");res.classList.add("hidden");
-  buildFlowPath();currentIdx=0;renderQ();
+  buildFlowPath();currentIdx=0;isClicking=false;renderQ();
 }
 function renderQ(){
+  isClicking=false; // 画面切り替え時にロック解除
   buildFlowPath();
   if(currentIdx>=flowPath.length){showResult();return;}
   const qid=flowPath[currentIdx];
@@ -298,9 +312,18 @@ function renderQ(){
     const b=document.createElement("div");b.className="opt";
     b.innerHTML=`<span>${opt.label}</span><small>選択</small>`;
     b.onclick=()=>{
+      if(isClicking) return; // 二重クリック防止
+      isClicking = true;
+      
+      // クリックしたときの視覚的フィードバック
+      b.style.borderColor="rgba(255,79,163,.45)";
+      b.style.boxShadow="0 6px 18px rgba(255,79,163,.10)";
+
       ans[q.id]={value:opt.value,label:opt.label};
       if(q.id==="age"&&opt.value==="no"){showBlocked();return;}
-      setTimeout(()=>{currentIdx++;renderQ();},120);
+      
+      // 切り替えのタイミングを少しゆったりに（フリーズ対策）
+      setTimeout(()=>{currentIdx++;renderQ();},150);
     };
     list.appendChild(b);
   });
@@ -308,14 +331,16 @@ function renderQ(){
 }
 
 function goBack(){
+  if(isClicking) return;
   if(currentIdx<=0)return;
+  isClicking = true;
   const prevId=flowPath[currentIdx-1];
   delete ans[prevId];
-  // Also delete any conditional question answers that depended on changed answers
   currentIdx--;buildFlowPath();renderQ();
 }
 
 function showBlocked(){
+  isClicking=false;
   quiz.classList.add("hidden");intro.classList.remove("hidden");
   const box=intro.querySelector(".warnBox")||intro.querySelector(".dangerBox");
   box.className="dangerBox";
@@ -411,7 +436,7 @@ function computeResult(){
   else if(outer==="none"||issue==="zero"){
     type="ゼロイチ覚醒：感覚の土台づくりタイプ";
     desc="「感じない」のではなく、脳と神経がまだ繋がっていない状態。焦らず地図を作る段階です。";
-    advice=["いきなり[ピーク]を目指さず、まずは「触られて心地よい場所」を探す","刺激の強さよりも、安心感と温かさを優先する"];
+    advice=["いきなりピークを目指さず、まずは「触られて心地よい場所」を探す","刺激の強さよりも、安心感と温かさを優先する"];
     if(freq==="never")advice.push("まずセルフタッチから。自分の身体に触れる習慣をつけることが第一歩");
     if(mentalFlag)advice.push("感じない原因がメンタル（過去の経験・罪悪感）にある可能性も。心の準備も大切");
     if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。ローションを使って摩擦を減らしてみる");
@@ -459,36 +484,36 @@ function computeResult(){
     if(almostD==="plateau")advice.push("刺激の種類を変えてみる。同じパターンだと神経が慣れて頭打ちになりやすい");
     if(almostD==="focus")advice.push("集中を保つために、呼吸のリズムに意識を合わせる。雑念は「戻す」練習で改善できる");
     advice.push("上手くいきそうな時のリズムや角度を『絶対に変えない』ようキープする");
-    if(mentalFlag)advice.push("「イかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
+    if(mentalFlag)advice.push("「いかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
   // ── 7. 外側バッチリ ──
   else if(outer==="good"){
     if(inner==="none"||inner==="pressure"){
-      type="未知の扉：[奥のピーク]特化アプローチタイプ";
-      desc="[外側]の回路は完成。あとは[奥側]への神経を繋げるだけ。「ただの[単調な動き]」から卒業する一番美味しい段階です。";
-      advice=["[外側]で十分に高めてからでないと、[奥]の回路は開きにくい（準備運動必須）","激しい動きではなく、特定のポイントをゆっくり押圧して感覚を探す","奥の刺激を「違和感」ではなく「気持ちいい」と脳に教え込む"];
+      type="未知の扉：奥のピーク特化アプローチタイプ";
+      desc="外の回路は完成。あとは中への神経を繋げるだけ。「ただの単調な動き」から卒業する一番美味しい段階です。";
+      advice=["外で十分に高めてからでないと、奥の回路は開きにくい（準備運動必須）","激しい動きではなく、特定のポイントをゆっくり押圧して感覚を探す","奥の刺激を「違和感」ではなく「気持ちいい」と脳に教え込む"];
       if(dryFlag)advice.push("潤い不足だと奥の感覚が「圧迫」にしか感じられない。十分な潤滑を");
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
     }else if(inner==="slight"){
       type="感覚の芽生え：奥の回路育成タイプ";
-      desc="奥に「何か」を感じ始めています。この微かな感覚を育てることで、[奥のピーク]への道が開けます。";
+      desc="奥に「何か」を感じ始めています。この微かな感覚を育てることで、ピークへの道が開けます。";
       advice=["今感じている「微かな何か」を最大限に大切にする。それが入口","その場所を見つけたら、同じ角度・同じ圧で丁寧に刺激を続ける","外→奥の切り替えではなく、外を刺激しながら奥も同時に刺激する"];
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
     }else if(inner==="deep_feel"){
-      type="[奥のピーク]覚醒待ち：あと一歩タイプ";
-      desc="奥の感覚がすでに育っています。条件さえハマればいつでも[奥のピーク]を迎えられるポテンシャルがあります。";
+      type="覚醒待ち：あと一歩タイプ";
+      desc="奥の感覚がすでに育っています。条件さえハマればいつでもピークを迎えられるポテンシャルがあります。";
       advice=["奥がジンジンしてきたら、絶対にリズムや角度を変えない","腹式呼吸を意識して、奥の筋肉の緊張を解く","刺激を点ではなく「面」で捉える意識を持つ"];
       if(mentalFlag)advice.push("身体は準備万端。あとは頭を手放すだけ。「もっと感じたい」から「感じるままに」に切り替えて");
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
     }else if(inner==="ik"||issue==="deeper"){
       type="底なし沼：ディープ快感追求タイプ";
-      desc="基本の回路は完了。より深い[ピーク]や連続・[特殊な絶頂]を目指せる段階です。";
+      desc="基本の回路は完了。より深いオーガズムや連続を目指せる段階です。";
       advice=["自分の「一番気持ちいいスポット」を正確に言語化・共有する","達した後もすぐ止めず、波を繋げる感覚を掴む","これまでのパターンを壊す新しいアプローチを取り入れる"];
       primary="direct";selfLink=LINKS.note_inner;
     }else if(inner==="no_exp"){
       type="未開拓の可能性：奥の世界へのファーストステップ";
-      desc="まだ奥の刺激を試していない状態。外側が整っているので、準備は万端です。";
+      desc="まだ奥の刺激を試していない状態。外が整っているので、準備は万端です。";
       advice=["いきなり奥を目指さず、まずは浅い部分からゆっくり慣らしていく","十分な前戯と潤滑が必須。焦らないことが最大のコツ","最初は自分のペースで試すのがおすすめ。グッズを使うのも◎"];
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
     }else{
@@ -526,8 +551,8 @@ function computeResult(){
   // コピー用テキスト
   const copyText=`【感度チェック結果】
 タイプ：${type}
-外側の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
-中側の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
+外の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
+中の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
 濡れやすさ：${ans.arousal?.label||"未回答"}
 頭の中：${ans.tension?.label||"未回答"}
 パートナーとの伝え合い：${ans.partnerComm?.label||"未回答"}
@@ -557,8 +582,8 @@ function showResult(){
   // スコアバー
   const sa=$("scoreArea");sa.innerHTML="";
   const bars=[
-    {label:"外側感度",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
-    {label:"中側感度",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
+    {label:"外の感度",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
+    {label:"中の感度",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
     {label:"リラックス度",score:r.scores.relaxScore,color:"linear-gradient(90deg,#10b981,#34d399)"},
     {label:"身体の準備",score:r.scores.bodyScore,color:"linear-gradient(90deg,#f59e0b,#fbbf24)"},
     {label:"セルフ理解度",score:r.scores.selfKnowScore,color:"linear-gradient(90deg,#ec4899,#f472b6)"},
@@ -577,7 +602,8 @@ function showResult(){
   // 安全ボックス
   const sb=$("safetyBox");sb.className="hidden";sb.innerHTML="";
   if(r.painFlag){sb.classList.remove("hidden");sb.classList.add("dangerBox");sb.innerHTML="<b>安全優先：</b>痛み/違和感が絡む場合は、無理は禁物です。我慢して続けると身体が拒絶反応を起こす可能性があります。";}
-  else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>「[ピーク]にいかなきゃ」という焦りや緊張がブレーキになっています。身体より先に『頭を休ませる』のが鍵です。";}
+  else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>焦りや緊張がブレーキになっています。身体より先に『頭を休ませる』のが鍵です。";}
+  
   // CTA
   $("ctaSelfDesc").textContent=r.selfDesc;
   $("ctaConsultDesc").textContent=r.consultDesc;
@@ -595,7 +621,7 @@ function showResult(){
 
 async function copyResult(){
   try{await navigator.clipboard.writeText($("copyPreview").textContent);showToast("結果をコピーしました！DMに貼り付けてください");}
-  catch(e){showToast("コピーできない環境です。手動でコピーしてください");}
+  catch(e){showToast("コピーできない環境です。手掌握でコピーしてください");}
 }
 
 // Events
