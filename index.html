@@ -13,9 +13,9 @@
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
-    /* ▼▼ スマホのフリーズ対策 ▼▼ */
+    /* ▼▼ 徹底的なフリーズ対策（装飾・エフェクト完全排除） ▼▼ */
     body {
-      -webkit-tap-highlight-color: transparent; /* タップ時のデフォルトハイライトを消す */
+      -webkit-tap-highlight-color: transparent; 
       margin: 0;
       color: var(--ink);
       background: radial-gradient(1200px 700px at 20% 10%,var(--bg1),transparent 55%),radial-gradient(1200px 700px at 80% 10%,var(--bg2),transparent 55%),linear-gradient(180deg,#fff,#fafbff);
@@ -28,7 +28,7 @@
       -webkit-touch-callout: none;
     }
     .opt * {
-      pointer-events: none; /* ボタン内の文字の誤選択を防ぐ */
+      pointer-events: none; 
     }
     .copyBox {
       -webkit-user-select: auto; 
@@ -49,22 +49,9 @@
     .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
     .optList{display:grid;gap:10px;margin-top:12px;}
     
+    /* ホバーやトランジション（アニメーション）を完全に削除しました */
     .opt{text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;}
     .opt small{color:var(--muted);font-weight:700;}
-    
-    /* ホバー効果はPCなどマウス操作時のみ適用（スマホのタップ残りバグを防止） */
-    @media (hover: hover) {
-      .opt:hover { border-color:rgba(255,79,163,.45); box-shadow:0 6px 18px rgba(255,79,163,.10); }
-      button:hover { background:rgba(27,31,42,.08); }
-      .ghost:hover { background:rgba(27,31,42,.04); }
-    }
-    
-    /* タップされた時の即時フィードバック用クラス */
-    .opt.selected {
-      border-color: rgba(255,79,163,.45);
-      box-shadow: 0 6px 18px rgba(255,79,163,.10);
-      background-color: rgba(255,79,163,.05);
-    }
 
     .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
     button{appearance:none;border:none;cursor:pointer;border-radius:14px;padding:10px 12px;font-weight:900;background:rgba(27,31,42,.06);color:var(--ink);border:1px solid rgba(27,31,42,.10);}
@@ -146,7 +133,8 @@
     <div class="ctaGrid">
       <div class="ctaCard"><p class="ctaTitle">自己解決（まず自分で）</p><p class="ctaDesc" id="ctaSelfDesc">—</p><a class="ctaBtn" id="ctaSelf" href="#" target="_blank" rel="noopener">記事を見る</a></div>
       <div class="ctaCard"><p class="ctaTitle">相談（DM/LINE）</p><p class="ctaDesc" id="ctaConsultDesc">—</p><a class="ctaBtn" id="ctaConsult" href="#" target="_blank" rel="noopener">相談する</a></div>
-      <div class="ctaCard"><p class="ctaTitle">直接の案内（セッション）</p><p class="ctaDesc" id="ctaDirectDesc">—</p><a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">案内を見る</a></div>
+      <!-- ▼▼ 体験するボタンのテキストを変更 ▼▼ -->
+      <div class="ctaCard"><p class="ctaTitle">直接の案内（セッション）</p><p class="ctaDesc" id="ctaDirectDesc">—</p><a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">体験する</a></div>
     </div>
     <div class="divider"></div>
     <p class="kicker">この結果をコピーして相談する</p>
@@ -163,7 +151,14 @@
 <div class="toast" id="toast">コピーした</div>
 
 <script>
-const LINKS={note_self:"#",note_inner:"#",dm:"#",booking:"#"};
+// ▼▼ いただいたURLを反映しました ▼▼
+const LINKS={
+  note_self:"https://note.com/miyaaromassage",
+  note_inner:"https://note.com/miyaaromassage",
+  dm:"https://www.instagram.com/",
+  booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
+};
+// ▲▲ ここまで ▲▲
 
 const QUESTIONS=[
   {id:"age",title:"18歳以上ですか？（不明なら「いいえ」）",desc:"安全のため。18歳未満はこのツールを使えない設計です。",
@@ -335,21 +330,24 @@ function renderQ(){
   q.options.forEach(opt=>{
     const b=document.createElement("div");b.className="opt";
     b.innerHTML=`<span>${opt.label}</span><small>選択</small>`;
+    
+    // ▼▼ Braveフリーズ完全防止のため、即時切り替えに修正 ▼▼
     b.onclick=(e)=>{
+      e.preventDefault();
       if(isClicking) return; 
       isClicking = true;
-      
-      // CSSクラス付与に切り替えることでブラウザのスタイル計算負担を削減
-      b.classList.add("selected");
 
       ans[q.id]={value:opt.value,label:opt.label};
-      if(q.id==="age"&&opt.value==="no"){showBlocked();return;}
+      if(q.id==="age"&&opt.value==="no"){
+        setTimeout(showBlocked, 0);
+        return;
+      }
       
-      // 待機時間を100msに短縮し、WebKitのDOM削除クラッシュを防ぐ
+      // アニメーションや待機時間を完全に「0」にし、即時書き換えます
       setTimeout(()=>{
         currentIdx++;
         renderQ();
-      }, 100);
+      }, 0);
     };
     list.appendChild(b);
   });
