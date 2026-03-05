@@ -13,14 +13,26 @@
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
-    /* ▼▼ スマホの全選択・ズーム暴発（フリーズ）を防ぐコード ▼▼ */
-    body, .wrap {
+    /* ▼▼ スマホのパニック（フリーズ）を完全に防ぐ魔法のコード ▼▼ */
+    body {
+      -webkit-tap-highlight-color: transparent; /* タップ時のピンク/グレーのハイライトを消す */
+    }
+    .wrap {
       -webkit-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
     }
     button, .opt {
       touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .opt * {
+      pointer-events: none; /* ボタンの中の「文字」だけを誤って選択してしまうのを防ぐ */
+    }
+    .copyBox {
+      -webkit-user-select: auto; /* コピー欄だけは手動コピーできるように選択可能に戻す */
+      user-select: auto;
     }
     /* ▲▲ ここまで ▲▲ */
 
@@ -140,9 +152,6 @@
 <script>
 const LINKS={note_self:"#",note_inner:"#",dm:"#",booking:"#"};
 
-// ============================================================
-// 質問定義（条件分岐付き）
-// ============================================================
 const QUESTIONS=[
   {id:"age",title:"18歳以上ですか？（不明なら「いいえ」）",desc:"安全のため。18歳未満はこのツールを使えない設計です。",
     options:[{value:"yes",label:"はい（18歳以上）"},{value:"no",label:"いいえ / 不明"}]},
@@ -158,7 +167,6 @@ const QUESTIONS=[
       {value:"pain",label:"痛い・不快・あまり触られたくない"}
     ]},
 
-  // 外が「自分だけOK」→ 深掘り
   {id:"selfOnlyDetail",title:"セルフではいけるとのこと。もう少し詳しく教えてください。",
     desc:"相手とのギャップの原因を特定します。",
     condition:a=>a.outerExp?.value==="self_only",
@@ -170,7 +178,6 @@ const QUESTIONS=[
       {value:"env",label:"場所・明るさ・音など環境が落ち着かない"}
     ]},
 
-  // 外が「寸止め」→ 深掘り
   {id:"almostDetail",title:"寸止め状態とのこと。その時の身体はどんな感じですか？",
     desc:"あと一歩の壁がどこにあるか特定します。",
     condition:a=>a.outerExp?.value==="almost",
@@ -193,7 +200,6 @@ const QUESTIONS=[
       {value:"no_exp",label:"中の刺激の経験がない / 試したことがない"}
     ]},
 
-  // 中が「痛い」→ 深掘り
   {id:"innerPainDetail",title:"奥の痛みについてもう少し教えてください。",
     desc:"痛みの種類によって対処法が異なります。",
     condition:a=>a.innerExp?.value==="pain",
@@ -264,13 +270,10 @@ const QUESTIONS=[
     ]}
 ];
 
-// ============================================================
-// State
-// ============================================================
 let flowPath=[];   
 let ans={};
 let currentIdx=0;  
-let isClicking=false; // 連打フリーズ防止用フラグ
+let isClicking=false; 
 
 const $=id=>document.getElementById(id);
 const intro=$("screenIntro"),quiz=$("screenQuiz"),res=$("screenResult");
@@ -293,7 +296,7 @@ function showQuiz(){
   buildFlowPath();currentIdx=0;isClicking=false;renderQ();
 }
 function renderQ(){
-  isClicking=false; // 画面切り替え時にロック解除
+  isClicking=false; 
   buildFlowPath();
   if(currentIdx>=flowPath.length){showResult();return;}
   const qid=flowPath[currentIdx];
@@ -311,19 +314,21 @@ function renderQ(){
   q.options.forEach(opt=>{
     const b=document.createElement("div");b.className="opt";
     b.innerHTML=`<span>${opt.label}</span><small>選択</small>`;
-    b.onclick=()=>{
-      if(isClicking) return; // 二重クリック防止
+    b.onclick=(e)=>{
+      if(isClicking) return; 
       isClicking = true;
       
-      // クリックしたときの視覚的フィードバック
+      // ボタン連打や他のボタンのタッチを物理的に無効化
+      list.style.pointerEvents = "none";
+
       b.style.borderColor="rgba(255,79,163,.45)";
       b.style.boxShadow="0 6px 18px rgba(255,79,163,.10)";
 
       ans[q.id]={value:opt.value,label:opt.label};
       if(q.id==="age"&&opt.value==="no"){showBlocked();return;}
       
-      // 切り替えのタイミングを少しゆったりに（フリーズ対策）
-      setTimeout(()=>{currentIdx++;renderQ();},150);
+      // スマホのブラウザが処理を完了するまで「300ミリ秒」待ってから画面を消す（ここが重要！）
+      setTimeout(()=>{currentIdx++;renderQ();}, 300);
     };
     list.appendChild(b);
   });
@@ -359,9 +364,6 @@ function showToast(t){
   setTimeout(()=>el.classList.remove("show"),1500);
 }
 
-// ============================================================
-// スコア計算
-// ============================================================
 function calcScores(){
   const outer=ans.outerExp?.value||"";
   const inner=ans.innerExp?.value||"";
@@ -370,36 +372,27 @@ function calcScores(){
   const comm=ans.partnerComm?.value||"";
   const freq=ans.frequency?.value||"";
 
-  // 外側感度スコア (0-100)
   const outerMap={good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5,pain:0};
   let outerScore=outerMap[outer]??30;
 
-  // 中側感度スコア (0-100)
   const innerMap={ik:100,deep_feel:70,slight:40,pressure:20,none:10,pain:0,no_exp:5};
   let innerScore=innerMap[inner]??20;
 
-  // リラックス度 (0-100)
   const tensionMap={low:100,mid:70,overthink:25,conscious:20,duty:15,past:5};
   let relaxScore=tensionMap[tension]??40;
 
-  // 身体準備スコア (0-100)
   const arousalMap={easy:100,slow:60,head_ok:35,dry:10,unknown:30};
   let bodyScore=arousalMap[arousal]??40;
 
-  // セルフ理解度 (0-100)
   const freqMap={regular:100,sometimes:60,vibrator:50,exploring:35,never:5};
   let selfKnowScore=freqMap[freq]??30;
 
-  // コミュニケーション (0-100)
   const commMap={open:100,some:60,no_partner:40,silent:15,afraid:10};
   let commScore=commMap[comm]??40;
 
   return{outerScore,innerScore,relaxScore,bodyScore,selfKnowScore,commScore};
 }
 
-// ============================================================
-// 結果算出
-// ============================================================
 function computeResult(){
   const outer=ans.outerExp?.value||"";
   const inner=ans.innerExp?.value||"";
@@ -420,7 +413,6 @@ function computeResult(){
 
   let type="",desc="",advice=[],primary="consult",selfLink=LINKS.note_self;
 
-  // ── 1. 痛み優先 ──
   if(painFlag){
     type="安全・ケア優先：リセットタイプ";
     desc="感覚を求める前に、身体の痛みや不快感を取り除くのが最優先の段階です。";
@@ -432,7 +424,6 @@ function computeResult(){
     if(innerPainD==="sometimes")advice.push("日によって変わる場合はホルモンバランス・ストレス・体調との相関を記録してみる");
     primary="consult";
   }
-  // ── 2. 外側が無感覚 ──
   else if(outer==="none"||issue==="zero"){
     type="ゼロイチ覚醒：感覚の土台づくりタイプ";
     desc="「感じない」のではなく、脳と神経がまだ繋がっていない状態。焦らず地図を作る段階です。";
@@ -442,7 +433,6 @@ function computeResult(){
     if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。ローションを使って摩擦を減らしてみる");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
-  // ── 3. くすぐったい ──
   else if(outer==="ticklish"){
     type="感覚変換：くすぐったさ脱却タイプ";
     desc="くすぐったい＝神経は生きている証拠。快感回路への変換がまだ完了していない状態です。";
@@ -450,7 +440,6 @@ function computeResult(){
     if(freq==="never")advice.push("セルフタッチで「くすぐったくない触り方」を自分で探す練習がおすすめ");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
-  // ── 4. ぼんやり感覚 ──
   else if(outer==="weak"){
     type="感度覚醒：ぼんやり→はっきり変換タイプ";
     desc="感覚自体はあるので、回路は繋がりかけています。刺激の『質』を変えることで一気に目覚める可能性があります。";
@@ -459,7 +448,6 @@ function computeResult(){
     if(freq==="never"||freq==="sometimes")advice.push("セルフケアの頻度を増やし「自分が感じるパターン」のデータを集める");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
-  // ── 5. セルフのみOK ──
   else if(outer==="self_only"){
     type="委ねる練習：ブロック解除タイプ";
     desc="自分の身体の使い方は分かっていますが、人の前だと「思考」や「環境」が邪魔をしている状態です。";
@@ -473,7 +461,6 @@ function computeResult(){
     if(comm==="silent"||comm==="afraid")advice.push("伝えられないことが最大のブレーキ。一言でもいいので「ここがいい」を伝えてみて");
     primary="consult";
   }
-  // ── 6. 寸止め ──
   else if(outer==="almost"){
     type="寸止め打破：リミッター解除タイプ";
     desc="身体の準備はほぼ整っています。あと少しの「条件」が揃えば一気にリミッターが外れる段階です。";
@@ -487,7 +474,6 @@ function computeResult(){
     if(mentalFlag)advice.push("「いかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
-  // ── 7. 外側バッチリ ──
   else if(outer==="good"){
     if(inner==="none"||inner==="pressure"){
       type="未知の扉：奥のピーク特化アプローチタイプ";
@@ -523,7 +509,6 @@ function computeResult(){
       primary="consult";
     }
   }
-  // ── その他 ──
   else{
     type="現状整理：オーダーメイド相談タイプ";
     desc="複数の要素が絡み合っている可能性があります。まずは現状を整理して、あなただけの正解を見つける段階です。";
@@ -531,7 +516,6 @@ function computeResult(){
     primary="consult";
   }
 
-  // ── 横断的な追加アドバイス ──
   if(dryFlag&&!painFlag)advice.push("💧 身体の潤い不足を感じています。ローション・前戯の時間延長をまず試してみてください");
   if(mentalFlag&&!painFlag){
     if(tension==="past")advice.push("⚠️ 過去の経験が影響している場合、無理せずカウンセリングの併用も視野に");
@@ -540,7 +524,6 @@ function computeResult(){
   if(freq==="vibrator")advice.push("🔋 おもちゃ依存の場合、手の刺激では強度不足になりがち。徐々にグッズの強度を下げて手の感覚を育てる練習を");
   if(comm==="silent"||comm==="afraid")advice.push("🗣 パートナーに伝えられないことが大きなブレーキ。まずは「ここが好き」の一言から");
 
-  // 直接希望の後押し
   if(wish==="direct"){
     primary="direct";
     advice.push("【💡性感開発施術では】一人ではわからない部分を伝え、今の状態に合わせた最適な方法で導きます。");
@@ -548,7 +531,6 @@ function computeResult(){
   if(wish==="self"&&primary!=="consult")primary="self";
   if(wish==="consult")primary="consult";
 
-  // コピー用テキスト
   const copyText=`【感度チェック結果】
 タイプ：${type}
 外の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
@@ -569,9 +551,6 @@ function computeResult(){
   return{type,desc,advice,copyText,primary,selfLink,selfDesc,consultDesc,directDesc,painFlag,mentalFlag,scores};
 }
 
-// ============================================================
-// 結果画面
-// ============================================================
 function showResult(){
   intro.classList.add("hidden");quiz.classList.add("hidden");res.classList.remove("hidden");
   const r=computeResult();
@@ -579,7 +558,6 @@ function showResult(){
   $("typeTitle").textContent=r.type;
   $("typeDesc").textContent=r.desc;
 
-  // スコアバー
   const sa=$("scoreArea");sa.innerHTML="";
   const bars=[
     {label:"外の感度",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
@@ -595,16 +573,13 @@ function showResult(){
     sa.appendChild(row);
   });
 
-  // アドバイス
   const al=$("adviceList");al.innerHTML="";
   r.advice.forEach(t=>{const li=document.createElement("li");li.textContent=t;al.appendChild(li);});
 
-  // 安全ボックス
   const sb=$("safetyBox");sb.className="hidden";sb.innerHTML="";
   if(r.painFlag){sb.classList.remove("hidden");sb.classList.add("dangerBox");sb.innerHTML="<b>安全優先：</b>痛み/違和感が絡む場合は、無理は禁物です。我慢して続けると身体が拒絶反応を起こす可能性があります。";}
   else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>焦りや緊張がブレーキになっています。身体より先に『頭を休ませる』のが鍵です。";}
   
-  // CTA
   $("ctaSelfDesc").textContent=r.selfDesc;
   $("ctaConsultDesc").textContent=r.consultDesc;
   $("ctaDirectDesc").textContent=r.directDesc;
@@ -621,10 +596,9 @@ function showResult(){
 
 async function copyResult(){
   try{await navigator.clipboard.writeText($("copyPreview").textContent);showToast("結果をコピーしました！DMに貼り付けてください");}
-  catch(e){showToast("コピーできない環境です。手掌握でコピーしてください");}
+  catch(e){showToast("コピーできない環境です。手動でコピーしてください");}
 }
 
-// Events
 $("startBtn").onclick=()=>{resetAll();showQuiz();};
 $("backBtn").onclick=()=>goBack();
 $("resetBtn").onclick=()=>resetAll();
