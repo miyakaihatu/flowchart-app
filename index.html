@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>感度チェック簡易判定ツール</title>
+  <title>感度チェック簡易判定ツール byミヤ</title>
   <style>
     :root{
       --bg1:#fff3f7;--bg2:#f4f6ff;--ink:#1b1f2a;--muted:#6b7280;
@@ -13,13 +13,18 @@
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
-    /* ▼▼ 徹底的なフリーズ対策（装飾・エフェクト完全排除） ▼▼ */
+    /* ▼▼ Braveフリーズ対策 ＆ パクられ対策 ▼▼ */
+    * {
+      -webkit-tap-highlight-color: transparent !important; /* 強制的にすべてのタップ色を無効化 */
+    }
     body {
-      -webkit-tap-highlight-color: transparent; 
       margin: 0;
       color: var(--ink);
-      background: radial-gradient(1200px 700px at 20% 10%,var(--bg1),transparent 55%),radial-gradient(1200px 700px at 80% 10%,var(--bg2),transparent 55%),linear-gradient(180deg,#fff,#fafbff);
+      /* 重いグラデーションを軽量化して描画クラッシュを防止 */
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
     button, .opt {
       touch-action: manipulation;
@@ -27,30 +32,34 @@
       user-select: none;
       -webkit-touch-callout: none;
     }
-    .opt * {
-      pointer-events: none; 
-    }
-    .copyBox {
-      -webkit-user-select: auto; 
-      user-select: auto;
-    }
+    .opt * { pointer-events: none; }
+    .copyBox { -webkit-user-select: auto; user-select: auto; }
+
+    /* miyaオリジナルブランドデザイン */
+    .miya-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .miya-icon { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 900; box-shadow: 0 6px 15px rgba(255,79,163,.25); }
+    .miya-brand { font-size: 11px; font-weight: 900; color: var(--accent); letter-spacing: .05em; margin-bottom: 2px; }
+    
+    /* 背景の透かし文字（ウォーターマーク） */
+    .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 8vw; font-weight: 900; color: rgba(255, 79, 163, 0.04); pointer-events: none; z-index: -1; white-space: nowrap; user-select: none; }
     /* ▲▲ ここまで ▲▲ */
 
     .wrap{max-width:980px;margin:0 auto;padding:18px;}
     header{display:grid;gap:6px;margin-top:8px;}
-    h1{margin:0;font-size:26px;letter-spacing:.02em;}
+    h1{margin:0;font-size:24px;letter-spacing:.02em;}
     .sub{margin:0;color:var(--muted);line-height:1.6;}
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:14px;}
     .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
     .progress{height:10px;background:rgba(124,92,255,.10);border-radius:999px;overflow:hidden;border:1px solid rgba(124,92,255,.18);flex:1;min-width:220px;}
-    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s ease;}
+    /* フリーズの原因だったプログレスバーのアニメーション(transition)を削除 */
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));}
     .step{font-size:12px;color:var(--muted);white-space:nowrap;}
     .qTitle{margin:12px 0 6px;font-size:18px;font-weight:900;}
     .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
     .optList{display:grid;gap:10px;margin-top:12px;}
     
-    /* ホバーやトランジション（アニメーション）を完全に削除しました */
-    .opt{text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;}
+    /* ボタンデザイン */
+    .opt{appearance:none;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;}
     .opt small{color:var(--muted);font-weight:700;}
 
     .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
@@ -81,14 +90,24 @@
     .scoreBar{display:flex;align-items:center;gap:8px;margin-top:6px;}
     .scoreLabel{font-size:12px;color:var(--muted);min-width:80px;}
     .scoreFill{height:8px;border-radius:999px;flex:1;background:rgba(27,31,42,.08);overflow:hidden;}
-    .scoreFillInner{height:100%;border-radius:999px;transition:width .4s ease;}
+    /* アニメーション負荷を下げる */
+    .scoreFillInner{height:100%;border-radius:999px;}
   </style>
 </head>
 <body>
+<!-- 背景の透かし文字 -->
+<div class="watermark">miya's Method Sensibility Check</div>
+
 <div class="wrap">
   <header>
-    <h1>感度チェック簡易判定ツール</h1>
-    <p class="sub">うまく言葉にできない「今の感じ方」を、数分で整理するチェックです。結果はそのまま送れるので、相談もスムーズになります。</p>
+    <div class="miya-header">
+      <div class="miya-icon">M</div>
+      <div>
+        <div class="miya-brand">miya ORIGINAL METHOD</div>
+        <h1>感度チェック簡易判定</h1>
+      </div>
+    </div>
+    <p class="sub">うまく言葉にできない「今の感じ方」を、数分で整理するmiya専用のチェックです。結果はそのまま送れるので、相談もスムーズになります。</p>
   </header>
 
   <section class="card" id="screenIntro">
@@ -133,7 +152,6 @@
     <div class="ctaGrid">
       <div class="ctaCard"><p class="ctaTitle">自己解決（まず自分で）</p><p class="ctaDesc" id="ctaSelfDesc">—</p><a class="ctaBtn" id="ctaSelf" href="#" target="_blank" rel="noopener">記事を見る</a></div>
       <div class="ctaCard"><p class="ctaTitle">相談（DM/LINE）</p><p class="ctaDesc" id="ctaConsultDesc">—</p><a class="ctaBtn" id="ctaConsult" href="#" target="_blank" rel="noopener">相談する</a></div>
-      <!-- ▼▼ 体験するボタンのテキストを変更 ▼▼ -->
       <div class="ctaCard"><p class="ctaTitle">直接の案内（セッション）</p><p class="ctaDesc" id="ctaDirectDesc">—</p><a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">体験する</a></div>
     </div>
     <div class="divider"></div>
@@ -151,14 +169,12 @@
 <div class="toast" id="toast">コピーした</div>
 
 <script>
-// ▼▼ いただいたURLを反映しました ▼▼
 const LINKS={
   note_self:"https://note.com/miyaaromassage",
   note_inner:"https://note.com/miyaaromassage",
-  dm:"https://https://www.instagram.com/nakaikioilmassage/",
+  dm:"https://www.instagram.com/nakaikioilmassage/",
   booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
 };
-// ▲▲ ここまで ▲▲
 
 const QUESTIONS=[
   {id:"age",title:"18歳以上ですか？（不明なら「いいえ」）",desc:"安全のため。18歳未満はこのツールを使えない設計です。",
@@ -328,10 +344,12 @@ function renderQ(){
   const list=document.createElement("div");list.className="optList";
 
   q.options.forEach(opt=>{
-    const b=document.createElement("div");b.className="opt";
+    // ▼▼ Braveフリーズ対策：divではなくbutton要素にすることでブラウザのネイティブ制御に任せる ▼▼
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="opt";
     b.innerHTML=`<span>${opt.label}</span><small>選択</small>`;
     
-    // ▼▼ Braveフリーズ完全防止のため、即時切り替えに修正 ▼▼
     b.onclick=(e)=>{
       e.preventDefault();
       if(isClicking) return; 
@@ -339,15 +357,15 @@ function renderQ(){
 
       ans[q.id]={value:opt.value,label:opt.label};
       if(q.id==="age"&&opt.value==="no"){
-        setTimeout(showBlocked, 0);
+        setTimeout(showBlocked, 50);
         return;
       }
       
-      // アニメーションや待機時間を完全に「0」にし、即時書き換えます
+      // DOM操作前のマージンをわずかに持たせてレンダリングの衝突を回避
       setTimeout(()=>{
         currentIdx++;
         renderQ();
-      }, 0);
+      }, 50);
     };
     list.appendChild(b);
   });
@@ -552,6 +570,7 @@ function computeResult(){
   if(wish==="self"&&primary!=="consult")primary="self";
   if(wish==="consult")primary="consult";
 
+  // ▼▼ コピーされるテキストに署名を追加 ▼▼
   const copyText=`【感度チェック結果】
 タイプ：${type}
 外の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
@@ -563,7 +582,7 @@ function computeResult(){
 一番の目的：${ans.mainIssue?.label||"未回答"}
 希望：${ans.wish?.label||"未回答"}
 
-これをもとに相談・案内をお願いします。`;
+※この結果は「miya式 感度チェックツール」で作成されました`;
 
   const selfDesc=(primary==="self")?"今の状態に合った自己解決ルート。ここから試すのが一番近道です。":"まずは自分のペースで試してみたい人向けのnoteの記事です。";
   const consultDesc=(primary==="consult")?"結果をコピーしてDMに貼るだけ。状態がわかるので最適なアドバイスが可能です。":"自分だけだと判断が難しい・行き詰まった時の相談窓口です。";
