@@ -13,30 +13,29 @@
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
-    /* ▼▼ スマホのパニック（フリーズ）を完全に防ぐ魔法のコード ▼▼ */
+    /* ▼▼ スマホのフリーズ対策 ▼▼ */
     body {
-      -webkit-tap-highlight-color: transparent; /* タップ時のピンク/グレーのハイライトを消す */
-    }
-    .wrap {
-      -webkit-user-select: none;
-      user-select: none;
-      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent; /* タップ時のデフォルトハイライトを消す */
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(1200px 700px at 20% 10%,var(--bg1),transparent 55%),radial-gradient(1200px 700px at 80% 10%,var(--bg2),transparent 55%),linear-gradient(180deg,#fff,#fafbff);
+      min-height: 100vh;
     }
     button, .opt {
       touch-action: manipulation;
       -webkit-user-select: none;
       user-select: none;
+      -webkit-touch-callout: none;
     }
     .opt * {
-      pointer-events: none; /* ボタンの中の「文字」だけを誤って選択してしまうのを防ぐ */
+      pointer-events: none; /* ボタン内の文字の誤選択を防ぐ */
     }
     .copyBox {
-      -webkit-user-select: auto; /* コピー欄だけは手動コピーできるように選択可能に戻す */
+      -webkit-user-select: auto; 
       user-select: auto;
     }
     /* ▲▲ ここまで ▲▲ */
 
-    body{margin:0;color:var(--ink);background:radial-gradient(1200px 700px at 20% 10%,var(--bg1),transparent 55%),radial-gradient(1200px 700px at 80% 10%,var(--bg2),transparent 55%),linear-gradient(180deg,#fff,#fafbff);min-height:100vh;}
     .wrap{max-width:980px;margin:0 auto;padding:18px;}
     header{display:grid;gap:6px;margin-top:8px;}
     h1{margin:0;font-size:26px;letter-spacing:.02em;}
@@ -49,14 +48,28 @@
     .qTitle{margin:12px 0 6px;font-size:18px;font-weight:900;}
     .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
     .optList{display:grid;gap:10px;margin-top:12px;}
-    .opt{text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;transition:all .15s ease;}
+    
+    .opt{text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;}
     .opt small{color:var(--muted);font-weight:700;}
-    .opt:hover{border-color:rgba(255,79,163,.45);box-shadow:0 6px 18px rgba(255,79,163,.10);}
+    
+    /* ホバー効果はPCなどマウス操作時のみ適用（スマホのタップ残りバグを防止） */
+    @media (hover: hover) {
+      .opt:hover { border-color:rgba(255,79,163,.45); box-shadow:0 6px 18px rgba(255,79,163,.10); }
+      button:hover { background:rgba(27,31,42,.08); }
+      .ghost:hover { background:rgba(27,31,42,.04); }
+    }
+    
+    /* タップされた時の即時フィードバック用クラス */
+    .opt.selected {
+      border-color: rgba(255,79,163,.45);
+      box-shadow: 0 6px 18px rgba(255,79,163,.10);
+      background-color: rgba(255,79,163,.05);
+    }
+
     .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
     button{appearance:none;border:none;cursor:pointer;border-radius:14px;padding:10px 12px;font-weight:900;background:rgba(27,31,42,.06);color:var(--ink);border:1px solid rgba(27,31,42,.10);}
-    button:hover{background:rgba(27,31,42,.08);}
     .primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;border:none;}
-    .ghost{background:transparent;}.ghost:hover{background:rgba(27,31,42,.04);}
+    .ghost{background:transparent;}
     .warnBox{margin-top:10px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:12px;color:#5a3b00;line-height:1.6;}
     .dangerBox{margin-top:10px;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.25);border-radius:14px;padding:12px;color:#5a0f0f;line-height:1.6;}
     .resultTitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -295,12 +308,20 @@ function showQuiz(){
   intro.classList.add("hidden");quiz.classList.remove("hidden");res.classList.add("hidden");
   buildFlowPath();currentIdx=0;isClicking=false;renderQ();
 }
+
 function renderQ(){
   isClicking=false; 
   buildFlowPath();
-  if(currentIdx>=flowPath.length){showResult();return;}
+  
+  if(currentIdx>=flowPath.length){
+    showResult();
+    return;
+  }
+  
   const qid=flowPath[currentIdx];
   const q=getQById(qid);
+  if(!q) return;
+
   const total=flowPath.length;
   const step=currentIdx+1;
   barQuiz.style.width=Math.round((step/total)*100)+"%";
@@ -318,21 +339,17 @@ function renderQ(){
       if(isClicking) return; 
       isClicking = true;
       
-      // ▼▼ 修正箇所 ▼▼
-      // BraveやiOSのブラウザ等で、タップ直後に `pointer-events: none` を設定すると
-      // 描画エンジンがフリーズ（パニック）するバグがあるため、この行を削除しています。
-      // 上の `isClicking` フラグだけでボタンの二重タップは完全に防げます。
-      // list.style.pointerEvents = "none";
-      // ▲▲ 修正箇所 ▲▲
-
-      b.style.borderColor="rgba(255,79,163,.45)";
-      b.style.boxShadow="0 6px 18px rgba(255,79,163,.10)";
+      // CSSクラス付与に切り替えることでブラウザのスタイル計算負担を削減
+      b.classList.add("selected");
 
       ans[q.id]={value:opt.value,label:opt.label};
       if(q.id==="age"&&opt.value==="no"){showBlocked();return;}
       
-      // スマホのブラウザが処理を完了するまで「300ミリ秒」待ってから画面を消す
-      setTimeout(()=>{currentIdx++;renderQ();}, 300);
+      // 待機時間を100msに短縮し、WebKitのDOM削除クラッシュを防ぐ
+      setTimeout(()=>{
+        currentIdx++;
+        renderQ();
+      }, 100);
     };
     list.appendChild(b);
   });
@@ -345,7 +362,9 @@ function goBack(){
   isClicking = true;
   const prevId=flowPath[currentIdx-1];
   delete ans[prevId];
-  currentIdx--;buildFlowPath();renderQ();
+  currentIdx--;
+  buildFlowPath();
+  renderQ();
 }
 
 function showBlocked(){
