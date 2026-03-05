@@ -399,7 +399,7 @@ function computeResult(){
   if(painFlag){
     type="安全・ケア優先：リセットタイプ";
     desc="感覚を求める前に、身体の痛みや不快感を取り除くのが最優先の段階です。";
-    advice=["痛み・しみる・違和感がある日は"絶対に無理をしない"ルールを作る","潤い不足、緊張、体調不良など、痛みの原因を一つずつ潰す","無理に感じようとせず「痛くない・リラックスできる」状態を目指す"];
+    advice=["痛み・しみる・違和感がある日は『絶対に無理をしない』ルールを作る","潤い不足、緊張、体調不良など、痛みの原因を一つずつ潰す","無理に感じようとせず「痛くない・リラックスできる」状態を目指す"];
     if(innerPainD==="entry")advice.push("入口の痛みは緊張による締めつけが原因の場合が多い。深呼吸で骨盤底を緩める練習を");
     if(innerPainD==="deep")advice.push("奥の痛みは角度・深さ・タイミングの問題が多い。体位の見直しが有効");
     if(innerPainD==="dry"||dryFlag)advice.push("潤滑剤（ローション）の使用を積極的に。足りないのは異常ではなく個人差");
@@ -458,7 +458,7 @@ function computeResult(){
     if(almostD==="fear")advice.push("イく瞬間の恐怖は正常。タオルを敷く等の安心材料を用意して「何が起きても大丈夫」の環境を");
     if(almostD==="plateau")advice.push("刺激の種類を変えてみる。同じパターンだと神経が慣れて頭打ちになりやすい");
     if(almostD==="focus")advice.push("集中を保つために、呼吸のリズムに意識を合わせる。雑念は「戻す」練習で改善できる");
-    advice.push("上手くいきそうな時のリズムや角度を"絶対に変えない"ようキープする");
+    advice.push("上手くいきそうな時のリズムや角度を『絶対に変えない』ようキープする");
     if(mentalFlag)advice.push("「イかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
@@ -577,8 +577,7 @@ function showResult(){
   // 安全ボックス
   const sb=$("safetyBox");sb.className="hidden";sb.innerHTML="";
   if(r.painFlag){sb.classList.remove("hidden");sb.classList.add("dangerBox");sb.innerHTML="<b>安全優先：</b>痛み/違和感が絡む場合は、無理は禁物です。我慢して続けると身体が拒絶反応を起こす可能性があります。";}
-  else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>「[ピーク]にいかなきゃ」という焦りや緊張がブレーキになっています。身体より先に"頭を休ませる"のが鍵です。";}
-
+  else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>「[ピーク]にいかなきゃ」という焦りや緊張がブレーキになっています。身体より先に『頭を休ませる』のが鍵です。";}
   // CTA
   $("ctaSelfDesc").textContent=r.selfDesc;
   $("ctaConsultDesc").textContent=r.consultDesc;
