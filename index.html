@@ -135,19 +135,19 @@ const QUESTIONS=[
   {id:"age",title:"18歳以上ですか？（不明なら「いいえ」）",desc:"安全のため。18歳未満はこのツールを使えない設計です。",
     options:[{value:"yes",label:"はい（18歳以上）"},{value:"no",label:"いいえ / 不明"}]},
 
-  {id:"outerExp",title:"[外側]の感度について、一番近いものは？",desc:"あなたの現在の「感じる力」のベースをチェックします。",
+  {id:"outerExp",title:"外の感度について、一番近いものは？",desc:"あなたの現在の「感じる力」のベースをチェックします。",
     options:[
-      {value:"good",label:"自分でも相手でも、気持ちよく[ピーク]にいける"},
-      {value:"self_only",label:"セルフ（自分）なら[ピーク]にいけるが、人だとイマイチ"},
-      {value:"almost",label:"気持ちいい感覚はあるが、[ピーク]に達したことはない（寸止め感）"},
+      {value:"good",label:"自分でも相手でも、気持ちよくにいける"},
+      {value:"self_only",label:"セルフ（自分）ならいけるが、人だとイマイチ"},
+      {value:"almost",label:"気持ちいい感覚はあるが、達したことはない（寸止め感）"},
       {value:"weak",label:"触られている感覚はあるが強い快感ではない（ぼんやり）"},
       {value:"ticklish",label:"くすぐったくて集中できない"},
       {value:"none",label:"ほぼ何も感じない（無感覚）"},
       {value:"pain",label:"痛い・不快・あまり触られたくない"}
     ]},
 
-  // 外側が「自分だけOK」→ 深掘り
-  {id:"selfOnlyDetail",title:"セルフでは[ピーク]にいけるとのこと。もう少し詳しく教えてください。",
+  // 外が「自分だけOK」→ 深掘り
+  {id:"selfOnlyDetail",title:"セルフではいけるとのこと。もう少し詳しく教えてください。",
     desc:"相手とのギャップの原因を特定します。",
     condition:a=>a.outerExp?.value==="self_only",
     options:[
@@ -158,7 +158,7 @@ const QUESTIONS=[
       {value:"env",label:"場所・明るさ・音など環境が落ち着かない"}
     ]},
 
-  // 外側が「寸止め」→ 深掘り
+  // 外が「寸止め」→ 深掘り
   {id:"almostDetail",title:"寸止め状態とのこと。その時の身体はどんな感じですか？",
     desc:"あと一歩の壁がどこにあるか特定します。",
     condition:a=>a.outerExp?.value==="almost",
@@ -170,15 +170,15 @@ const QUESTIONS=[
       {value:"focus",label:"途中で集中が切れてしまい、ゼロに戻る"}
     ]},
 
-  {id:"innerExp",title:"[中側]の感覚について、一番近いものは？",desc:"中への刺激の受け取り方をチェックします。",
+  {id:"innerExp",title:"中の感覚について、一番近いものは？",desc:"中への刺激の受け取り方をチェックします。",
     options:[
-      {value:"ik",label:"[中イキ]を経験したことがある（さらに深めたい）"},
+      {value:"ik",label:"中イキを経験したことがある（さらに深めたい）"},
       {value:"deep_feel",label:"奥がジンジンする・響くような快感がある"},
-      {value:"slight",label:"奥に何か感じるが、快感かどうか微妙"},
+      {value:"slight",label:"何か感じるが、快感かどうか微妙"},
       {value:"pressure",label:"圧迫感・入ってる感覚はあるが、快感はない"},
-      {value:"none",label:"何も感じない（ただの[単調な動き]）"},
+      {value:"none",label:"何も感じない（ただの単調な動き）"},
       {value:"pain",label:"痛い・しみる・苦痛・入りにくい"},
-      {value:"no_exp",label:"奥の刺激の経験がない / 試したことがない"}
+      {value:"no_exp",label:"中の刺激の経験がない / 試したことがない"}
     ]},
 
   // 中が「痛い」→ 深掘り
@@ -205,7 +205,7 @@ const QUESTIONS=[
 
   {id:"tension",title:"行為中の「頭の中」や「身体の力み」はどう？",desc:"メンタルや緊張がブレーキになっていないかチェックします。",
     options:[
-      {value:"overthink",label:"「[ピーク]にいかなきゃ」「遅い」と焦ってしまう"},
+      {value:"overthink",label:"「いかなきゃ」など演技してしまう"},
       {value:"conscious",label:"「変じゃないかな」「見られてる」と自意識が消えない"},
       {value:"past",label:"過去のトラウマ・嫌な経験がフラッシュバックする"},
       {value:"duty",label:"相手のためにしている感覚（義務感）が強い"},
@@ -235,12 +235,12 @@ const QUESTIONS=[
 
   {id:"mainIssue",title:"今いちばん解決したい・求めていることは？",desc:"このチェックのゴール（目的）です。",
     options:[
-      {value:"zero",label:"「気持ちいい」って何？という状態から抜け出したい"},
-      {value:"outer_first",label:"まず[外側]で安定して[ピーク]にいけるようになりたい"},
-      {value:"mid_ik",label:"[外側]はOKだから、[中イキ]を味わってみたい"},
+      {value:"zero",label:"気持ちいいって何？という状態から抜け出したい"},
+      {value:"outer_first",label:"まず外で安定していけるようになりたい"},
+      {value:"mid_ik",label:"外はOKだから、中イキを味わってみたい"},
       {value:"partner",label:"相手との行為でちゃんと感じられるようになりたい"},
       {value:"pain_fix",label:"痛みや不快感をなくして、普通に楽しめるようになりたい"},
-      {value:"deeper",label:"もっと深い[ピーク]や、連続で達する身体になりたい"},
+      {value:"deeper",label:"もっと深いオーガズムや、連続で達する身体になりたい"},
       {value:"enjoy",label:"義務感ではなく、心から楽しめるようになりたい"}
     ]},
 
@@ -248,7 +248,7 @@ const QUESTIONS=[
     options:[
       {value:"self",label:"まずは自分で試してみたい（自己解決）"},
       {value:"consult",label:"一度相談して原因を整理したい（相談）"},
-      {value:"direct",label:"プロに任せたい / 直接[セッション]を受けたい"}
+      {value:"direct",label:"任せたい / 開発を受けたい"}
     ]}
 ];
 
