@@ -442,7 +442,7 @@ function computeResult(){
     advice=["痛み・しみる・違和感がある日は『絶対に無理をしない』ルールを作る","潤い不足、緊張、体調不良など、痛みの原因を一つずつ潰す","無理に感じようとせず「痛くない・リラックスできる」状態を目指す"];
     if(innerPainD==="entry")advice.push("入口の痛みは緊張による締めつけが原因の場合が多い。深呼吸で骨盤底を緩める練習を");
     if(innerPainD==="deep")advice.push("奥の痛みは角度・深さ・タイミングの問題が多い。体位の見直しが有効");
-    if(innerPainD==="dry"||dryFlag)advice.push("潤滑剤（ローション）の使用を積極的に。足りないのは異常ではなく個人差");
+    if(innerPainD==="dry"||dryFlag)advice.push("潤滑剤の使用を積極的に。足りないのは異常ではなく個人差");
     if(innerPainD==="burning")advice.push("灼熱感・ヒリヒリが続く場合は婦人科への相談を推奨");
     if(innerPainD==="sometimes")advice.push("日によって変わる場合はホルモンバランス・ストレス・体調との相関を記録してみる");
     primary="consult";
@@ -453,7 +453,7 @@ function computeResult(){
     advice=["いきなりピークを目指さず、まずは「触られて心地よい場所」を探す","刺激の強さよりも、安心感と温かさを優先する"];
     if(freq==="never")advice.push("まずセルフタッチから。自分の身体に触れる習慣をつけることが第一歩");
     if(mentalFlag)advice.push("感じない原因がメンタル（過去の経験・罪悪感）にある可能性も。心の準備も大切");
-    if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。ローションを使って摩擦を減らしてみる");
+    if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。潤滑剤を使って摩擦を減らしてみる");
     primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
   }
   else if(outer==="ticklish"){
@@ -539,7 +539,7 @@ function computeResult(){
     primary="consult";
   }
 
-  if(dryFlag&&!painFlag)advice.push("💧 身体の潤い不足を感じています。ローション・前戯の時間延長をまず試してみてください");
+  if(dryFlag&&!painFlag)advice.push("💧 身体の潤い不足を感じています。潤滑剤・前戯の時間延長をまず試してみてください");
   if(mentalFlag&&!painFlag){
     if(tension==="past")advice.push("⚠️ 過去の経験が影響している場合、無理せずカウンセリングの併用も視野に");
     if(tension==="duty")advice.push("💡 「相手のため」ではなく「自分が気持ちいい」を優先する許可を自分に出す");
