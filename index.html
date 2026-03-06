@@ -13,14 +13,12 @@
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
-    /* ▼▼ Braveフリーズ対策 ＆ パクられ対策 ▼▼ */
     * {
-      -webkit-tap-highlight-color: transparent !important; /* 強制的にすべてのタップ色を無効化 */
+      -webkit-tap-highlight-color: transparent !important;
     }
     body {
       margin: 0;
       color: var(--ink);
-      /* 重いグラデーションを軽量化して描画クラッシュを防止 */
       background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
       min-height: 100vh;
       position: relative;
@@ -35,14 +33,11 @@
     .opt * { pointer-events: none; }
     .copyBox { -webkit-user-select: auto; user-select: auto; }
 
-    /* miyaオリジナルブランドデザイン */
     .miya-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .miya-icon { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 900; box-shadow: 0 6px 15px rgba(255,79,163,.25); }
     .miya-brand { font-size: 11px; font-weight: 900; color: var(--accent); letter-spacing: .05em; margin-bottom: 2px; }
     
-    /* 背景の透かし文字（ウォーターマーク） */
     .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 8vw; font-weight: 900; color: rgba(255, 79, 163, 0.04); pointer-events: none; z-index: -1; white-space: nowrap; user-select: none; }
-    /* ▲▲ ここまで ▲▲ */
 
     .wrap{max-width:980px;margin:0 auto;padding:18px;}
     header{display:grid;gap:6px;margin-top:8px;}
@@ -51,14 +46,12 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:14px;}
     .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
     .progress{height:10px;background:rgba(124,92,255,.10);border-radius:999px;overflow:hidden;border:1px solid rgba(124,92,255,.18);flex:1;min-width:220px;}
-    /* フリーズの原因だったプログレスバーのアニメーション(transition)を削除 */
     .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));}
     .step{font-size:12px;color:var(--muted);white-space:nowrap;}
     .qTitle{margin:12px 0 6px;font-size:18px;font-weight:900;}
     .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
     .optList{display:grid;gap:10px;margin-top:12px;}
     
-    /* ボタンデザイン */
     .opt{appearance:none;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;padding:12px;border-radius:14px;background:#fff;border:1px solid rgba(27,31,42,.10);display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;cursor:pointer;}
     .opt small{color:var(--muted);font-weight:700;}
 
@@ -90,12 +83,10 @@
     .scoreBar{display:flex;align-items:center;gap:8px;margin-top:6px;}
     .scoreLabel{font-size:12px;color:var(--muted);min-width:80px;}
     .scoreFill{height:8px;border-radius:999px;flex:1;background:rgba(27,31,42,.08);overflow:hidden;}
-    /* アニメーション負荷を下げる */
     .scoreFillInner{height:100%;border-radius:999px;}
   </style>
 </head>
 <body>
-<!-- 背景の透かし文字 -->
 <div class="watermark">miya's Method Sensibility Check</div>
 
 <div class="wrap">
@@ -116,7 +107,7 @@
       <div class="step" id="stepIntro">ステップ 0</div>
     </div>
     <h2 class="qTitle">使い方</h2>
-    <p class="hint">全10問前後（回答によって質問が変化します）。直感で一番近いものを選んでください。<br>結果をもとに「自己解決」「相談」「施術の案内」に振り分けます。</p>
+    <p class="hint">全10問前後（回答によって質問が変化します）。直感で一番近いものを選んでください。<br>結果をもとに「自己解決」「相談」「直接の案内」に振り分けます。</p>
     <div class="warnBox"><b>安全優先：</b>痛み・出血・しみる・強い乾燥・怖さがある場合は、無理に進めず必要なら医療/相談を優先。</div>
     <div class="btns"><button class="primary" id="startBtn">はじめる</button></div>
     <p class="hint" style="margin-top:10px;">※18歳未満（または不明）の場合、このツールは利用できない設計です。</p>
@@ -152,7 +143,7 @@
     <div class="ctaGrid">
       <div class="ctaCard"><p class="ctaTitle">自己解決（まず自分で）</p><p class="ctaDesc" id="ctaSelfDesc">—</p><a class="ctaBtn" id="ctaSelf" href="#" target="_blank" rel="noopener">記事を見る</a></div>
       <div class="ctaCard"><p class="ctaTitle">相談（DM/LINE）</p><p class="ctaDesc" id="ctaConsultDesc">—</p><a class="ctaBtn" id="ctaConsult" href="#" target="_blank" rel="noopener">相談する</a></div>
-      <div class="ctaCard"><p class="ctaTitle">施術の案内（セッション）</p><p class="ctaDesc" id="ctaDirectDesc">—</p><a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">体験する</a></div>
+      <div class="ctaCard"><p class="ctaTitle">直接の案内（セッション）</p><p class="ctaDesc" id="ctaDirectDesc">—</p><a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">体験する</a></div>
     </div>
     <div class="divider"></div>
     <p class="kicker">この結果をコピーして相談する</p>
@@ -216,7 +207,8 @@ const QUESTIONS=[
   {id:"innerExp",title:"中の感覚について、一番近いものは？",desc:"中への刺激の受け取り方をチェックします。",
     options:[
       {value:"ik",label:"中イキを経験したことがある（さらに深めたい）"},
-      {value:"deep_feel",label:"奥がジンジンする・響くような快感がある"},
+      {value:"deep_feel",label:"奥がウズウズする・内側からこみ上げるような感覚がある"},
+      {value:"urge",label:"トイレに行きたくなる感覚（尿意）がある"},
       {value:"slight",label:"何か感じるが、快感かどうか微妙"},
       {value:"pressure",label:"圧迫感・入ってる感覚はあるが、快感はない"},
       {value:"none",label:"何も感じない（ただの単調な動き）"},
@@ -344,7 +336,6 @@ function renderQ(){
   const list=document.createElement("div");list.className="optList";
 
   q.options.forEach(opt=>{
-    // ▼▼ Braveフリーズ対策：divではなくbutton要素にすることでブラウザのネイティブ制御に任せる ▼▼
     const b=document.createElement("button");
     b.type="button";
     b.className="opt";
@@ -361,7 +352,6 @@ function renderQ(){
         return;
       }
       
-      // DOM操作前のマージンをわずかに持たせてレンダリングの衝突を回避
       setTimeout(()=>{
         currentIdx++;
         renderQ();
@@ -414,7 +404,8 @@ function calcScores(){
   const outerMap={good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5,pain:0};
   let outerScore=outerMap[outer]??30;
 
-  const innerMap={ik:100,deep_feel:70,slight:40,pressure:20,none:10,pain:0,no_exp:5};
+  // 尿意(urge)は中イキ手前の強い反応としてスコア60に設定
+  const innerMap={ik:100,deep_feel:70,urge:60,slight:40,pressure:20,none:10,pain:0,no_exp:5};
   let innerScore=innerMap[inner]??20;
 
   const tensionMap={low:100,mid:70,overthink:25,conscious:20,duty:15,past:5};
@@ -525,10 +516,13 @@ function computeResult(){
       desc="奥に「何か」を感じ始めています。この微かな感覚を育てることで、ピークへの道が開けます。";
       advice=["今感じている「微かな何か」を最大限に大切にする。それが入口","その場所を見つけたら、同じ角度・同じ圧で丁寧に刺激を続ける","外→奥の切り替えではなく、外を刺激しながら奥も同時に刺激する"];
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
-    }else if(inner==="deep_feel"){
+    }else if(inner==="deep_feel" || inner==="urge"){
       type="覚醒待ち：あと一歩タイプ";
       desc="奥の感覚がすでに育っています。条件さえハマればいつでもピークを迎えられるポテンシャルがあります。";
-      advice=["奥がジンジンしてきたら、絶対にリズムや角度を変えない","腹式呼吸を意識して、奥の筋肉の緊張を解く","刺激を点ではなく「面」で捉える意識を持つ"];
+      advice=["奥がウズウズしてきたら、絶対にリズムや角度を変えない","腹式呼吸を意識して、奥の筋肉の緊張を解く","刺激を点ではなく「面」で捉える意識を持つ"];
+      if(inner==="urge"){
+        advice.push("【重要】尿意は中イキ手前の正しい反応です。トイレは気にせず、そのまま受け入れる（力を抜く）練習をしましょう");
+      }
       if(mentalFlag)advice.push("身体は準備万端。あとは頭を手放すだけ。「もっと感じたい」から「感じるままに」に切り替えて");
       primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
     }else if(inner==="ik"||issue==="deeper"){
@@ -570,7 +564,6 @@ function computeResult(){
   if(wish==="self"&&primary!=="consult")primary="self";
   if(wish==="consult")primary="consult";
 
-  // ▼▼ コピーされるテキストに署名を追加 ▼▼
   const copyText=`【感度チェック結果】
 タイプ：${type}
 外の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
