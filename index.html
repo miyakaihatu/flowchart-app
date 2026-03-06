@@ -257,14 +257,15 @@ const QUESTIONS=[
       {value:"afraid",label:"伝えると相手が傷つく・空気が悪くなるのが怖い"}
     ]},
 
-  {id:"frequency",title:"セルフケア（自分で触れる習慣）はありますか？",
-    desc:"自分の身体を知っているかどうかは感度の基盤になります。",
+{id:"frequency",title:"セルフケア（1人でする習慣・やり方）はどうですか？",
+    desc:"1人の時の「癖」が、普段の感度や相手との行為に大きく影響します。",
     options:[
-      {value:"regular",label:"定期的にしている・自分の感じるポイントを把握している"},
+      {value:"regular",label:"定期的にしている・リラックスしてできている"},
+      {value:"ashipin",label:"足ピンなど、全身に強く力を入れたり息を止めてイッている"},
+      {value:"vibrator",label:"グッズ（バイブなど）の強い刺激がないとイけない"},
       {value:"sometimes",label:"たまにするが、決まったパターンだけ"},
       {value:"exploring",label:"最近始めた・模索中"},
-      {value:"never",label:"したことがない / 抵抗がある"},
-      {value:"vibrator",label:"グッズ（バイブなど）がないとイけない"}
+      {value:"never",label:"したことがない / 抵抗がある"}
     ]},
 
   {id:"mainIssue",title:"今いちばん解決したい・求めていることは？",desc:"このチェックのゴール（目的）です。",
@@ -414,7 +415,7 @@ function calcScores(){
   const arousalMap={easy:100,slow:60,head_ok:35,dry:10,unknown:30};
   let bodyScore=arousalMap[arousal]??40;
 
-  const freqMap={regular:100,sometimes:60,vibrator:50,exploring:35,never:5};
+  const freqMap={regular:100,sometimes:60,vibrator:50,ashipin:40,exploring:35,never:5};
   let selfKnowScore=freqMap[freq]??30;
 
   const commMap={open:100,some:60,no_partner:40,silent:15,afraid:10};
@@ -554,9 +555,10 @@ function computeResult(){
     if(tension==="past")advice.push("⚠️ 過去の経験が影響している場合、無理せずカウンセリングの併用も視野に");
     if(tension==="duty")advice.push("💡 「相手のため」ではなく「自分が気持ちいい」を優先する許可を自分に出す");
   }
-  if(freq==="vibrator")advice.push("🔋 おもちゃ依存の場合、手の刺激では強度不足になりがち。徐々にグッズの強度を下げて手の感覚を育てる練習を");
+  if(freq==="vibrator")advice.push("🔋 グッズへの慣れで手の刺激が物足りなくなっているかも。徐々にグッズの強度を下げて感覚を育てる練習を");
+  if(freq==="ashipin")advice.push("🦵【足ピン・力み癖の解除】強く力を入れて達する癖がつくと、本来の「リラックスして感じる」感度が鈍くなります。あえて力を抜き、息を深く吐きながら触れる練習を取り入れてみてください");
   if(comm==="silent"||comm==="afraid")advice.push("🗣 パートナーに伝えられないことが大きなブレーキ。まずは「ここが好き」の一言から");
-
+  
   if(wish==="direct"){
     primary="direct";
     advice.push("【💡性感開発施術では】一人ではわからない部分を伝え、今の状態に合わせた最適な方法で導きます。");
