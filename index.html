@@ -444,7 +444,7 @@ function computeResult(){
 
   let type="",desc="",advice=[],primary="consult",selfLink=LINKS.note_self;
 
-  if(painFlag){
+if(painFlag){
     type="安全・ケア優先：リセットタイプ";
     desc="感覚を求める前に、身体の痛みや不快感を取り除くのが最優先の段階です。";
     advice=["痛み・しみる・違和感がある日は『絶対に無理をしない』ルールを作る","潤い不足、緊張、体調不良など、痛みの原因を一つずつ潰す","無理に感じようとせず「痛くない・リラックスできる」状態を目指す"];
@@ -454,6 +454,7 @@ function computeResult(){
     if(innerPainD==="burning")advice.push("灼熱感・ヒリヒリが続く場合は婦人科への相談を推奨");
     if(innerPainD==="sometimes")advice.push("日によって変わる場合はホルモンバランス・ストレス・体調との相関を記録してみる");
     primary="consult";
+    selfLink="https://note.com/ここに安全優先タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="none"||issue==="zero"){
     type="ゼロイチ覚醒：感覚の土台づくりタイプ";
@@ -462,14 +463,16 @@ function computeResult(){
     if(freq==="never")advice.push("まずセルフタッチから。自分の身体に触れる習慣をつけることが第一歩");
     if(mentalFlag)advice.push("感じない原因がメンタル（過去の経験・罪悪感）にある可能性も。心の準備も大切");
     if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。潤滑剤を使って摩擦を減らしてみる");
-    primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
+    primary=(wish==="direct")?"direct":"self";
+    selfLink="https://note.com/ここにゼロイチ覚醒タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="ticklish"){
     type="感覚変換：くすぐったさ脱却タイプ";
     desc="くすぐったい＝神経は生きている証拠。快感回路への変換がまだ完了していない状態です。";
     advice=["「点」で触れるのではなく「面」でゆっくり圧をかけるように触れる","くすぐったい部分を避けるのではなく、圧の種類を変えて再挑戦","自分で触る→慣れる→他人に触られる、の順番で段階的に慣らす"];
     if(freq==="never")advice.push("セルフタッチで「くすぐったくない触り方」を自分で探す練習がおすすめ");
-    primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
+    primary=(wish==="direct")?"direct":"self";
+    selfLink="https://note.com/ここにくすぐったさ脱却タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="weak"){
     type="感度覚醒：ぼんやり→はっきり変換タイプ";
@@ -477,7 +480,8 @@ function computeResult(){
     advice=["強さではなく「リズム・温度・テクスチャ」を変えてみる","敏感なポイントを探すために、いろんな部位を時間をかけて試す","焦って強い刺激に頼らない。弱い刺激を丁寧に感じ取る練習を"];
     if(dryFlag)advice.push("潤いが足りないと触覚が鈍化する。十分な潤滑で感覚が変わることも");
     if(freq==="never"||freq==="sometimes")advice.push("セルフケアの頻度を増やし「自分が感じるパターン」のデータを集める");
-    primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
+    primary=(wish==="direct")?"direct":"self";
+    selfLink="https://note.com/ここに感度覚醒タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="self_only"){
     type="委ねる練習：ブロック解除タイプ";
@@ -491,6 +495,7 @@ function computeResult(){
     advice.push("相手の動きを、自分の動きだと思い込む（脳の錯覚を利用）");
     if(comm==="silent"||comm==="afraid")advice.push("伝えられないことが最大のブレーキ。一言でもいいので「ここがいい」を伝えてみて");
     primary="consult";
+    selfLink="https://note.com/ここに委ねる練習タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="almost"){
     type="寸止め打破：リミッター解除タイプ";
@@ -503,7 +508,8 @@ function computeResult(){
     if(almostD==="focus")advice.push("集中を保つために、呼吸のリズムに意識を合わせる。雑念は「戻す」練習で改善できる");
     advice.push("上手くいきそうな時のリズムや角度を『絶対に変えない』ようキープする");
     if(mentalFlag)advice.push("「いかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
-    primary=(wish==="direct")?"direct":"self";selfLink=LINKS.note_self;
+    primary=(wish==="direct")?"direct":"self";
+    selfLink="https://note.com/ここに寸止め打破タイプ向けの記事URL"; // ★ここを変更
   }
   else if(outer==="good"){
     if(inner==="none"||inner==="pressure"){
@@ -511,12 +517,14 @@ function computeResult(){
       desc="外の回路は完成。あとは中への神経を繋げるだけ。「ただの単調な動き」から卒業する一番美味しい段階です。";
       advice=["外で十分に高めてからでないと、奥の回路は開きにくい（準備運動必須）","激しい動きではなく、特定のポイントをゆっくり押圧して感覚を探す","奥の刺激を「違和感」ではなく「気持ちいい」と脳に教え込む"];
       if(dryFlag)advice.push("潤い不足だと奥の感覚が「圧迫」にしか感じられない。十分な潤滑を");
-      primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
+      primary=(wish==="self")?"self":"direct";
+      selfLink="https://note.com/ここに未知の扉タイプ向けの記事URL"; // ★ここを変更
     }else if(inner==="slight"){
       type="感覚の芽生え：奥の回路育成タイプ";
       desc="奥に「何か」を感じ始めています。この微かな感覚を育てることで、ピークへの道が開けます。";
       advice=["今感じている「微かな何か」を最大限に大切にする。それが入口","その場所を見つけたら、同じ角度・同じ圧で丁寧に刺激を続ける","外→奥の切り替えではなく、外を刺激しながら奥も同時に刺激する"];
-      primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
+      primary=(wish==="self")?"self":"direct";
+      selfLink="https://note.com/ここに感覚の芽生えタイプ向けの記事URL"; // ★ここを変更
     }else if(inner==="deep_feel" || inner==="urge"){
       type="覚醒待ち：あと一歩タイプ";
       desc="奥の感覚がすでに育っています。条件さえハマればいつでもピークを迎えられるポテンシャルがあります。";
@@ -525,22 +533,26 @@ function computeResult(){
         advice.push("【重要】尿意は中イキ手前の正しい反応です。トイレは気にせず、そのまま受け入れる（力を抜く）練習をしましょう");
       }
       if(mentalFlag)advice.push("身体は準備万端。あとは頭を手放すだけ。「もっと感じたい」から「感じるままに」に切り替えて");
-      primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
+      primary=(wish==="self")?"self":"direct";
+      selfLink="https://note.com/ここに覚醒待ちタイプ向けの記事URL"; // ★ここを変更
     }else if(inner==="ik"||issue==="deeper"){
       type="底なし沼：ディープ快感追求タイプ";
       desc="基本の回路は完了。より深いオーガズムや連続を目指せる段階です。";
       advice=["自分の「一番気持ちいいスポット」を正確に言語化・共有する","達した後もすぐ止めず、波を繋げる感覚を掴む","これまでのパターンを壊す新しいアプローチを取り入れる"];
-      primary="direct";selfLink=LINKS.note_inner;
+      primary="direct";
+      selfLink="https://note.com/ここに底なし沼タイプ向けの記事URL"; // ★ここを変更
     }else if(inner==="no_exp"){
       type="未開拓の可能性：奥の世界へのファーストステップ";
       desc="まだ奥の刺激を試していない状態。外が整っているので、準備は万端です。";
       advice=["いきなり奥を目指さず、まずは浅い部分からゆっくり慣らしていく","十分な前戯と潤滑が必須。焦らないことが最大のコツ","最初は自分のペースで試すのがおすすめ。グッズを使うのも◎"];
-      primary=(wish==="self")?"self":"direct";selfLink=LINKS.note_inner;
+      primary=(wish==="self")?"self":"direct";
+      selfLink="https://note.com/ここに未開拓の可能性タイプ向けの記事URL"; // ★ここを変更
     }else{
       type="感覚の最適化タイプ";
       desc="ベースの感度は整っています。目的に合わせてアプローチをチューニングする段階です。";
       advice=["自分に足りない要素（メンタルか、新しい刺激か）を見極める"];
       primary="consult";
+      selfLink="https://note.com/ここに感覚の最適化タイプ向けの記事URL"; // ★ここを変更
     }
   }
   else{
@@ -548,6 +560,7 @@ function computeResult(){
     desc="複数の要素が絡み合っている可能性があります。まずは現状を整理して、あなただけの正解を見つける段階です。";
     advice=["何が一番のブレーキになっているか（心か、身体か、環境か）を特定する","自分一人で悩まず、専門的な視点からのアドバイスを取り入れる"];
     primary="consult";
+    selfLink="https://note.com/ここに現状整理タイプ向けの記事URL"; // ★ここを変更
   }
 
   if(dryFlag&&!painFlag)advice.push("💧 身体の潤い不足を感じています。潤滑剤・前戯の時間延長をまず試してみてください");
