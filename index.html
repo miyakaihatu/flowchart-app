@@ -141,7 +141,7 @@
     <ul class="list" id="adviceList"></ul>
     <div class="divider"></div>
     <p class="kicker">次の行動</p>
-  <div class="ctaGrid">
+    <div class="ctaGrid">
       <div class="ctaCard"><p class="ctaTitle">自己解決（まず自分で）</p><p class="ctaDesc" id="ctaSelfDesc">—</p><a class="ctaBtn" id="ctaSelf" href="#" target="_blank" rel="noopener">記事を見る</a></div>
       <div class="ctaCard"><p class="ctaTitle">個別相談（Insta DM）</p><p class="ctaDesc" id="ctaConsultDesc">—</p><a class="ctaBtn" id="ctaConsult" href="#" target="_blank" rel="noopener">DMを送る</a></div>
       <div class="ctaCard"><p class="ctaTitle">匿名相談（質問箱）</p><p class="ctaDesc" id="ctaAnonDesc">—</p><a class="ctaBtn" id="ctaAnon" href="#" target="_blank" rel="noopener">匿名で質問する</a></div>
@@ -166,7 +166,7 @@ const LINKS={
   note_self:"https://note.com/miyaaromassage",
   note_inner:"https://note.com/miyaaromassage",
   dm:"https://www.instagram.com/nakaikioilmassage/",
-  anon_qa:"https://marshmallow-qa.com/miya_massage", // ★匿名の質問箱URLを追加
+  anon_qa:"https://marshmallow-qa.com/miya_massage",
   booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
 };
 
@@ -204,7 +204,8 @@ const QUESTIONS=[
       {value:"tense",label:"イきそうになると身体に力が入りすぎる（足・腹・肩など）"},
       {value:"fear",label:"イく瞬間が怖い・失禁しそうで止めてしまう"},
       {value:"plateau",label:"ある程度のところで快感が頭打ちになり、そこから上がらない"},
-      {value:"focus",label:"途中で集中が切れてしまい、ゼロに戻る"}
+      {value:"focus",label:"途中で集中が切れてしまい、ゼロに戻る"},
+      {value:"immersion_break",label:"気持ちよさはあるのに、途中で現実に戻ってしまい没入できない"}
     ]},
 
   {id:"innerExp",title:"中の感覚について、一番近いものは？",desc:"中への刺激の受け取り方をチェックします。",
@@ -240,13 +241,14 @@ const QUESTIONS=[
       {value:"unknown",label:"よくわからない / 気にしたことがない"}
     ]},
 
-  {id:"tension",title:"行為中の「頭の中」や「身体の力み」はどう？",desc:"メンタルや緊張がブレーキになっていないかチェックします。",
+  {id:"tension",title:"行為中の「頭の中」や「没入しやすさ」はどう？",desc:"思考・自意識・力み・集中切れなど、快感のブレーキになっていないかチェックします。",
     options:[
-      {value:"overthink",label:"「いかなきゃ」など演技してしまう"},
+      {value:"overthink",label:"「いかなきゃ」など考えてしまい、感覚に入りきれない"},
       {value:"conscious",label:"「変じゃないかな」「見られてる」と自意識が消えない"},
+      {value:"immersion",label:"気持ちよさはあるのに、感覚の流れに乗れず没入できない"},
       {value:"past",label:"過去のトラウマ・嫌な経験がフラッシュバックする"},
       {value:"duty",label:"相手のためにしている感覚（義務感）が強い"},
-      {value:"mid",label:"最初は緊張するが、徐々にリラックスできる"},
+      {value:"mid",label:"最初は緊張するが、徐々にリラックスして入っていける"},
       {value:"low",label:"頭を空っぽにして、感覚に集中できている"}
     ]},
 
@@ -260,7 +262,7 @@ const QUESTIONS=[
       {value:"afraid",label:"伝えると相手が傷つく・空気が悪くなるのが怖い"}
     ]},
 
-{id:"frequency",title:"セルフケア（1人でする習慣・やり方）はどうですか？",
+  {id:"frequency",title:"セルフケア（1人でする習慣・やり方）はどうですか？",
     desc:"1人の時の「癖」が、普段の感度や相手との行為に大きく影響します。",
     options:[
       {value:"regular",label:"定期的にしている・リラックスしてできている"},
@@ -290,10 +292,10 @@ const QUESTIONS=[
     ]}
 ];
 
-let flowPath=[];   
+let flowPath=[];
 let ans={};
-let currentIdx=0;  
-let isClicking=false; 
+let currentIdx=0;
+let isClicking=false;
 
 const $=id=>document.getElementById(id);
 const intro=$("screenIntro"),quiz=$("screenQuiz"),res=$("screenResult");
@@ -317,7 +319,7 @@ function showQuiz(){
 }
 
 function renderQ(){
-  isClicking=false; 
+  isClicking=false;
   buildFlowPath();
   
   if(currentIdx>=flowPath.length){
@@ -347,7 +349,7 @@ function renderQ(){
     
     b.onclick=(e)=>{
       e.preventDefault();
-      if(isClicking) return; 
+      if(isClicking) return;
       isClicking = true;
 
       ans[q.id]={value:opt.value,label:opt.label};
@@ -408,11 +410,10 @@ function calcScores(){
   const outerMap={good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5,pain:0};
   let outerScore=outerMap[outer]??30;
 
-  // 尿意(urge)は中イキ手前の強い反応としてスコア60に設定
   const innerMap={ik:100,deep_feel:70,urge:60,slight:40,pressure:20,none:10,pain:0,no_exp:5};
   let innerScore=innerMap[inner]??20;
 
-  const tensionMap={low:100,mid:70,overthink:25,conscious:20,duty:15,past:5};
+  const tensionMap={low:100,mid:70,immersion:35,overthink:25,conscious:20,duty:15,past:5};
   let relaxScore=tensionMap[tension]??40;
 
   const arousalMap={easy:100,slow:60,head_ok:35,dry:10,unknown:30};
@@ -442,12 +443,12 @@ function computeResult(){
 
   const scores=calcScores();
   const painFlag=(outer==="pain"||inner==="pain"||issue==="pain_fix");
-  const mentalFlag=["overthink","conscious","past","duty"].includes(tension);
+  const mentalFlag=["overthink","conscious","past","duty","immersion"].includes(tension);
   const dryFlag=(arousal==="dry"||arousal==="head_ok");
 
   let type="",desc="",advice=[],primary="consult",selfLink=LINKS.note_self;
 
-if(painFlag){
+  if(painFlag){
     type="安全・ケア優先：リセットタイプ";
     desc="感覚を求める前に、身体の痛みや不快感を取り除くのが最優先の段階です。";
     advice=["痛み・しみる・違和感がある日は『絶対に無理をしない』ルールを作る","潤い不足、緊張、体調不良など、痛みの原因を一つずつ潰す","無理に感じようとせず「痛くない・リラックスできる」状態を目指す"];
@@ -457,7 +458,7 @@ if(painFlag){
     if(innerPainD==="burning")advice.push("灼熱感・ヒリヒリが続く場合は婦人科への相談を推奨");
     if(innerPainD==="sometimes")advice.push("日によって変わる場合はホルモンバランス・ストレス・体調との相関を記録してみる");
     primary="consult";
-    selfLink="https://note.com/miyaaromassage/n/n1c037906ed36"; // ★ここを変更
+    selfLink="https://note.com/miyaaromassage/n/n1c037906ed36";
   }
   else if(outer==="none"||issue==="zero"){
     type="ゼロイチ覚醒：感覚の土台づくりタイプ";
@@ -467,7 +468,7 @@ if(painFlag){
     if(mentalFlag)advice.push("感じない原因がメンタル（過去の経験・罪悪感）にある可能性も。心の準備も大切");
     if(dryFlag)advice.push("潤い不足が感覚を鈍くしている可能性あり。潤滑剤を使って摩擦を減らしてみる");
     primary=(wish==="direct")?"direct":"self";
-    selfLink="https://note.com/miyaaromassage/n/n7e4a42a83b9c"; // ★ここを変更
+    selfLink="https://note.com/miyaaromassage/n/n7e4a42a83b9c";
   }
   else if(outer==="ticklish"){
     type="感覚変換：くすぐったさ脱却タイプ";
@@ -475,7 +476,7 @@ if(painFlag){
     advice=["「点」で触れるのではなく「面」でゆっくり圧をかけるように触れる","くすぐったい部分を避けるのではなく、圧の種類を変えて再挑戦","自分で触る→慣れる→他人に触られる、の順番で段階的に慣らす"];
     if(freq==="never")advice.push("セルフタッチで「くすぐったくない触り方」を自分で探す練習がおすすめ");
     primary=(wish==="direct")?"direct":"self";
-    selfLink="https://note.com/miyaaromassage/n/n7e300b1323be"; // ★ここを変更
+    selfLink="https://note.com/miyaaromassage/n/n7e300b1323be";
   }
   else if(outer==="weak"){
     type="感度覚醒：ぼんやり→はっきり変換タイプ";
@@ -484,11 +485,11 @@ if(painFlag){
     if(dryFlag)advice.push("潤いが足りないと触覚が鈍化する。十分な潤滑で感覚が変わることも");
     if(freq==="never"||freq==="sometimes")advice.push("セルフケアの頻度を増やし「自分が感じるパターン」のデータを集める");
     primary=(wish==="direct")?"direct":"self";
-    selfLink="https://note.com/ここに感度覚醒タイプ向けの記事URL"; // ★ここを変更
+    selfLink="https://note.com/ここに感度覚醒タイプ向けの記事URL";
   }
   else if(outer==="self_only"){
-    type="委ねる練習：ブロック解除タイプ";
-    desc="自分の身体の使い方は分かっていますが、人の前だと「思考」や「環境」が邪魔をしている状態です。";
+    type="委ねる練習：没入ブロック解除タイプ";
+    desc="自分では感じ方が分かっていても、人の前になると思考・自意識・環境の影響で感覚に入りきれなくなる状態です。『感じない』というより『入れない・委ねきれない』が起きやすい段階です。";
     advice=[];
     if(selfDetail==="trust")advice.push("まずは安心できる相手・環境を確保。暗い部屋、目を閉じるなどのハードルを下げる工夫を");
     if(selfDetail==="rhythm")advice.push("「もうちょっとゆっくり」「そこがいい」など、具体的なフィードバックを伝える練習を");
@@ -496,23 +497,30 @@ if(painFlag){
     if(selfDetail==="method")advice.push("セルフの時の動きを相手に正直に伝える or セルフの方法を相手との行為に少しずつ近づける");
     if(selfDetail==="env")advice.push("照明・音楽・温度など、自分がリラックスできる環境条件を相手に事前に共有する");
     advice.push("相手の動きを、自分の動きだと思い込む（脳の錯覚を利用）");
+    if(selfDetail==="head" || tension==="immersion"){
+      advice.push("没入しにくい時は、考えない努力より『呼吸・目線・リズム』を固定して感覚の流れを切らさない工夫が有効");
+    }
     if(comm==="silent"||comm==="afraid")advice.push("伝えられないことが最大のブレーキ。一言でもいいので「ここがいい」を伝えてみて");
     primary="consult";
-    selfLink="https://note.com/miyaaromassage/n/n1beab439a70b"; // ★ここを変更
+    selfLink="https://note.com/miyaaromassage/n/n1beab439a70b";
   }
   else if(outer==="almost"){
-    type="寸止め打破：リミッター解除タイプ";
-    desc="身体の準備はほぼ整っています。あと少しの「条件」が揃えば一気にリミッターが外れる段階です。";
+    type="寸止め打破：没入維持・リミッター解除タイプ";
+    desc="身体の準備はかなり整っています。足りないのは感度そのものというより、呼吸・脱力・没入の維持など『あと一歩を越える条件』です。途中で現実に戻りやすい人も、この段階に含まれます。";
     advice=[];
     if(almostD==="breath")advice.push("気持ちよくなってきたら、意識的に「息を吐く」。止めてしまうと身体に力が入ってブレーキになる");
     if(almostD==="tense")advice.push("イきそうな時に足・腹・肩の力を意識的に抜く。力を入れるのは逆効果");
     if(almostD==="fear")advice.push("イく瞬間の恐怖は正常。タオルを敷く等の安心材料を用意して「何が起きても大丈夫」の環境を");
     if(almostD==="plateau")advice.push("刺激の種類を変えてみる。同じパターンだと神経が慣れて頭打ちになりやすい");
     if(almostD==="focus")advice.push("集中を保つために、呼吸のリズムに意識を合わせる。雑念は「戻す」練習で改善できる");
+    if(almostD==="immersion_break")advice.push("快感は来ているのに途中で現実に戻るタイプ。目を閉じる・呼吸に意識を置く・同じリズムを崩さない、の3つで没入を切らさない工夫を");
     advice.push("上手くいきそうな時のリズムや角度を『絶対に変えない』ようキープする");
+    if(almostD==="focus" || almostD==="immersion_break" || tension==="immersion"){
+      advice.push("ピーク前で切れやすい人は、刺激を変えすぎないことが重要。同じ場所・同じ圧・同じテンポを保つほど入りやすい");
+    }
     if(mentalFlag)advice.push("「いかなきゃ」の焦りが最大の敵。ゴールを気にせず「気持ちいい」に浸ることだけに集中");
     primary=(wish==="direct")?"direct":"self";
-    selfLink="https://note.com/miyaaromassage/n/n9c5d9bdb62fe"; // ★ここを変更
+    selfLink="https://note.com/miyaaromassage/n/n9c5d9bdb62fe";
   }
   else if(outer==="good"){
     if(inner==="none"||inner==="pressure"){
@@ -521,61 +529,59 @@ if(painFlag){
       advice=["外で十分に高めてからでないと、奥の回路は開きにくい（準備運動必須）","激しい動きではなく、特定のポイントをゆっくり押圧して感覚を探す","奥の刺激を「違和感」ではなく「気持ちいい」と脳に教え込む"];
       if(dryFlag)advice.push("潤い不足だと奥の感覚が「圧迫」にしか感じられない。十分な潤滑を");
       primary=(wish==="self")?"self":"direct";
-      selfLink="https://note.com/miyaaromassage/n/n4cc02e2be555"; // ★ここを変更
+      selfLink="https://note.com/miyaaromassage/n/n4cc02e2be555";
     }else if(inner==="slight"){
-      type="感覚の芽生え：奥の回路育成タイプ";
-      desc="奥に「何か」を感じ始めています。この微かな感覚を育てることで、ピークへの道が開けます。";
+      type="感覚の芽生え：奥の回路育成・没入強化タイプ";
+      desc="奥に『何かいる』感覚はすでに出ています。ここで大事なのは強い刺激を足すことではなく、その微細な感覚に没入できる状態を保つことです。入口はもう見えています。";
       advice=["今感じている「微かな何か」を最大限に大切にする。それが入口","その場所を見つけたら、同じ角度・同じ圧で丁寧に刺激を続ける","外→奥の切り替えではなく、外を刺激しながら奥も同時に刺激する"];
       primary=(wish==="self")?"self":"direct";
-      selfLink="https://note.com/miyaaromassage/n/ne6aa02a5a113"; // ★ここを変更
+      selfLink="https://note.com/miyaaromassage/n/ne6aa02a5a113";
     }else if(inner==="deep_feel" || inner==="urge"){
-      type="覚醒待ち：あと一歩タイプ";
-      desc="奥の感覚がすでに育っています。条件さえハマればいつでもピークを迎えられるポテンシャルがあります。";
-      advice=["奥がウズウズしてきたら、絶対にリズムや角度を変えない","腹式呼吸を意識して、奥の筋肉の緊張を解く","刺激を点ではなく「面」で捉える意識を持つ"];
+      type="覚醒待ち：あと一歩・没入安定タイプ";
+      desc="奥の感覚はすでに育っています。足りないのは能力ではなく、感覚の流れを途中で切らずに乗り続けること。条件がハマれば、一気に深いピークへつながる段階です。";
+      advice=["奥がウズウズしてきたら、絶対にリズムや角度を変えない","腹式呼吸を意識して、奥の筋肉の緊張を解く","刺激を点ではなく『面』で捉える意識を持つ"];
       if(inner==="urge"){
         advice.push("【重要】尿意は中イキ手前の正しい反応です。トイレは気にせず、そのまま受け入れる（力を抜く）練習をしましょう");
       }
       if(mentalFlag)advice.push("身体は準備万端。あとは頭を手放すだけ。「もっと感じたい」から「感じるままに」に切り替えて");
       primary=(wish==="self")?"self":"direct";
-      selfLink="https://note.com/miyaaromassage/n/nd40c01dba006"; // ★ここを変更
-      
+      selfLink="https://note.com/miyaaromassage/n/nd40c01dba006";
     }else if(inner==="ik"||issue==="deeper"){
       type="底なし沼：ディープ快感追求タイプ";
       desc="基本の回路は完了。より深いオーガズムや連続を目指せる段階です。";
       advice=["自分の「一番気持ちいいスポット」を正確に言語化・共有する","達した後もすぐ止めず、波を繋げる感覚を掴む","これまでのパターンを壊す新しいアプローチを取り入れる"];
       primary="direct";
-      selfLink="https://note.com/miyaaromassage/n/necc79fb6bcb7"; // ★ここを変更
-      
+      selfLink="https://note.com/miyaaromassage/n/necc79fb6bcb7";
     }else if(inner==="no_exp"){
       type="未開拓の可能性：奥の世界へのファーストステップ";
       desc="まだ奥の刺激を試していない状態。外が整っているので、準備は万端です。";
       advice=["いきなり奥を目指さず、まずは浅い部分からゆっくり慣らしていく","十分な前戯と潤滑が必須。焦らないことが最大のコツ","最初は自分のペースで試すのがおすすめ。グッズを使うのも◎"];
       primary=(wish==="self")?"self":"direct";
-      selfLink="https://note.com/miyaaromassage/n/n40982c2bc96e?sub_rt=share_pw"; // ★ここを変更
-      
+      selfLink="https://note.com/miyaaromassage/n/n40982c2bc96e?sub_rt=share_pw";
     }else{
       type="感覚の最適化タイプ";
       desc="ベースの感度は整っています。目的に合わせてアプローチをチューニングする段階です。";
       advice=["自分に足りない要素（メンタルか、新しい刺激か）を見極める"];
       primary="consult";
-      selfLink="https://note.com/miyaaromassage/n/nffa057053102"; // ★ここを変更
+      selfLink="https://note.com/miyaaromassage/n/nffa057053102";
     }
   }
   else{
     type="現状整理：オーダーメイド相談タイプ";
-    desc="複数の要素が絡み合っている可能性があります。まずは現状を整理して、あなただけの正解を見つける段階です。";
+    desc="複数の要素が重なっていて、『感度の問題』と『没入しにくさ』が混ざっている可能性があります。まずは何がブレーキなのかを整理して、あなたに合う順番を見つける段階です。";
     advice=["何が一番のブレーキになっているか（心か、身体か、環境か）を特定する","自分一人で悩まず、専門的な視点からのアドバイスを取り入れる"];
     primary="consult";
-    selfLink="https://note.com/ここに現状整理タイプ向けの記事URL"; // ★ここを変更
+    selfLink="https://note.com/ここに現状整理タイプ向けの記事URL";
   }
 
   if(dryFlag&&!painFlag)advice.push("💧 身体の潤い不足を感じています。潤滑剤・前戯の時間延長をまず試してみてください");
   if(mentalFlag&&!painFlag){
     if(tension==="past")advice.push("⚠️ 過去の経験が影響している場合、無理せずカウンセリングの併用も視野に");
     if(tension==="duty")advice.push("💡 「相手のため」ではなく「自分が気持ちいい」を優先する許可を自分に出す");
+    if(tension==="immersion")advice.push("🌙 没入しにくいタイプは、考え方を変えるより『感覚を途切れさせない環境づくり』が重要。明るさ・音・呼吸・リズムを固定すると入りやすくなります");
   }
   if(freq==="vibrator")advice.push("🔋 グッズへの慣れで手の刺激が物足りなくなっているかも。徐々にグッズの強度を下げて感覚を育てる練習を");
-  if(freq==="ashipin")advice.push("🦵【足ピン・力み癖の解除】強く力を入れて達する癖がつくと、本来の「リラックスして感じる」感度が鈍くなります。あえて力を抜き、息を深く吐きながら触れる練習を取り入れてみてください");
+  if(freq==="ashipin")advice.push("🦵【足ピン・力み癖の解除】強く力を入れて達する癖がつくと、本来の『リラックスして感じる』感度が鈍くなります。あえて力を抜き、息を深く吐きながら触れる練習を取り入れてみてください");
   if(comm==="silent"||comm==="afraid")advice.push("🗣 パートナーに伝えられないことが大きなブレーキ。まずは「ここが好き」の一言から");
   
   if(wish==="direct"){
@@ -598,9 +604,9 @@ if(painFlag){
 
 ※この結果は「感度チェック簡易判定ツール byミヤ」で作成されました`;
 
-const selfDesc=(primary==="self")?"今の状態に合った自己解決ルート。今のあなたにオススメのnote記事を紹介します。":"今のあなたの状態にぴったりのnote記事を紹介します。";
+  const selfDesc=(primary==="self")?"今の状態に合った自己解決ルート。今のあなたにオススメのnote記事を紹介します。":"今のあなたの状態にぴったりのnote記事を紹介します。";
   const consultDesc=(primary==="consult")?"結果をコピーしてDMに貼るだけ。状態に合わせて具体的なアドバイスが可能です。":"しっかり個別で相談したい時はこちら。";
-  const anonDesc="「いきなりDMはハードルが高い…」という方は、質問箱から匿名でどうぞ。"; // ★質問箱用の説明を追加
+  const anonDesc="「いきなりDMはハードルが高い…」という方は、質問箱から匿名でどうぞ。";
   const directDesc=(primary==="direct")?"あなたの状態に合わせた、直接の開発施術の案内はこちら。":"miyaに任せて一気に開発されてみたい方向けの案内です。";
 
   return{type,desc,advice,copyText,primary,selfLink,selfDesc,consultDesc,anonDesc,directDesc,painFlag,mentalFlag,scores};
@@ -632,22 +638,30 @@ function showResult(){
   r.advice.forEach(t=>{const li=document.createElement("li");li.textContent=t;al.appendChild(li);});
 
   const sb=$("safetyBox");sb.className="hidden";sb.innerHTML="";
-  if(r.painFlag){sb.classList.remove("hidden");sb.classList.add("dangerBox");sb.innerHTML="<b>安全優先：</b>痛み/違和感が絡む場合は、無理は禁物です。我慢して続けると身体が拒絶反応を起こす可能性があります。";}
-  else if(r.mentalFlag){sb.classList.remove("hidden");sb.classList.add("warnBox");sb.innerHTML="<b>ヒント：</b>焦りや緊張がブレーキになっています。身体より先に『頭を休ませる』のが鍵です。";}
+  if(r.painFlag){
+    sb.classList.remove("hidden");
+    sb.classList.add("dangerBox");
+    sb.innerHTML="<b>安全優先：</b>痛み/違和感が絡む場合は、無理は禁物です。我慢して続けると身体が拒絶反応を起こす可能性があります。";
+  }
+  else if(r.mentalFlag){
+    sb.classList.remove("hidden");
+    sb.classList.add("warnBox");
+    sb.innerHTML="<b>ヒント：</b>焦り・自意識・没入の切れやすさがブレーキになっている可能性があります。強い刺激を足すより、まずは『感覚が途切れにくい状態』を作るのが鍵です。";
+  }
   
-$("ctaSelfDesc").textContent=r.selfDesc;
+  $("ctaSelfDesc").textContent=r.selfDesc;
   $("ctaConsultDesc").textContent=r.consultDesc;
-  $("ctaAnonDesc").textContent=r.anonDesc;     // ★質問箱の説明を反映
+  $("ctaAnonDesc").textContent=r.anonDesc;
   $("ctaDirectDesc").textContent=r.directDesc;
   
   $("ctaSelf").href=r.selfLink||LINKS.note_self;
   $("ctaConsult").href=LINKS.dm;
-  $("ctaAnon").href=LINKS.anon_qa;             // ★質問箱のリンクを反映
+  $("ctaAnon").href=LINKS.anon_qa;
   $("ctaDirect").href=LINKS.booking;
   
   $("ctaSelf").classList.remove("primary");
   $("ctaConsult").classList.remove("primary");
-  $("ctaAnon").classList.remove("primary");    // ★質問箱の色リセットを追加
+  $("ctaAnon").classList.remove("primary");
   $("ctaDirect").classList.remove("primary");
   
   if(r.primary==="self") {
@@ -662,8 +676,13 @@ $("ctaSelfDesc").textContent=r.selfDesc;
 }
 
 async function copyResult(){
-  try{await navigator.clipboard.writeText($("copyPreview").textContent);showToast("結果をコピーしました！DMに貼り付けてください");}
-  catch(e){showToast("コピーできない環境です。手動でコピーしてください");}
+  try{
+    await navigator.clipboard.writeText($("copyPreview").textContent);
+    showToast("結果をコピーしました！DMに貼り付けてください");
+  }
+  catch(e){
+    showToast("コピーできない環境です。手動でコピーしてください");
+  }
 }
 
 $("startBtn").onclick=()=>{resetAll();showQuiz();};
