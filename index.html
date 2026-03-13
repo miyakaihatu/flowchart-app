@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>感度チェック簡易判定ツール byミヤ</title>
+  <title>感じ方チェック byミヤ</title>
   <style>
     :root{
       --bg1:#fff3f7;--bg2:#f4f6ff;--ink:#1b1f2a;--muted:#6b7280;
@@ -88,7 +88,7 @@
   </style>
 </head>
 <body>
-<div class="watermark">miya's Method Sensibility Check</div>
+<div class="watermark">miya's Feeling Guide</div>
 
 <div class="wrap">
   <header>
@@ -96,10 +96,10 @@
       <div class="miya-icon">M</div>
       <div>
         <div class="miya-brand">miya ORIGINAL METHOD</div>
-        <h1>感度チェック簡易判定</h1>
+        <h1>今の感じ方整理ツール</h1>
       </div>
     </div>
-    <p class="sub">うまく言葉にできない「今の感じ方」を、数分で整理するチェックツールです。結果はそのままコピペしてミヤに送れるので、相談もスムーズになります。</p>
+    <p class="sub">うまく言葉にできない「今の感じ方」を、数分でやさしく整理するためのチェックです。結果はそのままコピペしてミヤに送れるので、相談もスムーズになります。</p>
   </header>
 
   <section class="card" id="screenIntro">
@@ -591,7 +591,7 @@ function computeResult(){
   if(wish==="self"&&primary!=="consult")primary="self";
   if(wish==="consult")primary="consult";
 
-  const copyText=`【感度チェック結果】
+const copyText=`【感じ方チェック結果】
 タイプ：${type}
 外の状態：${ans.outerExp?.label||"未回答"}${ans.selfOnlyDetail?"\n ┗ 詳細："+ans.selfOnlyDetail.label:""}${ans.almostDetail?"\n ┗ 詳細："+ans.almostDetail.label:""}
 中の状態：${ans.innerExp?.label||"未回答"}${ans.innerPainDetail?"\n ┗ 痛みの詳細："+ans.innerPainDetail.label:""}
@@ -602,7 +602,7 @@ function computeResult(){
 一番の目的：${ans.mainIssue?.label||"未回答"}
 希望：${ans.wish?.label||"未回答"}
 
-※この結果は「感度チェック簡易判定ツール byミヤ」で作成されました`;
+※この結果は「感じ方チェック byミヤ」で作成されました`;
 
   const selfDesc=(primary==="self")?"今の状態に合った自己解決ルート。今のあなたにオススメのnote記事を紹介します。":"今のあなたの状態にぴったりのnote記事を紹介します。";
   const consultDesc=(primary==="consult")?"結果をコピーしてDMに貼るだけ。状態に合わせて具体的なアドバイスが可能です。":"しっかり個別で相談したい時はこちら。";
