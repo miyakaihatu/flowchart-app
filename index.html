@@ -309,7 +309,8 @@ const LINKS = {
   note_self:"https://note.com/miyaaromassage",
   dm:"https://www.instagram.com/nakaikioilmassage/",
   anon_qa:"https://marshmallow-qa.com/miya_massage",
-  booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
+  booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1",
+  apply:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
 };
 
 const QUESTIONS = [
@@ -464,7 +465,8 @@ const QUESTIONS = [
       {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
       {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
       {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
-      {value:"direct", label:"直接任せたい", sub:"案内を見たい"}
+      {value:"direct", label:"直接任せたい", sub:"案内を見たい"},
+      {value:"apply", label:"そのまま応募したい", sub:"もう進みたい"}
     ]
   }
 ];
@@ -671,6 +673,14 @@ function baseActionSet(primary, descMap = {}){
       href:LINKS.booking,
       label:"案内を見る",
       priority: primary === "direct"
+    },
+    {
+      key:"apply",
+      title:"応募する",
+      desc:descMap.apply || "内容を見て、もう進みたい気持ちが固まっている人向けです。",
+      href:LINKS.apply,
+      label:"応募フォームへ",
+      priority: primary === "apply"
     }
   ];
 }
@@ -699,7 +709,6 @@ function computeResult(){
   const scores = calcScores();
   const painFlag = (outer === "pain" || inner === "pain" || issue === "pain_fix");
   const mentalFlag = ["overthink","conscious","past","duty","immersion"].includes(tension);
-  const dryFlag = (arousal === "dry" || arousal === "head_ok");
 
   let type = "";
   let desc = "";
@@ -717,7 +726,7 @@ function computeResult(){
     ];
     if(innerPainD==="entry") advice.push("入口の痛みは緊張による締めつけが関わることもあります。呼吸を深くして力みを抜く練習を");
     if(innerPainD==="deep") advice.push("奥の痛みは角度や深さの問題が関わることがあります。体位や当たり方の見直しを");
-    if(innerPainD==="dry" || dryFlag) advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
+    if(innerPainD==="dry" || arousal==="dry" || arousal==="head_ok") advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
     if(innerPainD==="burning") advice.push("ヒリヒリやしみる感じが続く場合は、受診も視野に入れてください");
     if(innerPainD==="sometimes") advice.push("日によって変わる場合は、体調やストレスとの関係を記録してみるのも有効です");
 
@@ -758,9 +767,10 @@ function computeResult(){
     ];
     if(freq==="never") advice.push("まずはセルフタッチで、自分の身体に触れることに慣れていく");
     if(mentalFlag) advice.push("過去の経験や緊張が感覚を鈍らせている可能性もあります");
-    if(dryFlag) advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
+    if(arousal==="dry" || arousal==="head_ok") advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
 
     primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    if(wish==="apply") primary = "self";
     actions = [
       {
         key:"self",
@@ -799,6 +809,7 @@ function computeResult(){
     if(freq==="never") advice.push("セルフで『くすぐったくなりにくい触れ方』を探すのも有効です");
 
     primary = wish==="consult" ? "consult" : "self";
+    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"self",
@@ -834,10 +845,11 @@ function computeResult(){
       "敏感なポイントを焦らず探す",
       "強刺激に飛ばず、弱い刺激を丁寧に感じる練習をする"
     ];
-    if(dryFlag) advice.push("潤い不足で感覚が鈍くなっていることもあります");
+    if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足で感覚が鈍くなっていることもあります");
     if(freq==="never" || freq==="sometimes") advice.push("セルフで『感じやすいパターン』のデータを集める");
 
     primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    if(wish==="apply") primary = "direct";
     actions = [
       {
         key:"self",
@@ -878,6 +890,7 @@ function computeResult(){
     if(comm==="silent" || comm==="afraid") advice.push("伝えづらさが大きなブレーキです。短い一言からで十分です");
 
     primary = wish==="self" ? "self" : "consult";
+    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"consult",
@@ -921,6 +934,7 @@ function computeResult(){
     if(mentalFlag) advice.push("『いかなきゃ』ではなく『今の気持ちよさにいる』に意識を戻す");
 
     primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    if(wish==="apply") primary = "apply";
     actions = [
       {
         key:"self",
@@ -931,12 +945,12 @@ function computeResult(){
         priority:primary === "self"
       },
       {
-        key:"direct",
-        title:"直接の案内を見る",
-        desc:"あと一歩を自力で詰めるのが面倒なら、こっちの方が早いです。",
-        href:LINKS.booking,
-        label:"案内を見る",
-        priority:primary === "direct"
+        key:"apply",
+        title:"応募する",
+        desc:"もう試すより進みたいなら、このまま応募に進めます。",
+        href:LINKS.apply,
+        label:"応募フォームへ",
+        priority:primary === "apply"
       },
       {
         key:"consult",
@@ -957,9 +971,10 @@ function computeResult(){
         "激しさより、ポイントをゆっくり探る",
         "違和感と快感の境目を丁寧に観察する"
       ];
-      if(dryFlag) advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
+      if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
 
       primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
+      if(wish==="apply") primary = "apply";
       actions = [
         {
           key:"self",
@@ -970,12 +985,12 @@ function computeResult(){
           priority:primary === "self"
         },
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"次の段階に進みたいなら、ここが一番素直な導線です。",
-          href:LINKS.booking,
-          label:"案内を見る",
-          priority:primary === "direct"
+          key:"apply",
+          title:"応募する",
+          desc:"自分で探るより、次の段階に進みたいならここから進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:primary === "apply"
         },
         {
           key:"consult",
@@ -996,6 +1011,7 @@ function computeResult(){
       ];
 
       primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+      if(wish==="apply") primary = "direct";
       actions = [
         {
           key:"self",
@@ -1034,14 +1050,15 @@ function computeResult(){
       if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
 
       primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
+      if(wish==="apply") primary = "apply";
       actions = [
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"このタイプは『あと少し』が一番もったいないので、直行導線を前に置いています。",
-          href:LINKS.booking,
-          label:"案内を見る",
-          priority:primary === "direct"
+          key:"apply",
+          title:"応募する",
+          desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:primary === "apply"
         },
         {
           key:"self",
@@ -1070,14 +1087,15 @@ function computeResult(){
       ];
 
       primary = wish==="consult" ? "consult" : "direct";
+      if(wish==="apply") primary = "apply";
       actions = [
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"今の段階なら、基礎説明より個別最適化の方が価値があります。",
-          href:LINKS.booking,
-          label:"案内を見る",
-          priority:primary === "direct"
+          key:"apply",
+          title:"応募する",
+          desc:"今の状態なら、説明を読むより先に応募した方が早い層です。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:primary === "apply"
         },
         {
           key:"consult",
@@ -1106,6 +1124,7 @@ function computeResult(){
       ];
 
       primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+      if(wish==="apply") primary = "direct";
       actions = [
         {
           key:"self",
@@ -1137,12 +1156,13 @@ function computeResult(){
       desc = "ベースは整っています。足りない条件を見極めて、微調整していく段階です。";
       advice = ["足りないのがメンタルか刺激条件かを見極める"];
 
-      primary = wish==="direct" ? "direct" : "consult";
+      primary = wish==="apply" ? "direct" : (wish==="direct" ? "direct" : "consult");
       actions = baseActionSet(primary, {
         self:"今の状態に合う自己整理ルートです。",
         consult:"条件のズレを言語化したい時はこちら。",
         anon:"まだ重くしたくない時は匿名でも大丈夫です。",
-        direct:"調整より実践寄りで進めたい方向けです。"
+        direct:"調整より実践寄りで進めたい方向けです。",
+        apply:"内容を見て、もう進みたい気持ちが固まっている人向けです。"
       }).filter(a => ["self","consult","direct"].includes(a.key));
     }
   }
@@ -1155,6 +1175,7 @@ function computeResult(){
     ];
 
     primary = wish==="self" ? "self" : "consult";
+    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"consult",
@@ -1183,7 +1204,7 @@ function computeResult(){
     ];
   }
 
-  if(dryFlag && !painFlag) advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
+  if((arousal==="dry" || arousal==="head_ok") && !painFlag) advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
   if(mentalFlag && !painFlag){
     if(tension==="past") advice.push("過去の経験が強く響く場合は、無理せず心のケアも視野に");
     if(tension==="duty") advice.push("『相手のため』より『自分がどう感じるか』を優先してよい段階です");
@@ -1197,29 +1218,45 @@ function computeResult(){
     if(!advice.includes(h)) advice.push(h);
   });
 
-  if(wish==="direct"){
+  if(wish==="apply"){
+    const applyExists = actions.some(a => a.key === "apply");
     const directExists = actions.some(a => a.key === "direct");
+
+    if(applyExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "apply" }));
+      primary = "apply";
+      advice.push("今の状態なら、案内確認よりそのまま応募に進む方が自然な場合もあります");
+    } else if(directExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "direct" }));
+      primary = "direct";
+      advice.push("応募の一歩手前として、まず案内を確認するのが自然な結果です");
+    }
+  } else if(wish==="direct"){
+    const directExists = actions.some(a => a.key === "direct");
+    const applyExists = actions.some(a => a.key === "apply");
+
     if(directExists){
       actions = actions.map(a => ({ ...a, priority: a.key === "direct" }));
       primary = "direct";
       advice.push("直接の案内では、今の状態に合わせて進め方を組み立てられます");
+    } else if(applyExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "apply" }));
+      primary = "apply";
+      advice.push("今の状態だと、案内より応募の方が自然な動線になっています");
     }
-  }
-  if(wish==="consult"){
+  } else if(wish==="consult"){
     const consultExists = actions.some(a => a.key === "consult");
     if(consultExists){
       actions = actions.map(a => ({ ...a, priority: a.key === "consult" }));
       primary = "consult";
     }
-  }
-  if(wish==="self"){
+  } else if(wish==="self"){
     const selfExists = actions.some(a => a.key === "self");
     if(selfExists){
       actions = actions.map(a => ({ ...a, priority: a.key === "self" }));
       primary = "self";
     }
-  }
-  if(wish==="just_result"){
+  } else if(wish==="just_result"){
     actions = actions.map(a => ({ ...a, priority:false }));
   }
 
