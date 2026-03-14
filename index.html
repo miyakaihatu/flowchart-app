@@ -150,7 +150,7 @@
     .kicker{font-weight:1000;margin:0 0 6px;}
     .list{margin:0;padding-left:18px;line-height:1.75;color:#2a2f3a;font-size:14px;}
 
-    .ctaGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr 1fr;margin-top:10px;}
+    .ctaGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;margin-top:10px;}
     @media(max-width:920px){.ctaGrid{grid-template-columns:1fr 1fr;}}
     @media(max-width:560px){.ctaGrid{grid-template-columns:1fr;}}
 
@@ -159,6 +159,22 @@
       border-radius:16px;padding:12px;background:#fff;
       box-shadow:0 8px 22px rgba(16,24,40,.08);
       display:grid;gap:7px;
+    }
+    .ctaCard.primaryCard{
+      border-color:rgba(124,92,255,.22);
+      box-shadow:0 10px 28px rgba(124,92,255,.14);
+      background:linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,245,255,1) 100%);
+    }
+    .ctaEyebrow{
+      display:inline-flex;
+      width:max-content;
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(124,92,255,.10);
+      color:var(--accent2);
+      font-size:10px;
+      font-weight:1000;
+      letter-spacing:.04em;
     }
     .ctaTitle{margin:0;font-weight:1000;font-size:14px;line-height:1.4;}
     .ctaDesc{margin:0;color:var(--muted);font-size:12px;line-height:1.55;}
@@ -271,28 +287,7 @@
 
     <div class="divider"></div>
     <p class="kicker">次の行動</p>
-    <div class="ctaGrid">
-      <div class="ctaCard">
-        <p class="ctaTitle">まずは自分で整える</p>
-        <p class="ctaDesc" id="ctaSelfDesc">—</p>
-        <a class="ctaBtn" id="ctaSelf" href="#" target="_blank" rel="noopener">記事を見る</a>
-      </div>
-      <div class="ctaCard">
-        <p class="ctaTitle">個別に相談する</p>
-        <p class="ctaDesc" id="ctaConsultDesc">—</p>
-        <a class="ctaBtn" id="ctaConsult" href="#" target="_blank" rel="noopener">DMを送る</a>
-      </div>
-      <div class="ctaCard">
-        <p class="ctaTitle">匿名で聞く</p>
-        <p class="ctaDesc" id="ctaAnonDesc">—</p>
-        <a class="ctaBtn" id="ctaAnon" href="#" target="_blank" rel="noopener">質問する</a>
-      </div>
-      <div class="ctaCard">
-        <p class="ctaTitle">直接の案内を見る</p>
-        <p class="ctaDesc" id="ctaDirectDesc">—</p>
-        <a class="ctaBtn primary" id="ctaDirect" href="#" target="_blank" rel="noopener">応募する</a>
-      </div>
-    </div>
+    <div class="ctaGrid" id="ctaGrid"></div>
 
     <div class="divider"></div>
     <p class="kicker">この結果をコピーする</p>
@@ -461,17 +456,17 @@ const QUESTIONS = [
       {value:"enjoy", label:"義務感を減らしたい", sub:"ちゃんと楽しめるようになりたい"}
     ]
   },
-{
-  id:"wish",
-  title:"今の気分に近いものは？",
-  desc:"結果を見るだけでも大丈夫です。",
-  options:[
-    {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
-    {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
-    {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
-    {value:"direct", label:"直接任せたい", sub:"案内を見たい"}
-  ]
-}
+  {
+    id:"wish",
+    title:"今の気分に近いものは？",
+    desc:"結果を見るだけでも大丈夫です。",
+    options:[
+      {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
+      {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
+      {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
+      {value:"direct", label:"直接任せたい", sub:"案内を見たい"}
+    ]
+  }
 ];
 
 let flowPath = [];
@@ -643,6 +638,51 @@ function calcScores(){
   };
 }
 
+function baseActionSet(primary, descMap = {}){
+  return [
+    {
+      key:"self",
+      title:"まずは自分で整える",
+      desc:descMap.self || "今の状態に合う自己整理ルートです。",
+      href:LINKS.note_self,
+      label:"記事を見る",
+      priority: primary === "self"
+    },
+    {
+      key:"consult",
+      title:"個別に相談する",
+      desc:descMap.consult || "結果をそのまま送れば、整理した状態から相談できます。",
+      href:LINKS.dm,
+      label:"DMを送る",
+      priority: primary === "consult"
+    },
+    {
+      key:"anon",
+      title:"匿名で聞く",
+      desc:descMap.anon || "いきなりDMが重い時は、匿名でどうぞ。",
+      href:LINKS.anon_qa,
+      label:"質問する",
+      priority: primary === "anon"
+    },
+    {
+      key:"direct",
+      title:"直接の案内を見る",
+      desc:descMap.direct || "直接任せたい方向けの案内です。",
+      href:LINKS.booking,
+      label:"案内を見る",
+      priority: primary === "direct"
+    }
+  ];
+}
+
+function scoreDrivenHints(scores){
+  const hints = [];
+  if(scores.relaxScore < 30) hints.push("脱力が低めなので、刺激を足すより呼吸と力みの整理を先に");
+  if(scores.commScore < 20) hints.push("共有が低めなので、感じ方以前に『伝えづらさ』がブレーキになりやすいです");
+  if(scores.bodyScore < 20) hints.push("準備が低めなので、前準備や潤いの工夫が先に効きやすいです");
+  return hints;
+}
+
 function computeResult(){
   const outer = ans.outerExp?.value || "";
   const inner = ans.innerExp?.value || "";
@@ -665,7 +705,7 @@ function computeResult(){
   let desc = "";
   let advice = [];
   let primary = "consult";
-  let selfLink = LINKS.note_self;
+  let actions = [];
 
   if(painFlag){
     type = "安全・ケア優先タイプ";
@@ -680,7 +720,34 @@ function computeResult(){
     if(innerPainD==="dry" || dryFlag) advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
     if(innerPainD==="burning") advice.push("ヒリヒリやしみる感じが続く場合は、受診も視野に入れてください");
     if(innerPainD==="sometimes") advice.push("日によって変わる場合は、体調やストレスとの関係を記録してみるのも有効です");
-    primary = "consult";
+
+    primary = wish === "just_result" ? "anon" : "consult";
+    actions = [
+      {
+        key:"self",
+        title:"まずは無理を止める",
+        desc:"今日は追わない判断も立派な最適化です。痛みがある日は休むのが先。",
+        href:LINKS.note_self,
+        label:"ケアの考え方を見る",
+        priority:false
+      },
+      {
+        key:"consult",
+        title:"状態を整理して相談する",
+        desc:"痛みの種類や出る場面をそのまま伝えると、整理しやすくなります。",
+        href:LINKS.dm,
+        label:"DMで相談する",
+        priority:primary === "consult"
+      },
+      {
+        key:"anon",
+        title:"匿名で先に聞く",
+        desc:"いきなり深く話したくない時は、まず匿名で切り出す方が楽です。",
+        href:LINKS.anon_qa,
+        label:"匿名で聞く",
+        priority:primary === "anon"
+      }
+    ];
   }
   else if(outer==="none" || issue==="zero"){
     type = "土台づくりタイプ";
@@ -692,7 +759,34 @@ function computeResult(){
     if(freq==="never") advice.push("まずはセルフタッチで、自分の身体に触れることに慣れていく");
     if(mentalFlag) advice.push("過去の経験や緊張が感覚を鈍らせている可能性もあります");
     if(dryFlag) advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
-    primary = (wish==="direct") ? "direct" : "self";
+
+    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    actions = [
+      {
+        key:"self",
+        title:"まずは自分で整える",
+        desc:"今はいきなり答えを出すより、感じやすい条件を集める段階です。",
+        href:LINKS.note_self,
+        label:"記事を見る",
+        priority:primary === "self"
+      },
+      {
+        key:"anon",
+        title:"匿名で壁だけ聞く",
+        desc:"『何がわからないのかもわからない』時は、匿名質問が相性いいです。",
+        href:LINKS.anon_qa,
+        label:"質問する",
+        priority:false
+      },
+      {
+        key:"consult",
+        title:"今の状態を相談する",
+        desc:"一人で整理しきれないなら、結果をそのまま送れば話が早いです。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      }
+    ];
   }
   else if(outer==="ticklish"){
     type = "くすぐったさ変換タイプ";
@@ -703,7 +797,34 @@ function computeResult(){
       "自分で触る→慣れる→人に触れられる、の順に段階を作る"
     ];
     if(freq==="never") advice.push("セルフで『くすぐったくなりにくい触れ方』を探すのも有効です");
-    primary = (wish==="direct") ? "direct" : "self";
+
+    primary = wish==="consult" ? "consult" : "self";
+    actions = [
+      {
+        key:"self",
+        title:"触れ方を変えて試す",
+        desc:"強くするより、面・圧・スピードを変える方が当たりやすいタイプです。",
+        href:LINKS.note_self,
+        label:"試し方を見る",
+        priority:primary === "self"
+      },
+      {
+        key:"consult",
+        title:"どこで崩れるか相談する",
+        desc:"くすぐったさなのか緊張なのか、切り分けるだけでも前に進みます。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      },
+      {
+        key:"anon",
+        title:"匿名で軽く聞く",
+        desc:"まだ相談ほどではないけど詰まってる、みたいな人間らしい中途半端さ用です。",
+        href:LINKS.anon_qa,
+        label:"匿名で聞く",
+        priority:false
+      }
+    ];
   }
   else if(outer==="weak"){
     type = "感覚はあるけど薄いタイプ";
@@ -715,7 +836,34 @@ function computeResult(){
     ];
     if(dryFlag) advice.push("潤い不足で感覚が鈍くなっていることもあります");
     if(freq==="never" || freq==="sometimes") advice.push("セルフで『感じやすいパターン』のデータを集める");
-    primary = (wish==="direct") ? "direct" : "self";
+
+    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    actions = [
+      {
+        key:"self",
+        title:"感じやすい条件を集める",
+        desc:"このタイプは『どれが効くか』を記録すると伸びやすいです。",
+        href:LINKS.note_self,
+        label:"記事を見る",
+        priority:primary === "self"
+      },
+      {
+        key:"consult",
+        title:"薄さの原因を切り分ける",
+        desc:"準備・緊張・刺激のズレを整理したい時はこちら。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      },
+      {
+        key:"direct",
+        title:"直接の案内を見る",
+        desc:"自分で探すより、最短で整えたい時の導線です。",
+        href:LINKS.booking,
+        label:"案内を見る",
+        priority:primary === "direct"
+      }
+    ];
   }
   else if(outer==="self_only"){
     type = "没入ブロック解除タイプ";
@@ -728,7 +876,34 @@ function computeResult(){
     advice.push("相手の動きを、自分の動きの延長だと思ってみる");
     if(selfDetail==="head" || tension==="immersion") advice.push("考えない努力より、呼吸・目線・リズムを固定して流れを切らさない工夫が有効です");
     if(comm==="silent" || comm==="afraid") advice.push("伝えづらさが大きなブレーキです。短い一言からで十分です");
-    primary = "consult";
+
+    primary = wish==="self" ? "self" : "consult";
+    actions = [
+      {
+        key:"consult",
+        title:"結果をそのまま送って相談する",
+        desc:"このタイプは一人で頑張るより、ズレを言語化した方が進みやすいです。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      },
+      {
+        key:"self",
+        title:"セルフとの差を整理する",
+        desc:"自分でできることと相手だと崩れることを見比べる段階です。",
+        href:LINKS.note_self,
+        label:"整理のヒントを見る",
+        priority:primary === "self"
+      },
+      {
+        key:"anon",
+        title:"匿名で相談の下書きをする",
+        desc:"何をどう伝えるか迷う時は、匿名で一度まとめるのが楽です。",
+        href:LINKS.anon_qa,
+        label:"匿名で聞く",
+        priority:false
+      }
+    ];
   }
   else if(outer==="almost"){
     type = "あと一歩・没入維持タイプ";
@@ -744,7 +919,34 @@ function computeResult(){
       advice.push("ピーク前で切れやすい人は、刺激を増やすより流れを保つ方が大切です");
     }
     if(mentalFlag) advice.push("『いかなきゃ』ではなく『今の気持ちよさにいる』に意識を戻す");
-    primary = (wish==="direct") ? "direct" : "self";
+
+    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+    actions = [
+      {
+        key:"self",
+        title:"その場で試せる微調整をやる",
+        desc:"このタイプは大改造より、呼吸・脱力・固定の3点調整が効きやすいです。",
+        href:LINKS.note_self,
+        label:"実践ポイントを見る",
+        priority:primary === "self"
+      },
+      {
+        key:"direct",
+        title:"直接の案内を見る",
+        desc:"あと一歩を自力で詰めるのが面倒なら、こっちの方が早いです。",
+        href:LINKS.booking,
+        label:"案内を見る",
+        priority:primary === "direct"
+      },
+      {
+        key:"consult",
+        title:"どこで切れるか相談する",
+        desc:"ピーク前で切れる理由を整理したい時はこちら。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      }
+    ];
   }
   else if(outer==="good"){
     if(inner==="none" || inner==="pressure"){
@@ -756,7 +958,34 @@ function computeResult(){
         "違和感と快感の境目を丁寧に観察する"
       ];
       if(dryFlag) advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
-      primary = (wish==="self") ? "self" : "direct";
+
+      primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
+      actions = [
+        {
+          key:"self",
+          title:"圧から快感への変換を試す",
+          desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階です。",
+          href:LINKS.note_self,
+          label:"記事を見る",
+          priority:primary === "self"
+        },
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"次の段階に進みたいなら、ここが一番素直な導線です。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:primary === "direct"
+        },
+        {
+          key:"consult",
+          title:"圧しかわからない理由を聞く",
+          desc:"準備不足なのか、当たり方なのか、切り分けたい時はこちら。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:primary === "consult"
+        }
+      ];
     } else if(inner==="slight"){
       type = "微細な感覚を育てるタイプ";
       desc = "奥に小さな感覚は出ています。今はそれを強くするより、途切れず感じ続けられる状態を育てる段階です。";
@@ -765,7 +994,34 @@ function computeResult(){
         "場所が見つかったら角度と圧を丁寧に保つ",
         "外と奥を切り分けず、つながりとして感じる"
       ];
-      primary = (wish==="self") ? "self" : "direct";
+
+      primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+      actions = [
+        {
+          key:"self",
+          title:"小さい感覚を育てる",
+          desc:"この段階は『もっと強く』より『切らさない』が先です。",
+          href:LINKS.note_self,
+          label:"育て方を見る",
+          priority:primary === "self"
+        },
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"すでに入口はあるので、次の一歩を詰めたい時に向いています。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:primary === "direct"
+        },
+        {
+          key:"anon",
+          title:"匿名で確認する",
+          desc:"この小さい反応が合ってるのか不安なら、まず軽く確認できます。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        }
+      ];
     } else if(inner==="deep_feel" || inner==="urge"){
       type = "あと一歩・奥の流れ安定タイプ";
       desc = "奥の感覚はすでに育っています。途中で流れを切らずに乗り続けることが鍵です。";
@@ -776,7 +1032,34 @@ function computeResult(){
       ];
       if(inner==="urge") advice.push("尿意っぽさは手前の反応として出ることがあります。怖くなければ力を抜いて観察を");
       if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
-      primary = (wish==="self") ? "self" : "direct";
+
+      primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
+      actions = [
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"このタイプは『あと少し』が一番もったいないので、直行導線を前に置いています。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:primary === "direct"
+        },
+        {
+          key:"self",
+          title:"流れを切らない練習をする",
+          desc:"呼吸とリズム固定だけで変わる余地があります。",
+          href:LINKS.note_self,
+          label:"実践ポイントを見る",
+          priority:primary === "self"
+        },
+        {
+          key:"consult",
+          title:"途中で崩れる理由を相談する",
+          desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:primary === "consult"
+        }
+      ];
     } else if(inner==="ik" || issue==="deeper"){
       type = "もっと深く味わうタイプ";
       desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
@@ -785,7 +1068,34 @@ function computeResult(){
         "達した後の流れをすぐ切らない",
         "今までと少し違うアプローチも試す"
       ];
-      primary = "direct";
+
+      primary = wish==="consult" ? "consult" : "direct";
+      actions = [
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"今の段階なら、基礎説明より個別最適化の方が価値があります。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:primary === "direct"
+        },
+        {
+          key:"consult",
+          title:"もっと深める相談をする",
+          desc:"今ある反応をどう伸ばすか、質の話をしたい時はこちら。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:primary === "consult"
+        },
+        {
+          key:"self",
+          title:"自分で精度を上げる",
+          desc:"深さを追う前に、再現条件を言葉にするのが先です。",
+          href:LINKS.note_self,
+          label:"整理のヒントを見る",
+          priority:false
+        }
+      ];
     } else if(inner==="no_exp"){
       type = "奥の感覚の入り口タイプ";
       desc = "まだ未経験なだけで、土台は整っています。急がず入口から慣れていく段階です。";
@@ -794,12 +1104,46 @@ function computeResult(){
         "前準備と潤いをしっかり確保する",
         "最初は自分のペースで試す"
       ];
-      primary = (wish==="self") ? "self" : "direct";
+
+      primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
+      actions = [
+        {
+          key:"self",
+          title:"入口から慣れていく",
+          desc:"未経験は欠陥じゃなく、単にまだ通ってない道です。",
+          href:LINKS.note_self,
+          label:"記事を見る",
+          priority:primary === "self"
+        },
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"遠回りせず入り口を越えたいならこちら。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:primary === "direct"
+        },
+        {
+          key:"anon",
+          title:"匿名で聞く",
+          desc:"未経験ゆえの初歩質問は、匿名の方が投げやすいことも多いです。",
+          href:LINKS.anon_qa,
+          label:"質問する",
+          priority:false
+        }
+      ];
     } else {
       type = "感覚の最適化タイプ";
       desc = "ベースは整っています。足りない条件を見極めて、微調整していく段階です。";
       advice = ["足りないのがメンタルか刺激条件かを見極める"];
-      primary = "consult";
+
+      primary = wish==="direct" ? "direct" : "consult";
+      actions = baseActionSet(primary, {
+        self:"今の状態に合う自己整理ルートです。",
+        consult:"条件のズレを言語化したい時はこちら。",
+        anon:"まだ重くしたくない時は匿名でも大丈夫です。",
+        direct:"調整より実践寄りで進めたい方向けです。"
+      }).filter(a => ["self","consult","direct"].includes(a.key));
     }
   }
   else{
@@ -809,7 +1153,34 @@ function computeResult(){
       "心・身体・環境のどれがいちばん強いブレーキか見極める",
       "一人で詰まるなら相談で整理する"
     ];
-    primary = "consult";
+
+    primary = wish==="self" ? "self" : "consult";
+    actions = [
+      {
+        key:"consult",
+        title:"まずは相談で整理する",
+        desc:"複数の要素が混ざっている時は、順番を決めるだけでも楽になります。",
+        href:LINKS.dm,
+        label:"DMを送る",
+        priority:primary === "consult"
+      },
+      {
+        key:"self",
+        title:"自分で整理する",
+        desc:"今の状態を急いで結論づけず、引っかかる条件を拾う段階です。",
+        href:LINKS.note_self,
+        label:"記事を見る",
+        priority:primary === "self"
+      },
+      {
+        key:"anon",
+        title:"匿名で先に聞く",
+        desc:"まだ曖昧なままでも投げやすいルートです。",
+        href:LINKS.anon_qa,
+        label:"質問する",
+        priority:false
+      }
+    ];
   }
 
   if(dryFlag && !painFlag) advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
@@ -822,12 +1193,37 @@ function computeResult(){
   if(freq==="ashipin") advice.push("力み癖があると、リラックスして感じる回路が育ちにくくなることがあります");
   if(comm==="silent" || comm==="afraid") advice.push("伝えにくさも大きなブレーキになります。短い一言からで十分です");
 
+  scoreDrivenHints(scores).forEach(h => {
+    if(!advice.includes(h)) advice.push(h);
+  });
+
   if(wish==="direct"){
-    primary = "direct";
-    advice.push("直接の案内では、今の状態に合わせて進め方を組み立てられます");
+    const directExists = actions.some(a => a.key === "direct");
+    if(directExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "direct" }));
+      primary = "direct";
+      advice.push("直接の案内では、今の状態に合わせて進め方を組み立てられます");
+    }
   }
-  if(wish==="self" && primary!=="consult") primary = "self";
-  if(wish==="consult") primary = "consult";
+  if(wish==="consult"){
+    const consultExists = actions.some(a => a.key === "consult");
+    if(consultExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "consult" }));
+      primary = "consult";
+    }
+  }
+  if(wish==="self"){
+    const selfExists = actions.some(a => a.key === "self");
+    if(selfExists){
+      actions = actions.map(a => ({ ...a, priority: a.key === "self" }));
+      primary = "self";
+    }
+  }
+  if(wish==="just_result"){
+    actions = actions.map(a => ({ ...a, priority:false }));
+  }
+
+  actions = actions.slice(0, 3);
 
   const copyText = `【感じ方チェック結果】
 タイプ：${type}
@@ -842,25 +1238,39 @@ function computeResult(){
 
 ※この結果は「感じ方チェック byミヤ」で作成されました`;
 
-  const selfDesc = (primary==="self")
-    ? "今の状態に合う自己整理ルートです。"
-    : "今の状態に合う記事導線です。";
-
-  const consultDesc = (primary==="consult")
-    ? "結果をそのまま送れば、整理した状態から相談できます。"
-    : "個別で話したい時はこちら。";
-
-  const anonDesc = "いきなりDMが重い時は、匿名でどうぞ。";
-
-  const directDesc = (primary==="direct")
-    ? "今の状態に合わせた案内を見る流れです。"
-    : "直接任せたい方向けの案内です。";
-
   return {
-    type, desc, advice, copyText, primary, selfLink,
-    selfDesc, consultDesc, anonDesc, directDesc,
-    painFlag, mentalFlag, scores
+    type,
+    desc,
+    advice,
+    copyText,
+    primary,
+    actions,
+    painFlag,
+    mentalFlag,
+    scores
   };
+}
+
+function renderActions(actions = []){
+  const grid = $("ctaGrid");
+  grid.innerHTML = "";
+
+  actions.forEach(action => {
+    const card = document.createElement("div");
+    card.className = "ctaCard" + (action.priority ? " primaryCard" : "");
+
+    const eyebrow = action.priority
+      ? `<span class="ctaEyebrow">おすすめ</span>`
+      : "";
+
+    card.innerHTML = `
+      ${eyebrow}
+      <p class="ctaTitle">${action.title}</p>
+      <p class="ctaDesc">${action.desc}</p>
+      <a class="ctaBtn ${action.priority ? "primary" : ""}" href="${action.href}" target="_blank" rel="noopener">${action.label}</a>
+    `;
+    grid.appendChild(card);
+  });
 }
 
 function showResult(){
@@ -918,29 +1328,7 @@ function showResult(){
     sb.innerHTML = "<b>ヒント：</b>焦り・自意識・没入の切れやすさがブレーキになっている可能性があります。強い刺激を足すより、流れが切れにくい状態を作る方が有効です。";
   }
 
-  $("ctaSelfDesc").textContent = r.selfDesc;
-  $("ctaConsultDesc").textContent = r.consultDesc;
-  $("ctaAnonDesc").textContent = r.anonDesc;
-  $("ctaDirectDesc").textContent = r.directDesc;
-
-  $("ctaSelf").href = r.selfLink || LINKS.note_self;
-  $("ctaConsult").href = LINKS.dm;
-  $("ctaAnon").href = LINKS.anon_qa;
-  $("ctaDirect").href = LINKS.booking;
-
-  $("ctaSelf").classList.remove("primary");
-  $("ctaConsult").classList.remove("primary");
-  $("ctaAnon").classList.remove("primary");
-  $("ctaDirect").classList.remove("primary");
-
-  if(r.primary==="self"){
-    $("ctaSelf").classList.add("primary");
-  } else if(r.primary==="consult"){
-    $("ctaConsult").classList.add("primary");
-  } else {
-    $("ctaDirect").classList.add("primary");
-  }
-
+  renderActions(r.actions);
   $("copyPreview").textContent = r.copyText;
 }
 
