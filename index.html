@@ -457,18 +457,17 @@ const QUESTIONS = [
       {value:"enjoy", label:"義務感を減らしたい", sub:"ちゃんと楽しめるようになりたい"}
     ]
   },
-  {
-    id:"wish",
-    title:"今の気分に近いものは？",
-    desc:"結果を見るだけでも大丈夫です。",
-    options:[
-      {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
-      {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
-      {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
-      {value:"direct", label:"直接任せたい", sub:"案内を見たい"},
-      {value:"apply", label:"そのまま応募したい", sub:"もう進みたい"}
-    ]
-  }
+{
+  id:"wish",
+  title:"今の気分に近いものは？",
+  desc:"結果を見るだけでも大丈夫です。",
+  options:[
+    {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
+    {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
+    {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
+    {value:"apply", label:"案内・応募に進みたい", sub:"フォームを見たい"}
+  ]
+}
 ];
 
 let flowPath = [];
@@ -881,14 +880,14 @@ function computeResult(){
         label:"実践ポイントを見る",
         priority:false
       },
-      {
-        key:"apply",
-        title:"応募する",
-        desc:"もう試すより進みたいなら、このまま応募に進めます。",
-        href:LINKS.apply,
-        label:"応募フォームへ",
-        priority:false
-      },
+   {
+  key:"apply",
+  title:"案内・応募に進む",
+  desc:"もう進みたい場合は、このままフォームを確認できます。",
+  href:LINKS.apply,
+  label:"案内・応募フォームへ",
+  priority:false
+},
       {
         key:"consult",
         title:"どこで切れるか相談する",
@@ -1188,16 +1187,16 @@ function computeResult(){
   } else if(wish==="apply"){
     const hasApply = actions.some(a => a.key==="apply");
 
-    if(!hasApply){
-      actions.unshift({
-        key:"apply",
-        title:"応募する",
-        desc:"今の状態で進めたい場合は、このまま応募できます。",
-        href:LINKS.apply,
-        label:"応募フォームへ",
-        priority:true
-      });
-    }
+if(!hasApply){
+  actions.unshift({
+    key:"apply",
+    title:"案内・応募に進む",
+    desc:"今の状態で進めたい場合は、このままフォームを確認できます。",
+    href:LINKS.apply,
+    label:"案内・応募フォームへ",
+    priority:true
+  });
+}
 
     let found = false;
     actions = actions.map(a => {
