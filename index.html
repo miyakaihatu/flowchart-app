@@ -640,51 +640,6 @@ function calcScores(){
   };
 }
 
-function baseActionSet(primary, descMap = {}){
-  return [
-    {
-      key:"self",
-      title:"まずは自分で整える",
-      desc:descMap.self || "今の状態に合う自己整理ルートです。",
-      href:LINKS.note_self,
-      label:"記事を見る",
-      priority: primary === "self"
-    },
-    {
-      key:"consult",
-      title:"個別に相談する",
-      desc:descMap.consult || "結果をそのまま送れば、整理した状態から相談できます。",
-      href:LINKS.dm,
-      label:"DMを送る",
-      priority: primary === "consult"
-    },
-    {
-      key:"anon",
-      title:"匿名で聞く",
-      desc:descMap.anon || "いきなりDMが重い時は、匿名でどうぞ。",
-      href:LINKS.anon_qa,
-      label:"質問する",
-      priority: primary === "anon"
-    },
-    {
-      key:"direct",
-      title:"直接の案内を見る",
-      desc:descMap.direct || "直接任せたい方向けの案内です。",
-      href:LINKS.booking,
-      label:"案内を見る",
-      priority: primary === "direct"
-    },
-    {
-      key:"apply",
-      title:"応募する",
-      desc:descMap.apply || "内容を見て、もう進みたい気持ちが固まっている人向けです。",
-      href:LINKS.apply,
-      label:"応募フォームへ",
-      priority: primary === "apply"
-    }
-  ];
-}
-
 function scoreDrivenHints(scores){
   const hints = [];
   if(scores.relaxScore < 30) hints.push("脱力が低めなので、刺激を足すより呼吸と力みの整理を先に");
@@ -713,7 +668,6 @@ function computeResult(){
   let type = "";
   let desc = "";
   let advice = [];
-  let primary = "consult";
   let actions = [];
 
   if(painFlag){
@@ -729,8 +683,6 @@ function computeResult(){
     if(innerPainD==="dry" || arousal==="dry" || arousal==="head_ok") advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
     if(innerPainD==="burning") advice.push("ヒリヒリやしみる感じが続く場合は、受診も視野に入れてください");
     if(innerPainD==="sometimes") advice.push("日によって変わる場合は、体調やストレスとの関係を記録してみるのも有効です");
-
-    primary = wish === "just_result" ? "anon" : "consult";
     actions = [
       {
         key:"self",
@@ -746,7 +698,7 @@ function computeResult(){
         desc:"痛みの種類や出る場面をそのまま伝えると、整理しやすくなります。",
         href:LINKS.dm,
         label:"DMで相談する",
-        priority:primary === "consult"
+        priority:false
       },
       {
         key:"anon",
@@ -754,7 +706,7 @@ function computeResult(){
         desc:"いきなり深く話したくない時は、まず匿名で切り出す方が楽です。",
         href:LINKS.anon_qa,
         label:"匿名で聞く",
-        priority:primary === "anon"
+        priority:false
       }
     ];
   }
@@ -768,9 +720,6 @@ function computeResult(){
     if(freq==="never") advice.push("まずはセルフタッチで、自分の身体に触れることに慣れていく");
     if(mentalFlag) advice.push("過去の経験や緊張が感覚を鈍らせている可能性もあります");
     if(arousal==="dry" || arousal==="head_ok") advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
-
-    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
-    if(wish==="apply") primary = "self";
     actions = [
       {
         key:"self",
@@ -778,7 +727,7 @@ function computeResult(){
         desc:"今はいきなり答えを出すより、感じやすい条件を集める段階です。",
         href:LINKS.note_self,
         label:"記事を見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"anon",
@@ -794,7 +743,7 @@ function computeResult(){
         desc:"一人で整理しきれないなら、結果をそのまま送れば話が早いです。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       }
     ];
   }
@@ -807,9 +756,6 @@ function computeResult(){
       "自分で触る→慣れる→人に触れられる、の順に段階を作る"
     ];
     if(freq==="never") advice.push("セルフで『くすぐったくなりにくい触れ方』を探すのも有効です");
-
-    primary = wish==="consult" ? "consult" : "self";
-    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"self",
@@ -817,7 +763,7 @@ function computeResult(){
         desc:"強くするより、面・圧・スピードを変える方が当たりやすいタイプです。",
         href:LINKS.note_self,
         label:"試し方を見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"consult",
@@ -825,7 +771,7 @@ function computeResult(){
         desc:"くすぐったさなのか緊張なのか、切り分けるだけでも前に進みます。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       },
       {
         key:"anon",
@@ -847,9 +793,6 @@ function computeResult(){
     ];
     if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足で感覚が鈍くなっていることもあります");
     if(freq==="never" || freq==="sometimes") advice.push("セルフで『感じやすいパターン』のデータを集める");
-
-    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
-    if(wish==="apply") primary = "direct";
     actions = [
       {
         key:"self",
@@ -857,7 +800,7 @@ function computeResult(){
         desc:"このタイプは『どれが効くか』を記録すると伸びやすいです。",
         href:LINKS.note_self,
         label:"記事を見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"consult",
@@ -865,7 +808,7 @@ function computeResult(){
         desc:"準備・緊張・刺激のズレを整理したい時はこちら。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       },
       {
         key:"direct",
@@ -873,7 +816,7 @@ function computeResult(){
         desc:"自分で探すより、最短で整えたい時の導線です。",
         href:LINKS.booking,
         label:"案内を見る",
-        priority:primary === "direct"
+        priority:false
       }
     ];
   }
@@ -888,9 +831,6 @@ function computeResult(){
     advice.push("相手の動きを、自分の動きの延長だと思ってみる");
     if(selfDetail==="head" || tension==="immersion") advice.push("考えない努力より、呼吸・目線・リズムを固定して流れを切らさない工夫が有効です");
     if(comm==="silent" || comm==="afraid") advice.push("伝えづらさが大きなブレーキです。短い一言からで十分です");
-
-    primary = wish==="self" ? "self" : "consult";
-    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"consult",
@@ -898,7 +838,7 @@ function computeResult(){
         desc:"このタイプは一人で頑張るより、ズレを言語化した方が進みやすいです。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       },
       {
         key:"self",
@@ -906,7 +846,7 @@ function computeResult(){
         desc:"自分でできることと相手だと崩れることを見比べる段階です。",
         href:LINKS.note_self,
         label:"整理のヒントを見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"anon",
@@ -932,9 +872,6 @@ function computeResult(){
       advice.push("ピーク前で切れやすい人は、刺激を増やすより流れを保つ方が大切です");
     }
     if(mentalFlag) advice.push("『いかなきゃ』ではなく『今の気持ちよさにいる』に意識を戻す");
-
-    primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
-    if(wish==="apply") primary = "apply";
     actions = [
       {
         key:"self",
@@ -942,7 +879,7 @@ function computeResult(){
         desc:"このタイプは大改造より、呼吸・脱力・固定の3点調整が効きやすいです。",
         href:LINKS.note_self,
         label:"実践ポイントを見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"apply",
@@ -950,7 +887,7 @@ function computeResult(){
         desc:"もう試すより進みたいなら、このまま応募に進めます。",
         href:LINKS.apply,
         label:"応募フォームへ",
-        priority:primary === "apply"
+        priority:false
       },
       {
         key:"consult",
@@ -958,7 +895,7 @@ function computeResult(){
         desc:"ピーク前で切れる理由を整理したい時はこちら。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       }
     ];
   }
@@ -972,9 +909,6 @@ function computeResult(){
         "違和感と快感の境目を丁寧に観察する"
       ];
       if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
-
-      primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
-      if(wish==="apply") primary = "apply";
       actions = [
         {
           key:"self",
@@ -982,7 +916,7 @@ function computeResult(){
           desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階です。",
           href:LINKS.note_self,
           label:"記事を見る",
-          priority:primary === "self"
+          priority:false
         },
         {
           key:"apply",
@@ -990,7 +924,7 @@ function computeResult(){
           desc:"自分で探るより、次の段階に進みたいならここから進めます。",
           href:LINKS.apply,
           label:"応募フォームへ",
-          priority:primary === "apply"
+          priority:false
         },
         {
           key:"consult",
@@ -998,7 +932,7 @@ function computeResult(){
           desc:"準備不足なのか、当たり方なのか、切り分けたい時はこちら。",
           href:LINKS.dm,
           label:"DMを送る",
-          priority:primary === "consult"
+          priority:false
         }
       ];
     } else if(inner==="slight"){
@@ -1009,9 +943,6 @@ function computeResult(){
         "場所が見つかったら角度と圧を丁寧に保つ",
         "外と奥を切り分けず、つながりとして感じる"
       ];
-
-      primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
-      if(wish==="apply") primary = "direct";
       actions = [
         {
           key:"self",
@@ -1019,7 +950,7 @@ function computeResult(){
           desc:"この段階は『もっと強く』より『切らさない』が先です。",
           href:LINKS.note_self,
           label:"育て方を見る",
-          priority:primary === "self"
+          priority:false
         },
         {
           key:"direct",
@@ -1027,7 +958,7 @@ function computeResult(){
           desc:"すでに入口はあるので、次の一歩を詰めたい時に向いています。",
           href:LINKS.booking,
           label:"案内を見る",
-          priority:primary === "direct"
+          priority:false
         },
         {
           key:"anon",
@@ -1048,9 +979,6 @@ function computeResult(){
       ];
       if(inner==="urge") advice.push("尿意っぽさは手前の反応として出ることがあります。怖くなければ力を抜いて観察を");
       if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
-
-      primary = wish==="consult" ? "consult" : (wish==="self" ? "self" : "direct");
-      if(wish==="apply") primary = "apply";
       actions = [
         {
           key:"apply",
@@ -1058,7 +986,7 @@ function computeResult(){
           desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
           href:LINKS.apply,
           label:"応募フォームへ",
-          priority:primary === "apply"
+          priority:false
         },
         {
           key:"self",
@@ -1066,7 +994,7 @@ function computeResult(){
           desc:"呼吸とリズム固定だけで変わる余地があります。",
           href:LINKS.note_self,
           label:"実践ポイントを見る",
-          priority:primary === "self"
+          priority:false
         },
         {
           key:"consult",
@@ -1074,7 +1002,7 @@ function computeResult(){
           desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
           href:LINKS.dm,
           label:"DMを送る",
-          priority:primary === "consult"
+          priority:false
         }
       ];
     } else if(inner==="ik" || issue==="deeper"){
@@ -1085,9 +1013,6 @@ function computeResult(){
         "達した後の流れをすぐ切らない",
         "今までと少し違うアプローチも試す"
       ];
-
-      primary = wish==="consult" ? "consult" : "direct";
-      if(wish==="apply") primary = "apply";
       actions = [
         {
           key:"apply",
@@ -1095,7 +1020,7 @@ function computeResult(){
           desc:"今の状態なら、説明を読むより先に応募した方が早い層です。",
           href:LINKS.apply,
           label:"応募フォームへ",
-          priority:primary === "apply"
+          priority:false
         },
         {
           key:"consult",
@@ -1103,7 +1028,7 @@ function computeResult(){
           desc:"今ある反応をどう伸ばすか、質の話をしたい時はこちら。",
           href:LINKS.dm,
           label:"DMを送る",
-          priority:primary === "consult"
+          priority:false
         },
         {
           key:"self",
@@ -1122,9 +1047,6 @@ function computeResult(){
         "前準備と潤いをしっかり確保する",
         "最初は自分のペースで試す"
       ];
-
-      primary = wish==="consult" ? "consult" : (wish==="direct" ? "direct" : "self");
-      if(wish==="apply") primary = "direct";
       actions = [
         {
           key:"self",
@@ -1132,7 +1054,7 @@ function computeResult(){
           desc:"未経験は欠陥じゃなく、単にまだ通ってない道です。",
           href:LINKS.note_self,
           label:"記事を見る",
-          priority:primary === "self"
+          priority:false
         },
         {
           key:"direct",
@@ -1140,7 +1062,7 @@ function computeResult(){
           desc:"遠回りせず入り口を越えたいならこちら。",
           href:LINKS.booking,
           label:"案内を見る",
-          priority:primary === "direct"
+          priority:false
         },
         {
           key:"anon",
@@ -1155,15 +1077,32 @@ function computeResult(){
       type = "感覚の最適化タイプ";
       desc = "ベースは整っています。足りない条件を見極めて、微調整していく段階です。";
       advice = ["足りないのがメンタルか刺激条件かを見極める"];
-
-      primary = wish==="apply" ? "direct" : (wish==="direct" ? "direct" : "consult");
-      actions = baseActionSet(primary, {
-        self:"今の状態に合う自己整理ルートです。",
-        consult:"条件のズレを言語化したい時はこちら。",
-        anon:"まだ重くしたくない時は匿名でも大丈夫です。",
-        direct:"調整より実践寄りで進めたい方向けです。",
-        apply:"内容を見て、もう進みたい気持ちが固まっている人向けです。"
-      }).filter(a => ["self","consult","direct"].includes(a.key));
+      actions = [
+        {
+          key:"self",
+          title:"まずは自分で整える",
+          desc:"今の状態に合う自己整理ルートです。",
+          href:LINKS.note_self,
+          label:"記事を見る",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"個別に相談する",
+          desc:"条件のズレを言語化したい時はこちら。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"direct",
+          title:"直接の案内を見る",
+          desc:"調整より実践寄りで進めたい方向けです。",
+          href:LINKS.booking,
+          label:"案内を見る",
+          priority:false
+        }
+      ];
     }
   }
   else{
@@ -1173,9 +1112,6 @@ function computeResult(){
       "心・身体・環境のどれがいちばん強いブレーキか見極める",
       "一人で詰まるなら相談で整理する"
     ];
-
-    primary = wish==="self" ? "self" : "consult";
-    if(wish==="apply") primary = "consult";
     actions = [
       {
         key:"consult",
@@ -1183,7 +1119,7 @@ function computeResult(){
         desc:"複数の要素が混ざっている時は、順番を決めるだけでも楽になります。",
         href:LINKS.dm,
         label:"DMを送る",
-        priority:primary === "consult"
+        priority:false
       },
       {
         key:"self",
@@ -1191,7 +1127,7 @@ function computeResult(){
         desc:"今の状態を急いで結論づけず、引っかかる条件を拾う段階です。",
         href:LINKS.note_self,
         label:"記事を見る",
-        priority:primary === "self"
+        priority:false
       },
       {
         key:"anon",
@@ -1218,46 +1154,88 @@ function computeResult(){
     if(!advice.includes(h)) advice.push(h);
   });
 
-  if(wish==="apply"){
-    const applyExists = actions.some(a => a.key === "apply");
-    const directExists = actions.some(a => a.key === "direct");
-
-    if(applyExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "apply" }));
-      primary = "apply";
-      advice.push("今の状態なら、案内確認よりそのまま応募に進む方が自然な場合もあります");
-    } else if(directExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "direct" }));
-      primary = "direct";
-      advice.push("応募の一歩手前として、まず案内を確認するのが自然な結果です");
-    }
+  // 希望に応じて優先ボタンを切り替える
+  if(wish==="just_result"){
+    actions = actions.map(a => ({ ...a, priority:false }));
+  } else if(wish==="self"){
+    let found = false;
+    actions = actions.map(a => {
+      const priority = !found && a.key==="self";
+      if(priority) found = true;
+      return { ...a, priority };
+    });
+  } else if(wish==="consult"){
+    let found = false;
+    actions = actions.map(a => {
+      const priority = !found && a.key==="consult";
+      if(priority) found = true;
+      return { ...a, priority };
+    });
   } else if(wish==="direct"){
-    const directExists = actions.some(a => a.key === "direct");
-    const applyExists = actions.some(a => a.key === "apply");
-
-    if(directExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "direct" }));
-      primary = "direct";
+    const hasDirect = actions.some(a => a.key==="direct");
+    const targetKey = hasDirect ? "direct" : "apply";
+    let found = false;
+    actions = actions.map(a => {
+      const priority = !found && a.key===targetKey;
+      if(priority) found = true;
+      return { ...a, priority };
+    });
+    if(targetKey==="direct"){
       advice.push("直接の案内では、今の状態に合わせて進め方を組み立てられます");
-    } else if(applyExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "apply" }));
-      primary = "apply";
+    } else {
       advice.push("今の状態だと、案内より応募の方が自然な動線になっています");
     }
-  } else if(wish==="consult"){
-    const consultExists = actions.some(a => a.key === "consult");
-    if(consultExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "consult" }));
-      primary = "consult";
+  } else if(wish==="apply"){
+    const hasApply = actions.some(a => a.key==="apply");
+
+    if(!hasApply){
+      actions.unshift({
+        key:"apply",
+        title:"応募する",
+        desc:"今の状態で進めたい場合は、このまま応募できます。",
+        href:LINKS.apply,
+        label:"応募フォームへ",
+        priority:true
+      });
     }
-  } else if(wish==="self"){
-    const selfExists = actions.some(a => a.key === "self");
-    if(selfExists){
-      actions = actions.map(a => ({ ...a, priority: a.key === "self" }));
-      primary = "self";
-    }
-  } else if(wish==="just_result"){
-    actions = actions.map(a => ({ ...a, priority:false }));
+
+    let found = false;
+    actions = actions.map(a => {
+      const priority = !found && a.key==="apply";
+      if(priority) found = true;
+      return { ...a, priority };
+    });
+
+    advice.push("応募したい気持ちが固まっているなら、そのまま進める導線を優先表示しています");
+  }
+
+  // 応募希望なら必ず表示、最大3枚に調整
+  if(wish==="apply" && !actions.some(a => a.key==="apply")){
+    actions.unshift({
+      key:"apply",
+      title:"応募する",
+      desc:"今の状態で進めたい場合は、このまま応募できます。",
+      href:LINKS.apply,
+      label:"応募フォームへ",
+      priority:true
+    });
+  }
+
+  // 重複削除
+  const seen = new Set();
+  actions = actions.filter(a => {
+    if(seen.has(a.key)) return false;
+    seen.add(a.key);
+    return true;
+  });
+
+  // 応募希望時は apply を先頭固定
+  if(wish==="apply"){
+    actions.sort((a,b) => {
+      if(a.key==="apply") return -1;
+      if(b.key==="apply") return 1;
+      return 0;
+    });
   }
 
   actions = actions.slice(0, 3);
@@ -1280,7 +1258,6 @@ function computeResult(){
     desc,
     advice,
     copyText,
-    primary,
     actions,
     painFlag,
     mentalFlag,
