@@ -670,6 +670,25 @@ function scoreDrivenHints(scores){
   return hints;
 }
 
+function getDisplayType(type){
+  const map = {
+    "安全・ケア優先タイプ":"無理せずケアを優先したい段階",
+    "土台づくりタイプ":"まず感じる土台を整える段階",
+    "くすぐったさ変換タイプ":"まず感じる土台を整える段階",
+    "感覚はあるけど薄いタイプ":"外の感覚を育てていく段階",
+    "没入ブロック解除タイプ":"相手だと崩れやすい段階",
+    "あと一歩・没入維持タイプ":"あと一歩を越える段階",
+    "奥の感覚を開いていくタイプ":"中の感覚を見つけていく段階",
+    "微細な感覚を育てるタイプ":"中の感覚を育てていく段階",
+    "あと一歩・奥の流れ安定タイプ":"あと一歩を越える段階",
+    "もっと深く味わうタイプ":"もっと深く味わっていく段階",
+    "奥の感覚の入り口タイプ":"中の感覚を見つけていく段階",
+    "感覚の最適化タイプ":"もっと自分に合う形へ整える段階",
+    "現状整理タイプ":"今の状態を整理していく段階"
+  };
+  return map[type] || type;
+}
+
 function computeResult(){
   const outer = ans.outerExp?.value || "";
   const inner = ans.innerExp?.value || "";
@@ -1262,8 +1281,11 @@ function computeResult(){
 
   actions = actions.slice(0, 3);
 
+  const displayType = getDisplayType(type);
+
   const copyText = `【感じ方チェック結果】
-タイプ：${type}
+表示結果：${displayType}
+内部判定：${type}
 外の状態：${ans.outerExp?.label || "未回答"}${ans.selfOnlyDetail ? "\n ┗ 詳細：" + ans.selfOnlyDetail.label : ""}${ans.almostDetail ? "\n ┗ 詳細：" + ans.almostDetail.label : ""}
 中の状態：${ans.innerExp?.label || "未回答"}${ans.innerPainDetail ? "\n ┗ 痛みの詳細：" + ans.innerPainDetail.label : ""}
 身体の準備：${ans.arousal?.label || "未回答"}
@@ -1277,6 +1299,7 @@ function computeResult(){
 
   return {
     type,
+    displayType,
     desc,
     advice,
     copyText,
@@ -1316,7 +1339,7 @@ function showResult(){
 
   const r = computeResult();
 
-  $("typeTitle").textContent = r.type;
+  $("typeTitle").textContent = r.displayType;
   $("typeDesc").textContent = r.desc;
 
   const sa = $("scoreArea");
