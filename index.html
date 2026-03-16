@@ -305,22 +305,30 @@
 <div class="toast" id="toast">コピーした</div>
 
 <script>
-// ▼ 各タイプに紐づけるURLのリストです
+// ▼ ミヤさんの全10記事を完璧にマッピングしたリンク集
 const LINKS = {
-  // noteのトップページ
   note_top:"https://note.com/miyaaromassage",
   
-  // 1. 【中がわからない・これから開発したい層】向けの「自己開発ノート」
-  note_self_dev:"https://note.com/miyaaromassage/n/n80f59699f797",
-  
-  // 2. 【中は感じるが、もっと深めたい・安定させたい層】向けの「中イキとポルチオの違い」
-  note_ik_diff:"https://note.com/miyaaromassage/n/n523fde7c95c9",
-  
-  // 3. 【相手がいると没入できない層】向けの「裏垢のオイルマッサージ」（※ nXXXXX をご自身のnoteのURLに書き換えてください）
-  note_oil:"https://note.com/miyaaromassage/n/nXXXXX",
-  
-  // 4. 【痛みや不快感が強い層】向けのケア記事（※ nYYYYY を書き換えてください。該当記事がなければ note_self_dev にしても大丈夫です）
-  note_care:"https://note.com/miyaaromassage/n/nYYYYY",
+  // 1. 土台づくり向け
+  note_self_dev:"https://note.com/miyaaromassage/n/n80f59699f797", 
+  // 2. 未経験・入口向け
+  note_unexp:"https://note.com/miyaaromassage/n/nXXXX1", 
+  // 3. 深く味わう向け
+  note_ik_diff:"https://note.com/miyaaromassage/n/n523fde7c95c9", 
+  // 4. 没入ブロック（相手がいるとダメ）向け
+  note_oil_ura:"https://note.com/miyaaromassage/n/nXXXX2", 
+  // 5. 薄い・くすぐったい向け
+  note_oil_reason:"https://note.com/miyaaromassage/n/nXXXX3", 
+  // 6. ビクンビクンするけど分からない向け
+  note_bikun:"https://note.com/miyaaromassage/n/nXXXX4", 
+  // 7. 力み・脱力できない向け
+  note_relax:"https://note.com/miyaaromassage/n/nXXXX5", 
+  // 8. 尿意・奥の流れ安定向け
+  note_oshigama:"https://note.com/miyaaromassage/n/nXXXX6", 
+  // 9. 痛み・濡れるけど気持ちよくない向け
+  note_pain:"https://note.com/miyaaromassage/n/nXXXX7", 
+  // 10. 最適化・相談前向け
+  note_policy:"https://note.com/miyaaromassage/n/nXXXX8", 
 
   dm:"https://www.instagram.com/nakaikioilmassage/",
   anon_qa:"https://marshmallow-qa.com/miya_massage",
@@ -681,7 +689,7 @@ function computeResult(){
 
   let type = "";
   let desc = "";
-  let advice = [];
+  let advice =[];
   let actions =[];
 
   if(painFlag){
@@ -700,10 +708,10 @@ function computeResult(){
     actions =[
       {
         key:"self",
-        title:"まずは無理を止める",
-        desc:"今日は追わない判断も立派な最適化です。痛みがある日は休むのが先。",
-        href:LINKS.note_care,
-        label:"ケアの考え方を見る",
+        title:"身体の防衛反応を知る",
+        desc:"濡れるのに気持ちよくない時や痛みがある時の、身体の仕組みを解説しています。",
+        href:LINKS.note_pain,
+        label:"ケアの考え方を読む",
         priority:false
       },
       {
@@ -740,7 +748,7 @@ function computeResult(){
         title:"まずは自分で整える",
         desc:"今はいきなり答えを出すより、感じやすい条件を集める段階です。",
         href:LINKS.note_self_dev,
-        label:"記事を見る",
+        label:"自己開発ノートを読む",
         priority:false
       },
       {
@@ -773,10 +781,10 @@ function computeResult(){
     actions =[
       {
         key:"self",
-        title:"触れ方を変えて試す",
-        desc:"強くするより、面・圧・スピードを変える方が当たりやすいタイプです。",
-        href:LINKS.note_self_dev,
-        label:"試し方を見る",
+        title:"感度が上がる仕組みを知る",
+        desc:"強くするより、面や温かさ・触れ方を変える方が当たりやすいタイプです。",
+        href:LINKS.note_oil_reason,
+        label:"感度が上がる理由を読む",
         priority:false
       },
       {
@@ -810,10 +818,10 @@ function computeResult(){
     actions =[
       {
         key:"self",
-        title:"感じやすい条件を集める",
-        desc:"このタイプは『どれが効くか』を記録すると伸びやすいです。",
-        href:LINKS.note_self_dev,
-        label:"記事を見る",
+        title:"感度を上げる科学を知る",
+        desc:"このタイプは『どれが効くか』の条件を整理すると伸びやすいです。",
+        href:LINKS.note_oil_reason,
+        label:"感度が上がる理由を読む",
         priority:false
       },
       {
@@ -856,10 +864,10 @@ function computeResult(){
       },
       {
         key:"self",
-        title:"セルフとの差を整理する",
-        desc:"自分でできることと相手だと崩れることを見比べる段階です。",
-        href:LINKS.note_oil,
-        label:"整理のヒントを見る",
+        title:"前奏と環境の重要性を知る",
+        desc:"相手がいると崩れるのは、マッサージ等の事前準備の質に影響されます。",
+        href:LINKS.note_oil_ura,
+        label:"前奏の秘密を読む",
         priority:false
       },
       {
@@ -889,10 +897,10 @@ function computeResult(){
     actions =[
       {
         key:"self",
-        title:"その場で試せる微調整をやる",
-        desc:"このタイプは大改造より、呼吸・脱力・固定の3点調整が効きやすいです。",
-        href:LINKS.note_oil,
-        label:"実践ポイントを見る",
+        title:"『脱力』の誤解を解く",
+        desc:"力を抜こうとするほど難しくなる理由と、本当の味わい方を解説しています。",
+        href:LINKS.note_relax,
+        label:"味わうコツを読む",
         priority:false
       },
       {
@@ -926,10 +934,10 @@ function computeResult(){
       actions =[
         {
           key:"self",
-          title:"圧から快感への変換を試す",
-          desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階です。",
-          href:LINKS.note_self_dev,
-          label:"記事を見る",
+          title:"ビクンビクンする正体を知る",
+          desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階かもしれません。",
+          href:LINKS.note_bikun,
+          label:"ビクンビクンの正体を読む",
           priority:false
         },
         {
@@ -960,10 +968,10 @@ function computeResult(){
       actions =[
         {
           key:"self",
-          title:"小さい感覚を育てる",
+          title:"本当の快感に変える方法",
           desc:"この段階は『もっと強く』より『切らさない』が先です。",
-          href:LINKS.note_ik_diff,
-          label:"育て方を見る",
+          href:LINKS.note_bikun,
+          label:"快感の育て方を読む",
           priority:false
         },
         {
@@ -1004,10 +1012,10 @@ function computeResult(){
         },
         {
           key:"self",
-          title:"流れを切らない練習をする",
-          desc:"呼吸とリズム固定だけで変わる余地があります。",
-          href:LINKS.note_ik_diff,
-          label:"実践ポイントを見る",
+          title:"おしがまと中イキの関係",
+          desc:"尿意やうずきがある時の、流れを切らない考え方を解説しています。",
+          href:LINKS.note_oshigama,
+          label:"おしがまの関係を読む",
           priority:false
         },
         {
@@ -1046,10 +1054,10 @@ function computeResult(){
         },
         {
           key:"self",
-          title:"自分で精度を上げる",
-          desc:"深さを追う前に、再現条件を言葉にするのが先です。",
+          title:"中イキとポルチオの違い",
+          desc:"さらに深さを追うために、感覚の種類と言葉を整理する記事です。",
           href:LINKS.note_ik_diff,
-          label:"整理のヒントを見る",
+          label:"2つの違いを読む",
           priority:false
         }
       ];
@@ -1064,10 +1072,10 @@ function computeResult(){
       actions =[
         {
           key:"self",
-          title:"入口から慣れていく",
-          desc:"未経験は欠陥じゃなく、単にまだ通ってない道です。",
-          href:LINKS.note_self_dev,
-          label:"記事を見る",
+          title:"未経験の怖さをほどく",
+          desc:"『中はまだ怖い』と思うのは自然な反応です。無理なく進めるヒントを解説しています。",
+          href:LINKS.note_unexp,
+          label:"未経験向けの安心記事を読む",
           priority:false
         },
         {
@@ -1094,10 +1102,10 @@ function computeResult(){
       actions =[
         {
           key:"self",
-          title:"まずは自分で整える",
-          desc:"今の状態に合う自己整理ルートです。",
-          href:LINKS.note_self_dev,
-          label:"記事を見る",
+          title:"施術と身体の対話について",
+          desc:"今の状態に合う自己整理と、施術における考え方のルートです。",
+          href:LINKS.note_policy,
+          label:"施術の考え方を読む",
           priority:false
         },
         {
@@ -1137,10 +1145,10 @@ function computeResult(){
       },
       {
         key:"self",
-        title:"自分で整理する",
-        desc:"今の状態を急いで結論づけず、引っかかる条件を拾う段階です。",
-        href:LINKS.note_top,
-        label:"記事を見る",
+        title:"施術と身体の対話について",
+        desc:"今の状態を急いで結論づけず、身体の反応を観察する考え方の記事です。",
+        href:LINKS.note_policy,
+        label:"施術の考え方を読む",
         priority:false
       },
       {
