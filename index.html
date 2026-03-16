@@ -305,15 +305,30 @@
 <div class="toast" id="toast">コピーした</div>
 
 <script>
+// ▼ 各タイプに紐づけるURLのリストです
 const LINKS = {
-  note_self:"https://note.com/miyaaromassage",
+  // noteのトップページ
+  note_top:"https://note.com/miyaaromassage",
+  
+  // 1. 【中がわからない・これから開発したい層】向けの「自己開発ノート」
+  note_self_dev:"https://note.com/miyaaromassage/n/n80f59699f797",
+  
+  // 2. 【中は感じるが、もっと深めたい・安定させたい層】向けの「中イキとポルチオの違い」
+  note_ik_diff:"https://note.com/miyaaromassage/n/n523fde7c95c9",
+  
+  // 3. 【相手がいると没入できない層】向けの「裏垢のオイルマッサージ」（※ nXXXXX をご自身のnoteのURLに書き換えてください）
+  note_oil:"https://note.com/miyaaromassage/n/nXXXXX",
+  
+  // 4. 【痛みや不快感が強い層】向けのケア記事（※ nYYYYY を書き換えてください。該当記事がなければ note_self_dev にしても大丈夫です）
+  note_care:"https://note.com/miyaaromassage/n/nYYYYY",
+
   dm:"https://www.instagram.com/nakaikioilmassage/",
   anon_qa:"https://marshmallow-qa.com/miya_massage",
   booking:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1",
   apply:"https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
 };
 
-const QUESTIONS = [
+const QUESTIONS =[
   {
     id:"age",
     title:"18歳以上ですか？",
@@ -470,7 +485,7 @@ const QUESTIONS = [
 }
 ];
 
-let flowPath = [];
+let flowPath =[];
 let ans = {};
 let currentIdx = 0;
 let isClicking = false;
@@ -494,7 +509,7 @@ function getQById(id){
 function resetAll(){
   currentIdx = 0;
   ans = {};
-  flowPath = [];
+  flowPath =[];
   isClicking = false;
   intro.classList.remove("hidden");
   quiz.classList.add("hidden");
@@ -640,7 +655,7 @@ function calcScores(){
 }
 
 function scoreDrivenHints(scores){
-  const hints = [];
+  const hints =[];
   if(scores.relaxScore < 30) hints.push("脱力が低めなので、刺激を足すより呼吸と力みの整理を先に");
   if(scores.commScore < 20) hints.push("共有が低めなので、感じ方以前に『伝えづらさ』がブレーキになりやすいです");
   if(scores.bodyScore < 20) hints.push("準備が低めなので、前準備や潤いの工夫が先に効きやすいです");
@@ -667,12 +682,12 @@ function computeResult(){
   let type = "";
   let desc = "";
   let advice = [];
-  let actions = [];
+  let actions =[];
 
   if(painFlag){
     type = "安全・ケア優先タイプ";
     desc = "感覚を深める前に、痛みや不快感を減らすことが最優先の段階です。";
-    advice = [
+    advice =[
       "痛みや違和感がある日は無理をしない",
       "潤い不足、緊張、体調など原因を一つずつ切り分ける",
       "まずは痛くない・怖くない状態を目指す"
@@ -682,12 +697,12 @@ function computeResult(){
     if(innerPainD==="dry" || arousal==="dry" || arousal==="head_ok") advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
     if(innerPainD==="burning") advice.push("ヒリヒリやしみる感じが続く場合は、受診も視野に入れてください");
     if(innerPainD==="sometimes") advice.push("日によって変わる場合は、体調やストレスとの関係を記録してみるのも有効です");
-    actions = [
+    actions =[
       {
         key:"self",
         title:"まずは無理を止める",
         desc:"今日は追わない判断も立派な最適化です。痛みがある日は休むのが先。",
-        href:LINKS.note_self,
+        href:LINKS.note_care,
         label:"ケアの考え方を見る",
         priority:false
       },
@@ -712,19 +727,19 @@ function computeResult(){
   else if(outer==="none" || issue==="zero"){
     type = "土台づくりタイプ";
     desc = "まだ感覚の地図がはっきりしていない段階です。焦らず、感じやすい条件を見つけるところから始めます。";
-    advice = [
+    advice =[
       "いきなりピークを目指さず、心地よい場所を探す",
       "強さより安心感、温かさ、落ち着きを優先する"
     ];
     if(freq==="never") advice.push("まずはセルフタッチで、自分の身体に触れることに慣れていく");
     if(mentalFlag) advice.push("過去の経験や緊張が感覚を鈍らせている可能性もあります");
     if(arousal==="dry" || arousal==="head_ok") advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
-    actions = [
+    actions =[
       {
         key:"self",
         title:"まずは自分で整える",
         desc:"今はいきなり答えを出すより、感じやすい条件を集める段階です。",
-        href:LINKS.note_self,
+        href:LINKS.note_self_dev,
         label:"記事を見る",
         priority:false
       },
@@ -749,18 +764,18 @@ function computeResult(){
   else if(outer==="ticklish"){
     type = "くすぐったさ変換タイプ";
     desc = "神経は反応しているので、触れ方や圧のかけ方を変えることで快感側に変わる余地があります。";
-    advice = [
+    advice =[
       "点でつつくより、面でゆっくり圧をかけるように触れる",
       "くすぐったい場所は避けるより、触れ方を変えて試す",
       "自分で触る→慣れる→人に触れられる、の順に段階を作る"
     ];
     if(freq==="never") advice.push("セルフで『くすぐったくなりにくい触れ方』を探すのも有効です");
-    actions = [
+    actions =[
       {
         key:"self",
         title:"触れ方を変えて試す",
         desc:"強くするより、面・圧・スピードを変える方が当たりやすいタイプです。",
-        href:LINKS.note_self,
+        href:LINKS.note_self_dev,
         label:"試し方を見る",
         priority:false
       },
@@ -785,19 +800,19 @@ function computeResult(){
   else if(outer==="weak"){
     type = "感覚はあるけど薄いタイプ";
     desc = "回路はつながりかけています。刺激の強さより、質や条件の見直しで変わる余地があります。";
-    advice = [
+    advice =[
       "強さよりリズム・温度・触れ方の違いを試す",
       "敏感なポイントを焦らず探す",
       "強刺激に飛ばず、弱い刺激を丁寧に感じる練習をする"
     ];
     if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足で感覚が鈍くなっていることもあります");
     if(freq==="never" || freq==="sometimes") advice.push("セルフで『感じやすいパターン』のデータを集める");
-    actions = [
+    actions =[
       {
         key:"self",
         title:"感じやすい条件を集める",
         desc:"このタイプは『どれが効くか』を記録すると伸びやすいです。",
-        href:LINKS.note_self,
+        href:LINKS.note_self_dev,
         label:"記事を見る",
         priority:false
       },
@@ -830,7 +845,7 @@ function computeResult(){
     advice.push("相手の動きを、自分の動きの延長だと思ってみる");
     if(selfDetail==="head" || tension==="immersion") advice.push("考えない努力より、呼吸・目線・リズムを固定して流れを切らさない工夫が有効です");
     if(comm==="silent" || comm==="afraid") advice.push("伝えづらさが大きなブレーキです。短い一言からで十分です");
-    actions = [
+    actions =[
       {
         key:"consult",
         title:"結果をそのまま送って相談する",
@@ -843,7 +858,7 @@ function computeResult(){
         key:"self",
         title:"セルフとの差を整理する",
         desc:"自分でできることと相手だと崩れることを見比べる段階です。",
-        href:LINKS.note_self,
+        href:LINKS.note_oil,
         label:"整理のヒントを見る",
         priority:false
       },
@@ -871,23 +886,23 @@ function computeResult(){
       advice.push("ピーク前で切れやすい人は、刺激を増やすより流れを保つ方が大切です");
     }
     if(mentalFlag) advice.push("『いかなきゃ』ではなく『今の気持ちよさにいる』に意識を戻す");
-    actions = [
+    actions =[
       {
         key:"self",
         title:"その場で試せる微調整をやる",
         desc:"このタイプは大改造より、呼吸・脱力・固定の3点調整が効きやすいです。",
-        href:LINKS.note_self,
+        href:LINKS.note_oil,
         label:"実践ポイントを見る",
         priority:false
       },
-   {
-  key:"apply",
-  title:"案内・応募に進む",
-  desc:"もう進みたい場合は、このままフォームを確認できます。",
-  href:LINKS.apply,
-  label:"案内・応募フォームへ",
-  priority:false
-},
+      {
+        key:"apply",
+        title:"案内・応募に進む",
+        desc:"もう進みたい場合は、このままフォームを確認できます。",
+        href:LINKS.apply,
+        label:"案内・応募フォームへ",
+        priority:false
+      },
       {
         key:"consult",
         title:"どこで切れるか相談する",
@@ -902,18 +917,18 @@ function computeResult(){
     if(inner==="none" || inner==="pressure"){
       type = "奥の感覚を開いていくタイプ";
       desc = "外の回路は整っています。次は奥の感覚を『圧』から『快感』に育てていく段階です。";
-      advice = [
+      advice =[
         "外で十分に高めてから奥に意識を向ける",
         "激しさより、ポイントをゆっくり探る",
         "違和感と快感の境目を丁寧に観察する"
       ];
       if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
-      actions = [
+      actions =[
         {
           key:"self",
           title:"圧から快感への変換を試す",
           desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階です。",
-          href:LINKS.note_self,
+          href:LINKS.note_self_dev,
           label:"記事を見る",
           priority:false
         },
@@ -937,17 +952,17 @@ function computeResult(){
     } else if(inner==="slight"){
       type = "微細な感覚を育てるタイプ";
       desc = "奥に小さな感覚は出ています。今はそれを強くするより、途切れず感じ続けられる状態を育てる段階です。";
-      advice = [
+      advice =[
         "今ある小さな感覚を雑に飛ばさない",
         "場所が見つかったら角度と圧を丁寧に保つ",
         "外と奥を切り分けず、つながりとして感じる"
       ];
-      actions = [
+      actions =[
         {
           key:"self",
           title:"小さい感覚を育てる",
           desc:"この段階は『もっと強く』より『切らさない』が先です。",
-          href:LINKS.note_self,
+          href:LINKS.note_ik_diff,
           label:"育て方を見る",
           priority:false
         },
@@ -971,14 +986,14 @@ function computeResult(){
     } else if(inner==="deep_feel" || inner==="urge"){
       type = "あと一歩・奥の流れ安定タイプ";
       desc = "奥の感覚はすでに育っています。途中で流れを切らずに乗り続けることが鍵です。";
-      advice = [
+      advice =[
         "奥がうずいてきたら、リズムや角度を変えすぎない",
         "腹式呼吸で奥まわりの力みを抜く",
         "刺激を点より面で受け取る意識を持つ"
       ];
       if(inner==="urge") advice.push("尿意っぽさは手前の反応として出ることがあります。怖くなければ力を抜いて観察を");
       if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
-      actions = [
+      actions =[
         {
           key:"apply",
           title:"応募する",
@@ -991,7 +1006,7 @@ function computeResult(){
           key:"self",
           title:"流れを切らない練習をする",
           desc:"呼吸とリズム固定だけで変わる余地があります。",
-          href:LINKS.note_self,
+          href:LINKS.note_ik_diff,
           label:"実践ポイントを見る",
           priority:false
         },
@@ -1007,12 +1022,12 @@ function computeResult(){
     } else if(inner==="ik" || issue==="deeper"){
       type = "もっと深く味わうタイプ";
       desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
-      advice = [
+      advice =[
         "気持ちいいポイントを言語化して共有する",
         "達した後の流れをすぐ切らない",
         "今までと少し違うアプローチも試す"
       ];
-      actions = [
+      actions =[
         {
           key:"apply",
           title:"応募する",
@@ -1033,7 +1048,7 @@ function computeResult(){
           key:"self",
           title:"自分で精度を上げる",
           desc:"深さを追う前に、再現条件を言葉にするのが先です。",
-          href:LINKS.note_self,
+          href:LINKS.note_ik_diff,
           label:"整理のヒントを見る",
           priority:false
         }
@@ -1041,17 +1056,17 @@ function computeResult(){
     } else if(inner==="no_exp"){
       type = "奥の感覚の入り口タイプ";
       desc = "まだ未経験なだけで、土台は整っています。急がず入口から慣れていく段階です。";
-      advice = [
+      advice =[
         "いきなり深い刺激を目指さない",
         "前準備と潤いをしっかり確保する",
         "最初は自分のペースで試す"
       ];
-      actions = [
+      actions =[
         {
           key:"self",
           title:"入口から慣れていく",
           desc:"未経験は欠陥じゃなく、単にまだ通ってない道です。",
-          href:LINKS.note_self,
+          href:LINKS.note_self_dev,
           label:"記事を見る",
           priority:false
         },
@@ -1076,12 +1091,12 @@ function computeResult(){
       type = "感覚の最適化タイプ";
       desc = "ベースは整っています。足りない条件を見極めて、微調整していく段階です。";
       advice = ["足りないのがメンタルか刺激条件かを見極める"];
-      actions = [
+      actions =[
         {
           key:"self",
           title:"まずは自分で整える",
           desc:"今の状態に合う自己整理ルートです。",
-          href:LINKS.note_self,
+          href:LINKS.note_self_dev,
           label:"記事を見る",
           priority:false
         },
@@ -1107,11 +1122,11 @@ function computeResult(){
   else{
     type = "現状整理タイプ";
     desc = "いくつかの要素が重なっている可能性があります。順番を整理すると進みやすくなります。";
-    advice = [
+    advice =[
       "心・身体・環境のどれがいちばん強いブレーキか見極める",
       "一人で詰まるなら相談で整理する"
     ];
-    actions = [
+    actions =[
       {
         key:"consult",
         title:"まずは相談で整理する",
@@ -1124,7 +1139,7 @@ function computeResult(){
         key:"self",
         title:"自分で整理する",
         desc:"今の状態を急いで結論づけず、引っかかる条件を拾う段階です。",
-        href:LINKS.note_self,
+        href:LINKS.note_top,
         label:"記事を見る",
         priority:false
       },
@@ -1187,16 +1202,16 @@ function computeResult(){
   } else if(wish==="apply"){
     const hasApply = actions.some(a => a.key==="apply");
 
-if(!hasApply){
-  actions.unshift({
-    key:"apply",
-    title:"案内・応募に進む",
-    desc:"今の状態で進めたい場合は、このままフォームを確認できます。",
-    href:LINKS.apply,
-    label:"案内・応募フォームへ",
-    priority:true
-  });
-}
+    if(!hasApply){
+      actions.unshift({
+        key:"apply",
+        title:"案内・応募に進む",
+        desc:"今の状態で進めたい場合は、このままフォームを確認できます。",
+        href:LINKS.apply,
+        label:"案内・応募フォームへ",
+        priority:true
+      });
+    }
 
     let found = false;
     actions = actions.map(a => {
@@ -1264,7 +1279,7 @@ if(!hasApply){
   };
 }
 
-function renderActions(actions = []){
+function renderActions(actions =[]){
   const grid = $("ctaGrid");
   grid.innerHTML = "";
 
@@ -1299,7 +1314,7 @@ function showResult(){
   const sa = $("scoreArea");
   sa.innerHTML = "";
 
-  const bars = [
+  const bars =[
     {label:"外",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
     {label:"中",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
     {label:"脱力",score:r.scores.relaxScore,color:"linear-gradient(90deg,#10b981,#34d399)"},
@@ -1337,6 +1352,7 @@ function showResult(){
     sb.innerHTML = "<b>安全優先：</b>痛みや違和感がある時は、感じ方を追うより無理をしないことが先です。";
   } else if(r.mentalFlag){
     sb.classList.remove("hidden");
+    sb.classList.remove("dangerBox");
     sb.classList.add("warnBox");
     sb.innerHTML = "<b>ヒント：</b>焦り・自意識・没入の切れやすさがブレーキになっている可能性があります。強い刺激を足すより、流れが切れにくい状態を作る方が有効です。";
   }
