@@ -448,6 +448,19 @@ const QUESTIONS =[
       {value:"position_only", label:"体位や深さで変わる", sub:"条件次第でかなり違う"}
     ]
   },
+
+  {
+  id:"painAnxiety",
+  title:"痛みへの不安はある？",
+  desc:"前に痛かった記憶が、今の力みや警戒につながっていることがあります。",
+  condition:a => a.rootTheme?.value==="pain",
+  options:[
+    {value:"strong", label:"かなりある", sub:"また痛いかもが先に浮かぶ"},
+    {value:"some", label:"少しある", sub:"不安はあるけど毎回ではない"},
+    {value:"none", label:"あまりない", sub:"不安より条件の問題が大きい"}
+  ]
+},
+  
   {
     id:"arousal",
     title:"身体の準備状態はどう？",
@@ -723,6 +736,7 @@ function computeResult(){
   const almostD = ans.almostDetail?.value || "";
   const painDetail = ans.painDetail?.value || "";
   const painTiming = ans.painTiming?.value || "";
+  const painAnxiety = ans.painAnxiety?.value || "";
   const comm = ans.partnerComm?.value || "";
   const freq = ans.frequency?.value || "";
 
@@ -777,6 +791,12 @@ function computeResult(){
     if(painTiming==="sometimes" || painDetail==="sometimes"){
       advice.push("日によって変わるなら、体調・周期・ストレス・体位の差をメモしておくと整理しやすい");
     }
+    if(painAnxiety==="strong"){
+  advice.push("前に痛かった記憶が強いと、入る前から身体が警戒して固くなりやすいです。まずは『大丈夫だった条件』を増やして、不安を少しずつ上書きするのが先です");
+}
+if(painAnxiety==="some"){
+  advice.push("少し不安がある時は、毎回ゼロから頑張るより、痛くなりにくい条件を固定した方が安心しやすいです");
+}
 
     actions = [
       {
@@ -1299,7 +1319,7 @@ function computeResult(){
 内部判定：${type}
 今の悩みのテーマ：${ans.rootTheme?.label || "未回答"}
 外の状態：${ans.outerExp?.label || "未回答"}${ans.selfOnlyDetail ? "\n ┗ 詳細：" + ans.selfOnlyDetail.label : ""}${ans.almostDetail ? "\n ┗ 詳細：" + ans.almostDetail.label : ""}
-中の状態：${ans.innerExp?.label || "未回答"}${ans.painDetail ? "\n ┗ 痛みの詳細：" + ans.painDetail.label : ""}
+中の状態：${ans.innerExp?.label || "未回答"}${ans.painDetail ? "\n ┗ 痛みの詳細：" + ans.painDetail.label : ""}${ans.painAnxiety ? "\n ┗ 痛みの不安：" + ans.painAnxiety.label : ""}
 身体の準備：${ans.arousal?.label || "未回答"}
 頭の中：${ans.tension?.label || "未回答"}
 伝えやすさ：${ans.partnerComm?.label || "未回答"}
