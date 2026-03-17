@@ -356,24 +356,35 @@ const QUESTIONS =[
     ]
   },
   {
+    id:"rootTheme",
+    title:"今の悩みにいちばん近いものは？",
+    desc:"まずは、今どのテーマを整理したいか選んでください。",
+    options:[
+      {value:"self_dev", label:"自分で感覚を育てたい", sub:"自己開発の進め方を整理したい"},
+      {value:"inner_unknown", label:"中の気持ちよさがよくわからない", sub:"痛みより、快感がつかみにくい"},
+      {value:"pain", label:"中が痛い・不快感がある", sub:"まずは痛みやつらさを減らしたい"},
+      {value:"climax", label:"中イキできず途中で止まる", sub:"反応はあるのに最後までつながりにくい"}
+    ]
+  },
+  {
     id:"outerExp",
     title:"外の感覚にいちばん近いものは？",
     desc:"今のベースの感じ方を見ていきます。",
+    condition:a => ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"good", label:"外で安定して気持ちいい", sub:"自分でも相手でもいける"},
       {value:"self_only", label:"自分ならいける", sub:"相手だとイマイチ"},
       {value:"almost", label:"あと一歩で止まる", sub:"気持ちいいけど達しきれない"},
       {value:"weak", label:"ぼんやりしている", sub:"感覚はあるけど弱い"},
       {value:"ticklish", label:"くすぐったい", sub:"集中しにくい"},
-      {value:"none", label:"ほぼ感じない", sub:"無感覚に近い"},
-     {value:"pain", label:"痛い・不快感が強い", sub:"外も中もまずつらさの整理が必要"}
+      {value:"none", label:"ほぼ感じない", sub:"無感覚に近い"}
     ]
   },
   {
     id:"selfOnlyDetail",
     title:"相手だとイマイチなのは、どれに近い？",
     desc:"ギャップの原因を整理します。",
-    condition:a=>a.outerExp?.value==="self_only",
+    condition:a => a.outerExp?.value==="self_only" && ["inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"trust", label:"緊張する", sub:"相手の前だと身体が固い"},
       {value:"rhythm", label:"リズムが合わない", sub:"強さやテンポが違う"},
@@ -386,7 +397,7 @@ const QUESTIONS =[
     id:"almostDetail",
     title:"あと一歩で止まる時はどんな感じ？",
     desc:"壁になっているものを見ていきます。",
-    condition:a=>a.outerExp?.value==="almost",
+    condition:a => a.outerExp?.value==="almost" && ["inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"breath", label:"呼吸が止まる", sub:"浅くなったり息を止めがち"},
       {value:"tense", label:"力みすぎる", sub:"足・お腹・肩に力が入る"},
@@ -400,6 +411,7 @@ const QUESTIONS =[
     id:"innerExp",
     title:"中の感覚にいちばん近いものは？",
     desc:"奥の刺激の受け取り方を見ていきます。",
+    condition:a => ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"ik", label:"中で達したことがある", sub:"さらに深めたい"},
       {value:"deep_feel", label:"奥がうずく感じがある", sub:"内側からこみ上げる感じ"},
@@ -407,32 +419,40 @@ const QUESTIONS =[
       {value:"slight", label:"何かは感じる", sub:"でも快感かは微妙"},
       {value:"pressure", label:"圧だけわかる", sub:"入ってる感覚はある"},
       {value:"none", label:"何も感じない", sub:"単調な動きに感じる"},
-      {value:"pain", label:"痛い・しみる", sub:"苦痛や入りにくさがある"},
       {value:"no_exp", label:"試したことがない", sub:"経験なし"}
     ]
   },
-{
-  id:"painDetail",
-  title:"痛みはどれに近い？",
-  desc:"場所や出方で対処が変わります。",
-  condition:a=>
-    a.outerExp?.value==="pain" ||
-    a.innerExp?.value==="pain" ||
-    a.mainIssue?.value==="pain_fix",
-  options:[
-    {value:"entry", label:"入口が痛い", sub:"入れ始めや浅いところがつらい"},
-    {value:"deep", label:"奥が痛い", sub:"深く当たるとズンと響く"},
-    {value:"back", label:"バックなど特定の体位で痛い", sub:"角度や深さで急につらくなる"},
-    {value:"overall", label:"全体的に痛い", sub:"どこがというより全部しんどい"},
-    {value:"dry", label:"こすれて痛い", sub:"滑りが足りない感じ"},
-    {value:"burning", label:"ヒリヒリ・しみる", sub:"灼熱感や刺激感がある"},
-    {value:"sometimes", label:"日によって違う", sub:"平気な日とつらい日がある"}
-  ]
-},
+  {
+    id:"painDetail",
+    title:"痛みはどれに近い？",
+    desc:"場所や出方で見直すポイントが変わります。",
+    condition:a => a.rootTheme?.value==="pain",
+    options:[
+      {value:"entry", label:"入口が痛い", sub:"入れ始めや浅いところがつらい"},
+      {value:"deep", label:"奥が痛い", sub:"深く当たるとズンと響く"},
+      {value:"back", label:"バックなど特定の体位で痛い", sub:"角度や深さで急につらくなる"},
+      {value:"overall", label:"全体的に痛い", sub:"どこがというより全部しんどい"},
+      {value:"dry", label:"こすれて痛い", sub:"滑りが足りない感じ"},
+      {value:"burning", label:"ヒリヒリする", sub:"しみる・灼熱感がある"},
+      {value:"sometimes", label:"日によって違う", sub:"痛い時と平気な時がある"}
+    ]
+  },
+  {
+    id:"painTiming",
+    title:"痛みの出方はどれに近い？",
+    desc:"毎回なのか、条件で変わるのかを見ます。",
+    condition:a => a.rootTheme?.value==="pain",
+    options:[
+      {value:"always", label:"ほぼ毎回ある", sub:"条件に関係なく出やすい"},
+      {value:"sometimes", label:"日によって違う", sub:"平気な日もある"},
+      {value:"position_only", label:"体位や深さで変わる", sub:"条件次第でかなり違う"}
+    ]
+  },
   {
     id:"arousal",
     title:"身体の準備状態はどう？",
     desc:"濡れやすさや反応の出方を見ます。",
+    condition:a => ["inner_unknown","pain","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"easy", label:"自然に準備が整う", sub:"興奮すると十分濡れる"},
       {value:"slow", label:"時間がかかる", sub:"すぐには足りない"},
@@ -445,6 +465,7 @@ const QUESTIONS =[
     id:"tension",
     title:"行為中の頭の中に近いものは？",
     desc:"思考や没入のしやすさを見ていきます。",
+    condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"overthink", label:"考えすぎて入れない", sub:"いかなきゃ、などが浮かぶ"},
       {value:"conscious", label:"自意識が消えない", sub:"見られてる感じが気になる"},
@@ -459,6 +480,7 @@ const QUESTIONS =[
     id:"partnerComm",
     title:"相手への伝えやすさはどう？",
     desc:"感覚の共有のしやすさを見ます。",
+    condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
     options:[
       {value:"open", label:"かなり伝えられる", sub:"好き嫌いを自由に言える"},
       {value:"some", label:"ある程度は言える", sub:"細かいことは言いにくい"},
@@ -471,6 +493,7 @@ const QUESTIONS =[
     id:"frequency",
     title:"1人でする時の傾向は？",
     desc:"普段の癖や慣れ方を見ていきます。",
+    condition:a => a.rootTheme?.value==="self_dev",
     options:[
       {value:"regular", label:"定期的にしている", sub:"リラックスしてできる"},
       {value:"ashipin", label:"力んで達しやすい", sub:"足ピンや息止めがある"},
@@ -481,30 +504,16 @@ const QUESTIONS =[
     ]
   },
   {
-    id:"mainIssue",
-    title:"今いちばん整えたいのは？",
-    desc:"このチェックの目的に近いものを選んでください。",
+    id:"wish",
+    title:"今の気分に近いものは？",
+    desc:"結果を見るだけでも大丈夫です。",
     options:[
-      {value:"zero", label:"まず感じ方の土台を作りたい", sub:"気持ちいいがよくわからない"},
-      {value:"outer_first", label:"まず外を安定させたい", sub:"外で気持ちよくなりたい"},
-      {value:"mid_ik", label:"中の感覚を開きたい", sub:"外はOKで次に進みたい"},
-      {value:"partner", label:"相手といる時に感じやすくなりたい", sub:"セルフとの差を減らしたい"},
-      {value:"pain_fix", label:"痛みや不快感を減らしたい", sub:"まず普通に楽しみたい"},
-      {value:"deeper", label:"もっと深く味わいたい", sub:"今より深いピークを目指したい"},
-      {value:"enjoy", label:"義務感を減らしたい", sub:"ちゃんと楽しめるようになりたい"}
+      {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
+      {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
+      {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
+      {value:"apply", label:"案内・応募に進みたい", sub:"フォームを見たい"}
     ]
-  },
-{
-  id:"wish",
-  title:"今の気分に近いものは？",
-  desc:"結果を見るだけでも大丈夫です。",
-  options:[
-    {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
-    {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
-    {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
-    {value:"apply", label:"案内・応募に進みたい", sub:"フォームを見たい"}
-  ]
-}
+  }
 ];
 
 let flowPath =[];
@@ -652,6 +661,7 @@ function showToast(t){
 }
 
 function calcScores(){
+  const theme = ans.rootTheme?.value || "";
   const outer = ans.outerExp?.value || "";
   const inner = ans.innerExp?.value || "";
   const tension = ans.tension?.value || "";
@@ -659,14 +669,15 @@ function calcScores(){
   const comm = ans.partnerComm?.value || "";
   const freq = ans.frequency?.value || "";
 
-  const outerMap = {good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5,pain:0};
-  const innerMap = {ik:100,deep_feel:70,urge:60,slight:40,pressure:20,none:10,pain:0,no_exp:5};
+  const outerMap = {good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5};
+  const innerMap = {ik:100,deep_feel:70,urge:60,slight:40,pressure:20,none:10,no_exp:5};
   const tensionMap = {low:100,mid:70,immersion:35,overthink:25,conscious:20,duty:15,past:5};
   const arousalMap = {easy:100,slow:60,head_ok:35,dry:10,unknown:30};
   const freqMap = {regular:100,sometimes:60,vibrator:50,ashipin:40,exploring:35,never:5};
   const commMap = {open:100,some:60,no_partner:40,silent:15,afraid:10};
 
   return {
+    theme,
     outerScore: outerMap[outer] ?? 30,
     innerScore: innerMap[inner] ?? 20,
     relaxScore: tensionMap[tension] ?? 40,
@@ -686,121 +697,151 @@ function scoreDrivenHints(scores){
 
 function getDisplayType(type){
   const map = {
-    "安全・ケア優先タイプ":"無理せずケアを優先したい段階",
+    "入口ケア優先タイプ":"まずは入口のつらさを減らす段階",
+    "奥の当たり方調整タイプ":"奥のつらさを整理する段階",
+    "体位依存ケアタイプ":"体位や角度を見直す段階",
+    "全体緊張ケアタイプ":"まずは警戒や力みをほどく段階",
+    "摩擦・刺激ケアタイプ":"摩擦や刺激の負担を減らす段階",
     "土台づくりタイプ":"まず感じる土台を整える段階",
-    "くすぐったさ変換タイプ":"まず感じる土台を整える段階",
-    "感覚はあるけど薄いタイプ":"外の感覚を育てていく段階",
-    "没入ブロック解除タイプ":"相手だと崩れやすい段階",
-    "あと一歩・没入維持タイプ":"あと一歩を越える段階",
-    "奥の感覚を開いていくタイプ":"中の感覚を見つけていく段階",
-    "微細な感覚を育てるタイプ":"中の感覚を育てていく段階",
-    "あと一歩・奥の流れ安定タイプ":"あと一歩を越える段階",
-    "もっと深く味わうタイプ":"もっと深く味わっていく段階",
-    "奥の感覚の入り口タイプ":"中の感覚を見つけていく段階",
-    "感覚の最適化タイプ":"もっと自分に合う形へ整える段階",
+    "感覚はあるけど薄いタイプ":"小さな感覚を育てる段階",
+    "没入ブロックタイプ":"相手だと崩れやすい段階",
+    "奥の感覚育成タイプ":"奥の流れを育てる段階",
+    "深めていくタイプ":"もっと深く味わっていく段階",
     "現状整理タイプ":"今の状態を整理していく段階"
   };
   return map[type] || type;
 }
 
 function computeResult(){
+  const theme = ans.rootTheme?.value || "";
   const outer = ans.outerExp?.value || "";
   const inner = ans.innerExp?.value || "";
   const tension = ans.tension?.value || "";
-  const issue = ans.mainIssue?.value || "";
   const wish = ans.wish?.value || "";
   const arousal = ans.arousal?.value || "";
   const selfDetail = ans.selfOnlyDetail?.value || "";
   const almostD = ans.almostDetail?.value || "";
- const painDetail = ans.painDetail?.value || "";
+  const painDetail = ans.painDetail?.value || "";
+  const painTiming = ans.painTiming?.value || "";
   const comm = ans.partnerComm?.value || "";
   const freq = ans.frequency?.value || "";
 
   const scores = calcScores();
-  const painFlag = (outer === "pain" || inner === "pain" || issue === "pain_fix");
+  const painFlag = theme === "pain";
   const mentalFlag = ["overthink","conscious","past","duty","immersion"].includes(tension);
 
   let type = "";
   let desc = "";
-  let advice =[];
-  let actions =[];
+  let advice = [];
+  let actions = [];
 
-if(painFlag){
-  type = "安全・ケア優先タイプ";
-  desc = "感覚を深める前に、まずは痛みや不快感の出方を整理して、無理のない条件を見つける段階です。";
-  advice =[
-    "痛みがある日は無理に進めず、まず『痛くない接触』まで段階を下げる",
-    "痛みの場所・体位・乾きやすさ・緊張の有無を分けて見る",
-    "『感じる練習』より先に、『怖くない・つらくない』を作る"
-  ];
-
-  if(painDetail==="entry") {
-    advice.push("入口の痛みは、緊張による締めつけや準備不足が重なっていることがあります。浅さ・呼吸・ペースを下げて確認を");
-  }
-  if(painDetail==="deep") {
-    advice.push("奥の痛みは、深さや当たり方の問題が関わることがあります。角度・深さ・骨盤の向きを見直すと変わることがあります");
-  }
-  if(painDetail==="back") {
-    advice.push("バックなど特定の体位だけ痛い場合は、相性より角度や深さの問題であることが多いです。体位を固定せず、浅さや骨盤の角度を調整してみてください");
-  }
-  if(painDetail==="overall") {
-    advice.push("全体的に痛い場合は、局所だけでなく緊張・怖さ・準備不足が重なっている可能性があります。『どこが痛いか』より先に、身体が警戒していないかを見てください");
-  }
-  if(painDetail==="dry" || arousal==="dry" || arousal==="head_ok") {
-    advice.push("こすれて痛い時は、潤い不足や摩擦の影響が大きいことがあります。潤滑の工夫は異常ではなく普通の選択肢です");
-  }
-  if(painDetail==="burning") {
-    advice.push("ヒリヒリ・しみる感じが続く場合は、摩擦以外の要因もありえるので受診も視野に入れてください");
-  }
-  if(painDetail==="sometimes") {
-    advice.push("日によって変わる場合は、体調・ストレス・周期・相手・体位との関係を記録しておくと整理しやすいです");
-  }
-  if(outer==="pain") {
-    advice.push("外側の不快感が強い場合は、刺激量より『触れ方そのものが合っているか』を先に見直す方が進みやすいです");
-  }
-
-  actions =[
-    {
-      key:"self",
-      title:"痛みの出方を整理する",
-      desc:"入口・奥・体位・乾きやすさなど、痛みのパターンごとに見直す視点をまとめていく枠です。",
-      href:LINKS.note_pain,
-      label:"ケアの考え方を読む",
-      priority:false
-    },
-    {
-      key:"consult",
-      title:"状態を整理して相談する",
-      desc:"どこで、どんな時に、どんな痛みが出るかをそのまま伝えると整理しやすくなります。",
-      href:LINKS.dm,
-      label:"DMで相談する",
-      priority:false
-    },
-    {
-      key:"anon",
-      title:"匿名で先に聞く",
-      desc:"いきなり深く話したくない時は、まず匿名で切り出す方が楽です。",
-      href:LINKS.anon_qa,
-      label:"匿名で聞く",
-      priority:false
+  if(theme==="pain"){
+    if(painDetail==="entry"){
+      type = "入口ケア優先タイプ";
+      desc = "入れ始めや浅いところのつらさを先に減らしていく段階です。感じ方を育てるより、まずは入口の負担を下げることが先です。";
+    } else if(painDetail==="deep"){
+      type = "奥の当たり方調整タイプ";
+      desc = "奥の当たり方や深さを調整していく段階です。快感を育てる前に、奥で痛くならない条件探しが先です。";
+    } else if(painDetail==="back"){
+      type = "体位依存ケアタイプ";
+      desc = "特定の体位でのつらさを整理していく段階です。相性より、角度や深さの問題として見た方が進みやすいです。";
+    } else if(painDetail==="overall"){
+      type = "全体緊張ケアタイプ";
+      desc = "入口や奥だけでなく、全体的な警戒や力みをほどいていく段階です。感じることより先に、つらくない条件づくりが必要です。";
+    } else {
+      type = "摩擦・刺激ケアタイプ";
+      desc = "摩擦や刺激の負担を減らしていく段階です。まずはヒリヒリやこすれの少ない状態を作ることが先です。";
     }
-  ];
-}
-  else if(outer==="none" || issue==="zero"){
-    type = "土台づくりタイプ";
-    desc = "まだ感覚の地図がはっきりしていない段階です。焦らず、感じやすい条件を見つけるところから始めます。";
-    advice =[
-      "いきなりピークを目指さず、心地よい場所を探す",
-      "強さより安心感、温かさ、落ち着きを優先する"
+
+    advice = [
+      "痛みがある日は無理に進めず、まず『痛くない接触』まで段階を下げる",
+      "場所・体位・乾きやすさ・緊張の有無を分けて見る",
+      "『感じる練習』より先に、『怖くない・つらくない』を作る"
     ];
-    if(freq==="never") advice.push("まずはセルフタッチで、自分の身体に触れることに慣れていく");
-    if(mentalFlag) advice.push("過去の経験や緊張が感覚を鈍らせている可能性もあります");
-    if(arousal==="dry" || arousal==="head_ok") advice.push("摩擦を減らすだけでも感じ方が変わることがあります");
-    actions =[
+
+    if(painDetail==="entry"){
+      advice.push("入口のつらさは、緊張や準備不足が重なっていることがあります。浅さ・呼吸・ペースを見直す");
+    }
+    if(painDetail==="deep"){
+      advice.push("奥のつらさは、深さや当たり方が影響していることがあります。角度や骨盤の向きを変えて確認する");
+    }
+    if(painDetail==="back"){
+      advice.push("バックなど特定の体位だけつらい場合は、体位を固定せず浅さや角度から調整する");
+    }
+    if(painDetail==="overall"){
+      advice.push("全体的に痛い時は、局所だけでなく怖さや力みが強くなっていないかを見る");
+    }
+    if(painDetail==="dry" || painDetail==="burning" || arousal==="dry" || arousal==="head_ok"){
+      advice.push("摩擦を減らす工夫や潤滑の見直しを先に。足りないのは異常ではなく、普通にある差です");
+    }
+    if(painTiming==="sometimes" || painDetail==="sometimes"){
+      advice.push("日によって変わるなら、体調・周期・ストレス・体位の差をメモしておくと整理しやすい");
+    }
+
+    actions = [
+      {
+        key:"self",
+        title:"痛みの出方を整理する",
+        desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
+        href:LINKS.note_pain,
+        label:"ケアの考え方を読む",
+        priority:false
+      },
+      {
+        key:"consult",
+        title:"状態を整理して相談する",
+        desc:"どこで、どんな時に、どんな痛みが出るかをそのまま伝えると整理しやすいです。",
+        href:LINKS.dm,
+        label:"DMで相談する",
+        priority:false
+      },
+      {
+        key:"anon",
+        title:"匿名で先に聞く",
+        desc:"まだ深く話したくない時は、匿名からでも十分です。",
+        href:LINKS.anon_qa,
+        label:"匿名で聞く",
+        priority:false
+      }
+    ];
+  }
+
+  else if(theme==="self_dev"){
+    if(inner==="none" || outer==="none" || inner==="no_exp"){
+      type = "土台づくりタイプ";
+      desc = "まだ感覚の地図がはっきりしていない段階です。焦らず、自分の中で感じやすい条件を見つけるところから始めます。";
+      advice = [
+        "いきなり答えを出そうとしない",
+        "強さより安心感、温かさ、落ち着きを優先する",
+        "まずは『何がダメか』より『少しマシな条件』を集める"
+      ];
+    } else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
+      type = "感覚はあるけど薄いタイプ";
+      desc = "小さな反応はあるので、刺激を強くするより『どの条件で入りやすいか』を育てていく段階です。";
+      advice = [
+        "強刺激に飛ばず、弱い反応を丁寧に拾う",
+        "触れ方・温度・タイミングの違いを試す",
+        "感じやすかった条件を自分の中で覚えていく"
+      ];
+    } else {
+      type = "現状整理タイプ";
+      desc = "自己開発の方向性は悪くありません。今は自分に合う進め方を整理していく段階です。";
+      advice = [
+        "自分のやり方の癖を知る",
+        "強い刺激頼みになっていないかを見る",
+        "続けやすい形でデータを取る"
+      ];
+    }
+
+    if(freq==="vibrator") advice.push("強い刺激に慣れている場合は、少しずつ刺激を弱める時間も作る");
+    if(freq==="ashipin") advice.push("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります");
+    if(freq==="never") advice.push("まずはセルフで触れること自体に慣れるところからで十分です");
+
+    actions = [
       {
         key:"self",
         title:"まずは自分で整える",
-        desc:"今はいきなり答えを出すより、感じやすい条件を集める段階です。",
+        desc:"自己開発の入口や、自分の感覚の探し方を整理する枠です。",
         href:LINKS.note_self_dev,
         label:"自己開発ノートを読む",
         priority:false
@@ -808,7 +849,7 @@ if(painFlag){
       {
         key:"anon",
         title:"匿名で壁だけ聞く",
-        desc:"『何がわからないのかもわからない』時は、匿名質問が相性いいです。",
+        desc:"自己流で詰まっている点だけ先に聞くこともできます。",
         href:LINKS.anon_qa,
         label:"質問する",
         priority:false
@@ -816,421 +857,409 @@ if(painFlag){
       {
         key:"consult",
         title:"今の状態を相談する",
-        desc:"一人で整理しきれないなら、結果をそのまま送れば話が早いです。",
+        desc:"一人で整理しきれない時は、そのまま送れば十分です。",
         href:LINKS.dm,
         label:"DMを送る",
         priority:false
       }
     ];
   }
-  else if(outer==="ticklish"){
-    type = "くすぐったさ変換タイプ";
-    desc = "神経は反応しているので、触れ方や圧のかけ方を変えることで快感側に変わる余地があります。";
-    advice =[
-      "点でつつくより、面でゆっくり圧をかけるように触れる",
-      "くすぐったい場所は避けるより、触れ方を変えて試す",
-      "自分で触る→慣れる→人に触れられる、の順に段階を作る"
-    ];
-    if(freq==="never") advice.push("セルフで『くすぐったくなりにくい触れ方』を探すのも有効です");
-    actions =[
-      {
-        key:"self",
-        title:"感度が上がる仕組みを知る",
-        desc:"強くするより、面や温かさ・触れ方を変える方が当たりやすいタイプです。",
-        href:LINKS.note_oil_reason,
-        label:"感度が上がる理由を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"どこで崩れるか相談する",
-        desc:"くすぐったさなのか緊張なのか、切り分けるだけでも前に進みます。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で軽く聞く",
-        desc:"まだ相談ほどではないけど詰まってる、みたいな人間らしい中途半端さ用です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="weak"){
-    type = "感覚はあるけど薄いタイプ";
-    desc = "回路はつながりかけています。刺激の強さより、質や条件の見直しで変わる余地があります。";
-    advice =[
-      "強さよりリズム・温度・触れ方の違いを試す",
-      "敏感なポイントを焦らず探す",
-      "強刺激に飛ばず、弱い刺激を丁寧に感じる練習をする"
-    ];
-    if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足で感覚が鈍くなっていることもあります");
-    if(freq==="never" || freq==="sometimes") advice.push("セルフで『感じやすいパターン』のデータを集める");
-    actions =[
-      {
-        key:"self",
-        title:"感度を上げる科学を知る",
-        desc:"このタイプは『どれが効くか』の条件を整理すると伸びやすいです。",
-        href:LINKS.note_oil_reason,
-        label:"感度が上がる理由を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"薄さの原因を切り分ける",
-        desc:"準備・緊張・刺激のズレを整理したい時はこちら。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"direct",
-        title:"直接の案内を見る",
-        desc:"自分で探すより、最短で整えたい時の導線です。",
-        href:LINKS.booking,
-        label:"案内を見る",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="self_only"){
-    type = "没入ブロック解除タイプ";
-    desc = "自分では分かっていても、人が相手だと思考や自意識が入りやすく、感覚に乗り切れない段階です。";
-    if(selfDetail==="trust") advice.push("安心できる相手や環境を優先する。暗さや温度も味方になります");
-    if(selfDetail==="rhythm") advice.push("強さやテンポの好みを言葉にして、すり合わせる");
-    if(selfDetail==="head") advice.push("頭の中の実況より、呼吸の流れに意識を戻す");
-    if(selfDetail==="method") advice.push("セルフ時のやり方を整理して、相手にも共有する");
-    if(selfDetail==="env") advice.push("照明・音・落ち着く空間などを整える");
-    advice.push("相手の動きを、自分の動きの延長だと思ってみる");
-    if(selfDetail==="head" || tension==="immersion") advice.push("考えない努力より、呼吸・目線・リズムを固定して流れを切らさない工夫が有効です");
-    if(comm==="silent" || comm==="afraid") advice.push("伝えづらさが大きなブレーキです。短い一言からで十分です");
-    actions =[
-      {
-        key:"consult",
-        title:"結果をそのまま送って相談する",
-        desc:"このタイプは一人で頑張るより、ズレを言語化した方が進みやすいです。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"self",
-        title: "まずは自分で感覚を探してみる",
-desc: "いきなり正解を当てにいくより、小さな『これかも』を拾いながら、自分の中の心地よさを育てていく段階です。",
-button: "やさしい自己開発ノートを読む",
-url: "https://note.com/miyaaromassage/n/n80f59699f797",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で相談の下書きをする",
-        desc:"何をどう伝えるか迷う時は、匿名で一度まとめるのが楽です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="almost"){
-    type = "あと一歩・没入維持タイプ";
-    desc = "準備はかなり整っています。呼吸、脱力、没入の維持など、最後の条件づくりが鍵です。";
-    if(almostD==="breath") advice.push("気持ちよくなってきたら、意識的に息を吐く");
-    if(almostD==="tense") advice.push("足・お腹・肩の力みを抜く意識を持つ");
-    if(almostD==="fear") advice.push("怖さが出る時は『何が起きても大丈夫』と思える安心材料を用意する");
-    if(almostD==="plateau") advice.push("同じ刺激で頭打ちなら、少しだけ角度や種類を変える");
-    if(almostD==="focus") advice.push("集中が切れたら、呼吸や身体感覚に戻す");
-    if(almostD==="immersion_break") advice.push("目を閉じる、呼吸を感じる、リズムを変えない、の3つが有効です");
-    advice.push("うまくいきそうな時ほど、場所・圧・テンポを変えすぎない");
-    if(almostD==="focus" || almostD==="immersion_break" || tension==="immersion"){
-      advice.push("ピーク前で切れやすい人は、刺激を増やすより流れを保つ方が大切です");
-    }
-    if(mentalFlag) advice.push("『いかなきゃ』ではなく『今の気持ちよさにいる』に意識を戻す");
-    actions =[
-      {
-        key:"self",
-        title:"『脱力』の誤解を解く",
-        desc:"力を抜こうとするほど難しくなる理由と、本当の味わい方を解説しています。",
-        href:LINKS.note_relax,
-        label:"味わうコツを読む",
-        priority:false
-      },
-      {
-        key:"apply",
-        title:"案内・応募に進む",
-        desc:"もう進みたい場合は、このままフォームを確認できます。",
-        href:LINKS.apply,
-        label:"案内・応募フォームへ",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"どこで切れるか相談する",
-        desc:"ピーク前で切れる理由を整理したい時はこちら。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="good"){
-    if(inner==="none" || inner==="pressure"){
-      type = "奥の感覚を開いていくタイプ";
-      desc = "外の回路は整っています。次は奥の感覚を『圧』から『快感』に育てていく段階です。";
-      advice =[
-        "外で十分に高めてから奥に意識を向ける",
-        "激しさより、ポイントをゆっくり探る",
-        "違和感と快感の境目を丁寧に観察する"
+
+  else if(theme==="inner_unknown"){
+    if(outer==="self_only"){
+      type = "没入ブロックタイプ";
+      desc = "自分では少しわかっていても、相手がいると感覚に乗り切れない段階です。";
+      advice = [
+        "刺激の強さより、緊張や意識の向き方を見直す",
+        "没入を邪魔する要素を減らす",
+        "一気に変えようとせず、崩れにくい条件を増やす"
       ];
-      if(arousal==="dry" || arousal==="head_ok") advice.push("潤い不足だと奥の感覚が圧に偏りやすくなります");
-      actions =[
-        {
-          key:"self",
-          title:"ビクンビクンする正体を知る",
-          desc:"今は『感じない』ではなく、『読み取り方がまだ粗い』段階かもしれません。",
-          href:LINKS.note_bikun,
-          label:"ビクンビクンの正体を読む",
-          priority:false
-        },
-        {
-          key:"apply",
-          title:"応募する",
-          desc:"自分で探るより、次の段階に進みたいならここから進めます。",
-          href:LINKS.apply,
-          label:"応募フォームへ",
-          priority:false
-        },
+      if(selfDetail==="trust") advice.push("相手の前で身体が固くなるなら、安心感を作る流れの見直しが先です");
+      if(selfDetail==="head") advice.push("考えすぎる時は、『正解を出す』より感覚の小さな変化を追う方が入りやすいです");
+      if(selfDetail==="env") advice.push("環境が気になるなら、明るさ・音・姿勢など外側の条件を固定すると崩れにくいです");
+
+      actions = [
         {
           key:"consult",
-          title:"圧しかわからない理由を聞く",
-          desc:"準備不足なのか、当たり方なのか、切り分けたい時はこちら。",
+          title:"結果をそのまま送って相談する",
+          desc:"このタイプは一人で頑張るより、ズレを言語化した方が進みやすいです。",
           href:LINKS.dm,
           label:"DMを送る",
           priority:false
-        }
-      ];
-    } else if(inner==="slight"){
-      type = "微細な感覚を育てるタイプ";
-      desc = "奥に小さな感覚は出ています。今はそれを強くするより、途切れず感じ続けられる状態を育てる段階です。";
-      advice =[
-        "今ある小さな感覚を雑に飛ばさない",
-        "場所が見つかったら角度と圧を丁寧に保つ",
-        "外と奥を切り分けず、つながりとして感じる"
-      ];
-      actions =[
-        {
-          key:"self",
-          title:"本当の快感に変える方法",
-          desc:"この段階は『もっと強く』より『切らさない』が先です。",
-          href:LINKS.note_bikun,
-          label:"快感の育て方を読む",
-          priority:false
         },
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"すでに入口はあるので、次の一歩を詰めたい時に向いています。",
-          href:LINKS.booking,
-          label:"案内を見る",
+          key:"self",
+          title:"相手がいると崩れる理由を知る",
+          desc:"セルフではわかっていても相手がいると途切れるなら、前奏不足より緊張や意識の向き方が影響していることがあります。",
+          href:LINKS.note_oil_ura,
+          label:"感覚が途切れる理由を読む",
           priority:false
         },
         {
           key:"anon",
-          title:"匿名で確認する",
-          desc:"この小さい反応が合ってるのか不安なら、まず軽く確認できます。",
+          title:"匿名で相談の下書きをする",
+          desc:"何をどう伝えるか迷う時は、匿名で一度まとめるのが楽です。",
           href:LINKS.anon_qa,
           label:"匿名で聞く",
           priority:false
         }
       ];
-    } else if(inner==="deep_feel" || inner==="urge"){
-      type = "あと一歩・奥の流れ安定タイプ";
-      desc = "奥の感覚はすでに育っています。途中で流れを切らずに乗り続けることが鍵です。";
-      advice =[
-        "奥がうずいてきたら、リズムや角度を変えすぎない",
-        "腹式呼吸で奥まわりの力みを抜く",
-        "刺激を点より面で受け取る意識を持つ"
+    }
+    else if(inner==="pressure" || inner==="none"){
+      type = "土台づくりタイプ";
+      desc = "外は反応していても、中はまだ『圧』として受け取っている段階です。奥の感覚を急がず育てていく土台づくりが先です。";
+      advice = [
+        "圧をすぐ快感に変えようとせず、小さな違いを拾う",
+        "強さより、安心感と受け取りやすさを優先する",
+        "『感じない』ではなく『まだ読み取りが粗い』前提で進める"
       ];
-      if(inner==="urge") advice.push("尿意っぽさは手前の反応として出ることがあります。怖くなければ力を抜いて観察を");
-      if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
-      actions =[
-  {
-    key:"apply",
-    title:"応募する",
-    desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
-    href:LINKS.apply,
-    label:"応募フォームへ",
-    priority:false
-  },
-  {
-    key:"self",
-    title:"奥の感覚を切らさない考え方を知る",
-    desc:"うずきや高まりが出てきた時に、怖さや力みで流れを止めず受け取り続けるヒントを解説しています。",
-    href:LINKS.note_oshigama,
-    label:"流れを切らない考え方を読む",
-    priority:false
-  },
-  {
-    key:"consult",
-    title:"途中で崩れる理由を相談する",
-    desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
-    href:LINKS.dm,
-    label:"DMを送る",
-    priority:false
-  }
-];
-    } else if(inner==="ik" || issue==="deeper"){
-      type = "もっと深く味わうタイプ";
-      desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
-      advice =[
-        "気持ちいいポイントを言語化して共有する",
-        "達した後の流れをすぐ切らない",
-        "今までと少し違うアプローチも試す"
-      ];
-      actions =[
+
+      actions = [
         {
-          key:"apply",
-          title:"応募する",
-          desc:"今の状態なら、説明を読むより先に応募した方が早い層です。",
-          href:LINKS.apply,
-          label:"応募フォームへ",
+          key:"self",
+          title:"中の気持ちよさの入口を知る",
+          desc:"まずは『圧』と『快感』の違いを少しずつ見つけていく段階です。",
+          href:LINKS.note_oil_reason,
+          label:"育て方を読む",
           priority:false
         },
         {
           key:"consult",
-          title:"もっと深める相談をする",
-          desc:"今ある反応をどう伸ばすか、質の話をしたい時はこちら。",
+          title:"どこで止まっているか相談する",
+          desc:"圧だけなのか、緊張で切れているのかを整理したい時はこちら。",
           href:LINKS.dm,
           label:"DMを送る",
           priority:false
         },
         {
+          key:"anon",
+          title:"匿名で聞く",
+          desc:"まだ曖昧な状態でも、そのまま切り出して大丈夫です。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        }
+      ];
+    }
+    else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
+      type = "感覚はあるけど薄いタイプ";
+      desc = "反応は出始めています。強くするより、今ある感覚を育てる段階です。";
+      advice = [
+        "『もっと強く』より『今ある反応を切らさない』を優先する",
+        "感じやすい条件を整理して再現性を上げる",
+        "くすぐったさや薄さは、触れ方の調整で変わる余地があります"
+      ];
+
+      actions = [
+        {
           key:"self",
-          title:"中イキとポルチオの違い",
+          title:"小さな感覚を育てる考え方",
+          desc:"この段階は『もっと強く』より、今ある小さな反応を育てる方が先です。",
+          href:LINKS.note_bikun,
+          label:"快感の育て方を読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"薄さの原因を切り分ける",
+          desc:"準備・緊張・刺激のズレを整理したい時はこちら。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"anon",
+          title:"匿名で先に聞く",
+          desc:"詰まっている場所だけ軽く整理したい時に向いています。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        }
+      ];
+    }
+    else {
+      type = "現状整理タイプ";
+      desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
+      advice = [
+        "中の感覚は『ない』より『まだ安定していない』で捉える",
+        "条件ごとの違いを雑にせず観察する",
+        "準備・緊張・伝えやすさも感覚に影響します"
+      ];
+
+      actions = [
+        {
+          key:"self",
+          title:"今の状態に近い記事を読む",
+          desc:"感覚の整理と次の一歩を掴むための導線です。",
+          href:LINKS.note_policy,
+          label:"考え方を読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"今の状態を整理して相談する",
+          desc:"曖昧なままでも十分です。止まる場所をそのまま送ってください。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"anon",
+          title:"匿名で壁を確認する",
+          desc:"まだ相談までいかない時の軽い入口です。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        }
+      ];
+    }
+  }
+
+  else if(theme==="climax"){
+    if(outer==="almost" || almostD==="breath" || almostD==="tense" || almostD==="focus" || almostD==="immersion_break"){
+      type = "奥の感覚育成タイプ";
+      desc = "準備はかなり整っています。今は呼吸、脱力、没入の維持など、最後の流れを切らさないことが鍵です。";
+      advice = [
+        "気持ちよさを上げるより、途中で切らないことを優先する",
+        "呼吸と力みの変化を止めどころとして観察する",
+        "ピーク前に冷静になる癖があるなら、流れを固定して崩れにくくする"
+      ];
+      if(almostD==="breath") advice.push("呼吸が止まるなら、気持ちよさが上がるほど『吐く』を意識する");
+      if(almostD==="tense") advice.push("足・お腹・肩に力が入るなら、そこが切れ目になっていないか確認する");
+      if(almostD==="fear") advice.push("怖さで止めるなら、失禁感や未知の感覚を危険と結びつけすぎていないか見る");
+
+      actions = [
+        {
+          key:"self",
+          title:"『脱力』の誤解を解く",
+          desc:"力を抜こうとするほど難しくなる理由と、流れを切らさない考え方を解説しています。",
+          href:LINKS.note_relax,
+          label:"味わうコツを読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"途中で崩れる理由を相談する",
+          desc:"呼吸・力み・怖さのどれが壁か、本人だと見分けにくい時の導線です。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"apply",
+          title:"応募する",
+          desc:"今の反応を活かして進めたいなら、そのまま次へ進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:false
+        }
+      ];
+    }
+    else if(inner==="deep_feel" || inner==="urge"){
+      type = "奥の感覚育成タイプ";
+      desc = "奥の感覚は出ています。途中で流れを切らずに受け取り続けることが鍵です。";
+      advice = [
+        "『もっと強く』より『切らさない』を優先する",
+        "うずきや高まりが出た時に怖さや力みで止めない",
+        "尿意っぽさがあっても、毎回危険とは限らないので条件を見分ける"
+      ];
+
+      actions = [
+        {
+          key:"self",
+          title:"奥の感覚を切らさない考え方を知る",
+          desc:"うずきや高まりが出てきた時に、怖さや力みで流れを止めず受け取り続けるヒントを解説しています。",
+          href:LINKS.note_oshigama,
+          label:"流れを切らない考え方を読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"途中で崩れる理由を相談する",
+          desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"apply",
+          title:"応募する",
+          desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:false
+        }
+      ];
+    }
+    else if(inner==="ik"){
+      type = "深めていくタイプ";
+      desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
+      advice = [
+        "今ある感覚を再現できる条件を言語化する",
+        "感覚の違いを整理して、自分に合う深まり方を掴む",
+        "深さを追う時ほど、雑に強くしない"
+      ];
+
+      actions = [
+        {
+          key:"self",
+          title:"中イキとポルチオの違いを知る",
           desc:"さらに深さを追うために、感覚の種類と言葉を整理する記事です。",
           href:LINKS.note_ik_diff,
           label:"2つの違いを読む",
           priority:false
+        },
+        {
+          key:"consult",
+          title:"今の段階から深める相談をする",
+          desc:"何が伸びしろかを整理したい時はこちら。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"apply",
+          title:"応募する",
+          desc:"今の状態から次へ進みたいなら、そのまま案内へ進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
+          priority:false
         }
       ];
-    } else if(inner==="no_exp"){
-      type = "奥の感覚の入り口タイプ";
-      desc = "まだ未経験なだけで、土台は整っています。急がず入口から慣れていく段階です。";
-      advice =[
-        "いきなり深い刺激を目指さない",
-        "前準備と潤いをしっかり確保する",
-        "最初は自分のペースで試す"
+    }
+    else if(inner==="no_exp" || inner==="none" || inner==="pressure"){
+      type = "土台づくりタイプ";
+      desc = "中イキの前に、まずは中の感覚そのものを育てる土台が必要な段階です。";
+      advice = [
+        "『できるかどうか』より、まず中の感覚の入口を作る",
+        "圧だけの状態からすぐ先を目指しすぎない",
+        "未経験は遅れているのではなく、まだ入口に慣れていないだけです"
       ];
-      actions =[
+
+      actions = [
         {
           key:"self",
           title:"未経験の怖さをほどく",
-          desc:"『中はまだ怖い』と思うのは自然な反応です。無理なく進めるヒントを解説しています。",
+          desc:"『中はまだ怖い』『中の快感がまだ弱い』人向けに、入口から整えるヒントです。",
           href:LINKS.note_unexp,
           label:"未経験向けの安心記事を読む",
           priority:false
         },
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"遠回りせず入り口を越えたいならこちら。",
-          href:LINKS.booking,
-          label:"案内を見る",
+          key:"consult",
+          title:"入口から相談する",
+          desc:"まだ土台段階でも、そのまま整理して大丈夫です。",
+          href:LINKS.dm,
+          label:"DMを送る",
           priority:false
         },
         {
           key:"anon",
-          title:"匿名で聞く",
-          desc:"未経験ゆえの初歩質問は、匿名の方が投げやすいことも多いです。",
+          title:"匿名で先に聞く",
+          desc:"今の段階を言葉にしにくい時の軽い入口です。",
           href:LINKS.anon_qa,
-          label:"質問する",
+          label:"匿名で聞く",
           priority:false
         }
       ];
-    } else {
-      type = "感覚の最適化タイプ";
-      desc = "ベースは整っています。足りない条件を見極めて、微調整していく段階です。";
-      advice = ["足りないのがメンタルか刺激条件かを見極める"];
-      actions =[
+    }
+    else {
+      type = "現状整理タイプ";
+      desc = "反応はあるけど、どこで止まっているかを整理すると進みやすい段階です。";
+      advice = [
+        "最後まで行けないこと自体を失敗と見なしすぎない",
+        "止まるポイントを『怖さ』『力み』『没入切れ』で見分ける",
+        "今の段階に合う次の一手を選ぶ"
+      ];
+
+      actions = [
         {
           key:"self",
           title:"施術と身体の対話について",
-          desc:"今の状態に合う自己整理と、施術における考え方のルートです。",
+          desc:"今の状態を急いで結論づけず、身体の反応を観察する考え方の記事です。",
           href:LINKS.note_policy,
           label:"施術の考え方を読む",
           priority:false
         },
         {
           key:"consult",
-          title:"個別に相談する",
-          desc:"条件のズレを言語化したい時はこちら。",
+          title:"今の状態を整理して相談する",
+          desc:"途中で止まる場所をそのまま送るだけでも整理できます。",
           href:LINKS.dm,
           label:"DMを送る",
           priority:false
         },
         {
-          key:"direct",
-          title:"直接の案内を見る",
-          desc:"調整より実践寄りで進めたい方向けです。",
-          href:LINKS.booking,
-          label:"案内を見る",
+          key:"apply",
+          title:"応募する",
+          desc:"今の状態から進めたいなら、そのまま次へ進めます。",
+          href:LINKS.apply,
+          label:"応募フォームへ",
           priority:false
         }
       ];
     }
   }
-  else{
+
+  else {
     type = "現状整理タイプ";
     desc = "いくつかの要素が重なっている可能性があります。順番を整理すると進みやすくなります。";
-    advice =[
-      "心・身体・環境のどれがいちばん強いブレーキか見極める",
-      "一人で詰まるなら相談で整理する"
+    advice = [
+      "今は答えを急がず、どこで止まりやすいかを見る",
+      "身体の準備・頭の中・相手とのズレを分けて考える",
+      "最初の一歩は、いちばん抵抗が少ないものからで十分です"
     ];
-    actions =[
+
+    actions = [
+      {
+        key:"self",
+        title:"今の状態に近い記事を読む",
+        desc:"状態整理から始めたい人向けの導線です。",
+        href:LINKS.note_policy,
+        label:"考え方を読む",
+        priority:false
+      },
       {
         key:"consult",
-        title:"まずは相談で整理する",
-        desc:"複数の要素が混ざっている時は、順番を決めるだけでも楽になります。",
+        title:"結果をそのまま送って相談する",
+        desc:"整理しきれない時は、そのまま送れば十分です。",
         href:LINKS.dm,
         label:"DMを送る",
         priority:false
       },
       {
-        key:"self",
-        title:"施術と身体の対話について",
-        desc:"今の状態を急いで結論づけず、身体の反応を観察する考え方の記事です。",
-        href:LINKS.note_policy,
-        label:"施術の考え方を読む",
-        priority:false
-      },
-      {
         key:"anon",
         title:"匿名で先に聞く",
-        desc:"まだ曖昧なままでも投げやすいルートです。",
+        desc:"まだ深く話したくない時の軽い入口です。",
         href:LINKS.anon_qa,
-        label:"質問する",
+        label:"匿名で聞く",
         priority:false
       }
     ];
   }
 
-  if((arousal==="dry" || arousal==="head_ok") && !painFlag) advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
+  if((arousal==="dry" || arousal==="head_ok") && !painFlag){
+    advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
+  }
   if(mentalFlag && !painFlag){
     if(tension==="past") advice.push("過去の経験が強く響く場合は、無理せず心のケアも視野に");
     if(tension==="duty") advice.push("『相手のため』より『自分がどう感じるか』を優先してよい段階です");
     if(tension==="immersion") advice.push("没入しにくい時は、考え方を変えるより環境とリズムを固定する方が効きやすいです");
   }
-  if(freq==="vibrator") advice.push("強い刺激に慣れている場合は、少しずつ刺激を弱める練習も有効です");
-  if(freq==="ashipin") advice.push("力み癖があると、リラックスして感じる回路が育ちにくくなることがあります");
-  if(comm==="silent" || comm==="afraid") advice.push("伝えにくさも大きなブレーキになります。短い一言からで十分です");
+  if(freq==="vibrator" && !advice.includes("強い刺激に慣れている場合は、少しずつ刺激を弱める時間も作る")){
+    advice.push("強い刺激に慣れている場合は、少しずつ刺激を弱める練習も有効です");
+  }
+  if(freq==="ashipin" && !advice.includes("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります")){
+    advice.push("力み癖があると、リラックスして感じる回路が育ちにくくなることがあります");
+  }
+  if((comm==="silent" || comm==="afraid") && !painFlag){
+    advice.push("伝えにくさも大きなブレーキになります。短い一言からで十分です");
+  }
 
   scoreDrivenHints(scores).forEach(h => {
     if(!advice.includes(h)) advice.push(h);
   });
 
-  // 希望に応じて優先ボタンを切り替える
   if(wish==="just_result"){
     actions = actions.map(a => ({ ...a, priority:false }));
   } else if(wish==="self"){
@@ -1247,66 +1276,13 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
       if(priority) found = true;
       return { ...a, priority };
     });
-  } else if(wish==="direct"){
-    const hasDirect = actions.some(a => a.key==="direct");
-    const targetKey = hasDirect ? "direct" : "apply";
-    let found = false;
-    actions = actions.map(a => {
-      const priority = !found && a.key===targetKey;
-      if(priority) found = true;
-      return { ...a, priority };
-    });
-    if(targetKey==="direct"){
-      advice.push("直接の案内では、今の状態に合わせて進め方を組み立てられます");
-    } else {
-      advice.push("今の状態だと、案内より応募の方が自然な動線になっています");
-    }
   } else if(wish==="apply"){
-    const hasApply = actions.some(a => a.key==="apply");
-
-    if(!hasApply){
-      actions.unshift({
-        key:"apply",
-        title:"案内・応募に進む",
-        desc:"今の状態で進めたい場合は、このままフォームを確認できます。",
-        href:LINKS.apply,
-        label:"案内・応募フォームへ",
-        priority:true
-      });
-    }
-
     let found = false;
     actions = actions.map(a => {
       const priority = !found && a.key==="apply";
       if(priority) found = true;
       return { ...a, priority };
     });
-
-    advice.push("応募したい気持ちが固まっているなら、そのまま進める導線を優先表示しています");
-  }
-
-  // 応募希望なら必ず表示、最大3枚に調整
-  if(wish==="apply" && !actions.some(a => a.key==="apply")){
-    actions.unshift({
-      key:"apply",
-      title:"応募する",
-      desc:"今の状態で進めたい場合は、このまま応募できます。",
-      href:LINKS.apply,
-      label:"応募フォームへ",
-      priority:true
-    });
-  }
-
-  // 重複削除
-  const seen = new Set();
-  actions = actions.filter(a => {
-    if(seen.has(a.key)) return false;
-    seen.add(a.key);
-    return true;
-  });
-
-  // 応募希望時は apply を先頭固定
-  if(wish==="apply"){
     actions.sort((a,b) => {
       if(a.key==="apply") return -1;
       if(b.key==="apply") return 1;
@@ -1321,13 +1297,13 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
   const copyText = `【感じ方チェック結果】
 表示結果：${displayType}
 内部判定：${type}
+今の悩みのテーマ：${ans.rootTheme?.label || "未回答"}
 外の状態：${ans.outerExp?.label || "未回答"}${ans.selfOnlyDetail ? "\n ┗ 詳細：" + ans.selfOnlyDetail.label : ""}${ans.almostDetail ? "\n ┗ 詳細：" + ans.almostDetail.label : ""}
 中の状態：${ans.innerExp?.label || "未回答"}${ans.painDetail ? "\n ┗ 痛みの詳細：" + ans.painDetail.label : ""}
 身体の準備：${ans.arousal?.label || "未回答"}
 頭の中：${ans.tension?.label || "未回答"}
 伝えやすさ：${ans.partnerComm?.label || "未回答"}
 セルフの傾向：${ans.frequency?.label || "未回答"}
-今いちばん整えたいこと：${ans.mainIssue?.label || "未回答"}
 希望：${ans.wish?.label || "未回答"}
 
 ※この結果は「感じ方チェック byミヤ」で作成されました`;
@@ -1339,10 +1315,10 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
     advice,
     copyText,
     actions,
-painFlag,
-painDetail,
+    painFlag,
     mentalFlag,
-    scores
+    scores,
+    painDetail
   };
 }
 
