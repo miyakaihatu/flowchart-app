@@ -366,7 +366,7 @@ const QUESTIONS =[
       {value:"weak", label:"ぼんやりしている", sub:"感覚はあるけど弱い"},
       {value:"ticklish", label:"くすぐったい", sub:"集中しにくい"},
       {value:"none", label:"ほぼ感じない", sub:"無感覚に近い"},
-      {value:"pain", label:"痛い・不快", sub:"触られたくない感じがある"}
+     {value:"pain", label:"痛い・不快感が強い", sub:"外も中もまずつらさの整理が必要"}
     ]
   },
   {
@@ -411,19 +411,24 @@ const QUESTIONS =[
       {value:"no_exp", label:"試したことがない", sub:"経験なし"}
     ]
   },
-  {
-    id:"innerPainDetail",
-    title:"痛みはどれに近い？",
-    desc:"痛みの種類によって対処が変わります。",
-    condition:a=>a.innerExp?.value==="pain",
-    options:[
-      {value:"entry", label:"入口が痛い", sub:"浅いところがきつい"},
-      {value:"deep", label:"奥が痛い", sub:"突かれると響く"},
-      {value:"dry", label:"こすれて痛い", sub:"滑りが足りない感じ"},
-      {value:"burning", label:"ヒリヒリする", sub:"しみる・灼熱感がある"},
-      {value:"sometimes", label:"日によって違う", sub:"痛い時と平気な時がある"}
-    ]
-  },
+{
+  id:"painDetail",
+  title:"痛みはどれに近い？",
+  desc:"場所や出方で対処が変わります。",
+  condition:a=>
+    a.outerExp?.value==="pain" ||
+    a.innerExp?.value==="pain" ||
+    a.mainIssue?.value==="pain_fix",
+  options:[
+    {value:"entry", label:"入口が痛い", sub:"入れ始めや浅いところがつらい"},
+    {value:"deep", label:"奥が痛い", sub:"深く当たるとズンと響く"},
+    {value:"back", label:"バックなど特定の体位で痛い", sub:"角度や深さで急につらくなる"},
+    {value:"overall", label:"全体的に痛い", sub:"どこがというより全部しんどい"},
+    {value:"dry", label:"こすれて痛い", sub:"滑りが足りない感じ"},
+    {value:"burning", label:"ヒリヒリ・しみる", sub:"灼熱感や刺激感がある"},
+    {value:"sometimes", label:"日によって違う", sub:"平気な日とつらい日がある"}
+  ]
+},
   {
     id:"arousal",
     title:"身体の準備状態はどう？",
@@ -707,7 +712,7 @@ function computeResult(){
   const arousal = ans.arousal?.value || "";
   const selfDetail = ans.selfOnlyDetail?.value || "";
   const almostD = ans.almostDetail?.value || "";
-  const innerPainD = ans.innerPainDetail?.value || "";
+ const painDetail = ans.painDetail?.value || "";
   const comm = ans.partnerComm?.value || "";
   const freq = ans.frequency?.value || "";
 
@@ -720,46 +725,67 @@ function computeResult(){
   let advice =[];
   let actions =[];
 
-  if(painFlag){
-    type = "安全・ケア優先タイプ";
-    desc = "感覚を深める前に、痛みや不快感を減らすことが最優先の段階です。";
-    advice =[
-      "痛みや違和感がある日は無理をしない",
-      "潤い不足、緊張、体調など原因を一つずつ切り分ける",
-      "まずは痛くない・怖くない状態を目指す"
-    ];
-    if(innerPainD==="entry") advice.push("入口の痛みは緊張による締めつけが関わることもあります。呼吸を深くして力みを抜く練習を");
-    if(innerPainD==="deep") advice.push("奥の痛みは角度や深さの問題が関わることがあります。体位や当たり方の見直しを");
-    if(innerPainD==="dry" || arousal==="dry" || arousal==="head_ok") advice.push("潤滑剤の使用も選択肢です。足りないのは異常ではなく個人差です");
-    if(innerPainD==="burning") advice.push("ヒリヒリやしみる感じが続く場合は、受診も視野に入れてください");
-    if(innerPainD==="sometimes") advice.push("日によって変わる場合は、体調やストレスとの関係を記録してみるのも有効です");
-    actions =[
-      {
-        key:"self",
-        title:"身体の防衛反応を知る",
-        desc:"濡れるのに気持ちよくない時や痛みがある時の、身体の仕組みを解説しています。",
-        href:LINKS.note_pain,
-        label:"ケアの考え方を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"状態を整理して相談する",
-        desc:"痛みの種類や出る場面をそのまま伝えると、整理しやすくなります。",
-        href:LINKS.dm,
-        label:"DMで相談する",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"いきなり深く話したくない時は、まず匿名で切り出す方が楽です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
+if(painFlag){
+  type = "安全・ケア優先タイプ";
+  desc = "感覚を深める前に、まずは痛みや不快感の出方を整理して、無理のない条件を見つける段階です。";
+  advice =[
+    "痛みがある日は無理に進めず、まず『痛くない接触』まで段階を下げる",
+    "痛みの場所・体位・乾きやすさ・緊張の有無を分けて見る",
+    "『感じる練習』より先に、『怖くない・つらくない』を作る"
+  ];
+
+  if(painDetail==="entry") {
+    advice.push("入口の痛みは、緊張による締めつけや準備不足が重なっていることがあります。浅さ・呼吸・ペースを下げて確認を");
   }
+  if(painDetail==="deep") {
+    advice.push("奥の痛みは、深さや当たり方の問題が関わることがあります。角度・深さ・骨盤の向きを見直すと変わることがあります");
+  }
+  if(painDetail==="back") {
+    advice.push("バックなど特定の体位だけ痛い場合は、相性より角度や深さの問題であることが多いです。体位を固定せず、浅さや骨盤の角度を調整してみてください");
+  }
+  if(painDetail==="overall") {
+    advice.push("全体的に痛い場合は、局所だけでなく緊張・怖さ・準備不足が重なっている可能性があります。『どこが痛いか』より先に、身体が警戒していないかを見てください");
+  }
+  if(painDetail==="dry" || arousal==="dry" || arousal==="head_ok") {
+    advice.push("こすれて痛い時は、潤い不足や摩擦の影響が大きいことがあります。潤滑の工夫は異常ではなく普通の選択肢です");
+  }
+  if(painDetail==="burning") {
+    advice.push("ヒリヒリ・しみる感じが続く場合は、摩擦以外の要因もありえるので受診も視野に入れてください");
+  }
+  if(painDetail==="sometimes") {
+    advice.push("日によって変わる場合は、体調・ストレス・周期・相手・体位との関係を記録しておくと整理しやすいです");
+  }
+  if(outer==="pain") {
+    advice.push("外側の不快感が強い場合は、刺激量より『触れ方そのものが合っているか』を先に見直す方が進みやすいです");
+  }
+
+  actions =[
+    {
+      key:"self",
+      title:"痛みの出方を整理する",
+      desc:"入口・奥・体位・乾きやすさなど、痛みのパターンごとに見直す視点をまとめていく枠です。",
+      href:LINKS.note_pain,
+      label:"ケアの考え方を読む",
+      priority:false
+    },
+    {
+      key:"consult",
+      title:"状態を整理して相談する",
+      desc:"どこで、どんな時に、どんな痛みが出るかをそのまま伝えると整理しやすくなります。",
+      href:LINKS.dm,
+      label:"DMで相談する",
+      priority:false
+    },
+    {
+      key:"anon",
+      title:"匿名で先に聞く",
+      desc:"いきなり深く話したくない時は、まず匿名で切り出す方が楽です。",
+      href:LINKS.anon_qa,
+      label:"匿名で聞く",
+      priority:false
+    }
+  ];
+}
   else if(outer==="none" || issue==="zero"){
     type = "土台づくりタイプ";
     desc = "まだ感覚の地図がはっきりしていない段階です。焦らず、感じやすい条件を見つけるところから始めます。";
@@ -1296,7 +1322,7 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
 表示結果：${displayType}
 内部判定：${type}
 外の状態：${ans.outerExp?.label || "未回答"}${ans.selfOnlyDetail ? "\n ┗ 詳細：" + ans.selfOnlyDetail.label : ""}${ans.almostDetail ? "\n ┗ 詳細：" + ans.almostDetail.label : ""}
-中の状態：${ans.innerExp?.label || "未回答"}${ans.innerPainDetail ? "\n ┗ 痛みの詳細：" + ans.innerPainDetail.label : ""}
+中の状態：${ans.innerExp?.label || "未回答"}${ans.painDetail ? "\n ┗ 痛みの詳細：" + ans.painDetail.label : ""}
 身体の準備：${ans.arousal?.label || "未回答"}
 頭の中：${ans.tension?.label || "未回答"}
 伝えやすさ：${ans.partnerComm?.label || "未回答"}
@@ -1313,7 +1339,8 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
     advice,
     copyText,
     actions,
-    painFlag,
+painFlag,
+painDetail,
     mentalFlag,
     scores
   };
