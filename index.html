@@ -462,20 +462,20 @@ const QUESTIONS =[
     ]
   },
   {
-    id:"tension",
-    title:"行為中の頭の中に近いものは？",
-    desc:"思考や没入のしやすさを見ていきます。",
-    condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"overthink", label:"考えすぎて入れない", sub:"いかなきゃ、などが浮かぶ"},
-      {value:"conscious", label:"自意識が消えない", sub:"見られてる感じが気になる"},
-      {value:"immersion", label:"没入しきれない", sub:"気持ちよさはあるのに流れに乗れない"},
-      {value:"past", label:"嫌な記憶がよぎる", sub:"過去の経験が浮かぶ"},
-      {value:"duty", label:"義務感が強い", sub:"相手のためにしてる感じ"},
-      {value:"mid", label:"最初は緊張する", sub:"でも途中から入っていける"},
-      {value:"low", label:"頭を空っぽにできる", sub:"感覚に集中できている"}
-    ]
-  },
+{
+  id:"tension",
+  title:"行為中の頭の中に近いものは？",
+  desc:"思考や没入のしやすさを見ていきます。",
+  condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
+  options:[
+    {value:"overthink", label:"考えすぎて入れない", sub:"いかなきゃ、などが浮かぶ"},
+    {value:"conscious", label:"自意識が消えない", sub:"見られてる感じが気になる"},
+    {value:"acting", label:"演技してしまう", sub:"本音より相手に合わせて反応してしまう"},
+    {value:"immersion", label:"没入しきれない", sub:"気持ちよさはあるのに流れに乗れない"},
+    {value:"duty", label:"義務感が強い", sub:"相手のためにしてる感じ"},
+    {value:"low", label:"感覚に集中できる", sub:"頭はそこまで邪魔していない"}
+  ]
+},
   {
     id:"partnerComm",
     title:"相手への伝えやすさはどう？",
