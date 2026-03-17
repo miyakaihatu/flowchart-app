@@ -1030,31 +1030,31 @@ url: "https://note.com/miyaaromassage/n/n80f59699f797",
       if(inner==="urge") advice.push("尿意っぽさは手前の反応として出ることがあります。怖くなければ力を抜いて観察を");
       if(mentalFlag) advice.push("身体は準備ができています。あとは頭のノイズを減らして流れに乗ること");
       actions =[
-        {
-          key:"apply",
-          title:"応募する",
-          desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
-          href:LINKS.apply,
-          label:"応募フォームへ",
-          priority:false
-        },
-        {
-          key:"self",
-          title:"おしがまと中イキの関係",
-          desc:"尿意やうずきがある時の、流れを切らない考え方を解説しています。",
-          href:LINKS.note_oshigama,
-          label:"おしがまの関係を読む",
-          priority:false
-        },
-        {
-          key:"consult",
-          title:"途中で崩れる理由を相談する",
-          desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
-          href:LINKS.dm,
-          label:"DMを送る",
-          priority:false
-        }
-      ];
+  {
+    key:"apply",
+    title:"応募する",
+    desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
+    href:LINKS.apply,
+    label:"応募フォームへ",
+    priority:false
+  },
+  {
+    key:"self",
+    title:"奥の感覚を切らさない考え方を知る",
+    desc:"うずきや高まりが出てきた時に、怖さや力みで流れを止めず受け取り続けるヒントを解説しています。",
+    href:LINKS.note_oshigama,
+    label:"流れを切らない考え方を読む",
+    priority:false
+  },
+  {
+    key:"consult",
+    title:"途中で崩れる理由を相談する",
+    desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
+    href:LINKS.dm,
+    label:"DMを送る",
+    priority:false
+  }
+];
     } else if(inner==="ik" || issue==="deeper"){
       type = "もっと深く味わうタイプ";
       desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
