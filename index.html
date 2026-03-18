@@ -339,10 +339,10 @@ const LINKS = {
   // 10. 最適化・相談前向け
   note_policy: "https://note.com/miyaaromassage/n/nffa057053102",
 
-  dm: "https://www.instagram.com/nakaikioilmassage/",
-  anon_qa: "https://marshmallow-qa.com/miya_massage",
-  booking: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1",
-  apply: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/edit?pli=1"
+dm: "https://www.instagram.com/nakaikioilmassage/",
+anon_qa: "https://marshmallow-qa.com/miya_massage",
+booking: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/viewform",
+apply: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/viewform"
 };
 
 const QUESTIONS =[
@@ -1287,37 +1287,48 @@ if(painAnxiety==="some"){
   });
 
   if(wish==="just_result"){
-    actions = actions.map(a => ({ ...a, priority:false }));
-  } else if(wish==="self"){
-    let found = false;
-    actions = actions.map(a => {
-      const priority = !found && a.key==="self";
-      if(priority) found = true;
-      return { ...a, priority };
-    });
-  } else if(wish==="consult"){
-    let found = false;
-    actions = actions.map(a => {
-      const priority = !found && a.key==="consult";
-      if(priority) found = true;
-      return { ...a, priority };
-    });
-  } else if(wish==="apply"){
-    let found = false;
-    actions = actions.map(a => {
-      const priority = !found && a.key==="apply";
-      if(priority) found = true;
-      return { ...a, priority };
-    });
-    actions.sort((a,b) => {
-      if(a.key==="apply") return -1;
-      if(b.key==="apply") return 1;
-      return 0;
+  actions = actions.map(a => ({ ...a, priority:false }));
+} else if(wish==="self"){
+  let found = false;
+  actions = actions.map(a => {
+    const priority = !found && a.key==="self";
+    if(priority) found = true;
+    return { ...a, priority };
+  });
+} else if(wish==="consult"){
+  let found = false;
+  actions = actions.map(a => {
+    const priority = !found && a.key==="consult";
+    if(priority) found = true;
+    return { ...a, priority };
+  });
+} else if(wish==="apply"){
+  if(!actions.some(a => a.key==="apply")){
+    actions.push({
+      key:"apply",
+      title:"応募する",
+      desc:"そのまま施術応募に進みたい場合はこちら。",
+      href:LINKS.apply,
+      label:"応募フォームへ",
+      priority:true
     });
   }
 
-  actions = actions.slice(0, 3);
+  let found = false;
+  actions = actions.map(a => {
+    const priority = !found && a.key==="apply";
+    if(priority) found = true;
+    return { ...a, priority };
+  });
 
+  actions.sort((a,b) => {
+    if(a.key==="apply") return -1;
+    if(b.key==="apply") return 1;
+    return 0;
+  });
+}
+
+actions = actions.slice(0, 3);
   const displayType = getDisplayType(type);
 
   const copyText = `【感じ方チェック結果】
