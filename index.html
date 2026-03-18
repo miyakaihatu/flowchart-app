@@ -683,7 +683,14 @@ function calcScores(){
 
   const outerMap = {good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5};
   const innerMap = {ik:100,deep_feel:70,urge:60,slight:40,pressure:20,none:10,no_exp:5};
-  const tensionMap = {low:100,mid:70,immersion:35,overthink:25,conscious:20,duty:15,past:5};
+ const tensionMap = {
+  low:100,
+  immersion:35,
+  overthink:25,
+  conscious:20,
+  acting:20,
+  duty:15
+};
   const arousalMap = {easy:100,slow:60,head_ok:35,dry:10,unknown:30};
   const freqMap = {regular:100,sometimes:60,vibrator:50,ashipin:40,exploring:35,never:5};
   const commMap = {open:100,some:60,no_partner:40,silent:15,afraid:10};
@@ -909,7 +916,7 @@ if(painAnxiety==="some"){
         {
           key:"self",
           title:"相手がいると崩れる理由を知る",
-          desc:"セルフではわかっていても相手がいると途切れるなら、前奏不足より緊張や意識の向き方が影響していることがあります。",
+          desc:"セルフではわかっていても相手がいると途切れるなら、前戯不足より緊張や意識の向き方が影響していることがあります。",
           href:LINKS.note_oil_ura,
           label:"感覚が途切れる理由を読む",
           priority:false
