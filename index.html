@@ -1031,43 +1031,7 @@ if(painAnxiety==="some"){
         }
       ];
     }
-    else {
-      type = "現状整理タイプ";
-      desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
-      advice = [
-        "中の感覚は『ない』より『まだ安定していない』で捉える",
-        "条件ごとの違いを雑にせず観察する",
-        "準備・緊張・伝えやすさも感覚に影響します"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"今の状態に近い記事を読む",
-          desc:"感覚の整理と次の一歩を掴むための導線です。",
-          href:LINKS.note_policy,
-          label:"考え方を読む",
-          priority:false
-        },
-        {
-          key:"consult",
-          title:"今の状態を整理して相談する",
-          desc:"曖昧なままでも十分です。止まる場所をそのまま送ってください。",
-          href:LINKS.dm,
-          label:"DMを送る",
-          priority:false
-        },
-        {
-          key:"anon",
-          title:"匿名で壁を確認する",
-          desc:"まだ相談までいかない時の軽い入口です。",
-          href:LINKS.anon_qa,
-          label:"匿名で聞く",
-          priority:false
-        }
-      ];
-    }
-  }
+    else if(theme==="climax"){
     else {
       type = "現状整理タイプ";
       desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
