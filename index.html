@@ -887,190 +887,187 @@ if(painAnxiety==="some"){
   }
 
   else if(theme==="inner_unknown"){
-  if(inner==="pain_like"){
-    type = "痛み・不快感の整理が先のタイプ";
-    desc = "快感を育てる前に、まずは中の痛みや不快感を減らしていく段階です。感じ方の問題というより、つらさを先に整理した方が進みやすいです。";
-    advice = [
-      "快感を探すより先に、どこで何がつらいかを分けて見る",
-      "痛い日の共通点を探して、無理のない条件を増やす",
-      "『感じにくい』より『つらさが邪魔している』前提で整える"
-    ];
+    if(inner==="pain_like"){
+      type = "防御反応タイプ";
+      desc = "感度の問題というより、まずは身体が『危険かも』と判断しやすい状態かもしれません。無理に進めるより、安全感や脱力が優先です。";
+      advice = [
+        "痛みや怖さが出る時は『刺激不足』ではなく防御反応として考える",
+        "安心しにくい状況では感覚は育ちにくい",
+        "まずは緩める・止める・言えるが大切です"
+      ];
 
-    actions = [
-      {
-        key:"self",
-        title:"痛みの出方を整理する",
-        desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
-        href:LINKS.note_pain,
-        label:"ケアの考え方を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"状態を整理して相談する",
-        desc:"どこで、どんな時に、どんな不快感が出るかをそのまま伝えると整理しやすいです。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"まだ深く話したくない時は、匿名からでも十分です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="self_only"){
-    type = "没入ブロックタイプ";
-    desc = "自分では少しわかっていても、相手がいると感覚に乗り切れない段階です。";
-    advice = [
-      "刺激の強さより、緊張や意識の向き方を見直す",
-      "没入を邪魔する要素を減らす",
-      "一気に変えようとせず、崩れにくい条件を増やす"
-    ];
-    if(selfDetail==="trust") advice.push("相手の前で身体が固くなるなら、安心感を作る流れの見直しが先です");
-    if(selfDetail==="head") advice.push("考えすぎる時は、『正解を出す』より感覚の小さな変化を追う方が入りやすいです");
-    if(selfDetail==="env") advice.push("環境が気になるなら、明るさ・音・姿勢など外側の条件を固定すると崩れにくいです");
+      actions = [
+        {
+          key:"self",
+          title:"ひとりで整える考え方を読む",
+          desc:"安全感や緊張との向き合い方を先に整理したい人向けです。",
+          href:LINKS.note_policy,
+          label:"noteを読む",
+          priority:false
+        },
+        {
+          key:"anon",
+          title:"匿名で確認する",
+          desc:"まだ応募までは考えていない時の軽い入口です。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        },
+        {
+          key:"result_only",
+          title:"今回は結果だけ見る",
+          desc:"急がず、今の状態だけ把握して閉じたい人向けです。",
+          href:"",
+          label:"このまま閉じる",
+          priority:false
+        }
+      ];
+    }
+    else if(outer==="self_only"){
+      type = "連動づくりタイプ";
+      desc = "外だけならわかるけど中がつながらない場合、刺激の強さより呼吸・力み・集中の連動が課題になりやすいです。";
+      advice = [
+        "強くすればいいではなく、抜けることと拾えることの両方が必要",
+        "外の気持ちよさと中の感覚は別回路としてズレることがある",
+        "連動が育つと『ただ押されてる感じ』が変わることがあります"
+      ];
 
-    actions = [
-      {
-        key:"consult",
-        title:"結果をそのまま送って相談する",
-        desc:"このタイプは一人で頑張るより、ズレを言語化した方が進みやすいです。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"self",
-        title:"相手がいると崩れる理由を知る",
-        desc:"セルフではわかっていても相手がいると途切れるなら、前戯不足より緊張や意識の向き方が影響していることがあります。",
-        href:LINKS.note_oil_ura,
-        label:"感覚が途切れる理由を読む",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で相談の下書きをする",
-        desc:"何をどう伝えるか迷う時は、匿名で一度まとめるのが楽です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(inner==="none" || inner==="no_exp"){
-    type = "土台づくりタイプ";
-    desc = "外は反応していても、中の感覚はまだ育ちきっていない段階です。奥の感覚を急がず育てていく土台づくりが先です。";
-    advice = [
-      "『感じない』をすぐ異常扱いせず、入口段階として見る",
-      "強さより、安心感と受け取りやすさを優先する",
-      "小さな違いを拾える条件を増やしていく"
-    ];
+      actions = [
+        {
+          key:"self",
+          title:"ひとりで整える考え方を読む",
+          desc:"まずは自分で掴みたい人向けの入口です。",
+          href:LINKS.note_policy,
+          label:"noteを読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"今の状態に合わせて相談する",
+          desc:"呼吸・力み・集中の崩れ方を見ながら整理したい人向けです。",
+          href:LINKS.dm,
+          label:"DMで相談する",
+          priority:true
+        },
+        {
+          key:"apply",
+          title:"そのまま応募したい",
+          desc:"状態を見ながら進めたい場合はこちらです。",
+          href:LINKS.form_apply,
+          label:"応募フォームへ",
+          priority:false
+        }
+      ];
+    }
+    else if(inner==="none" || inner==="no_exp"){
+      type = "入口づくりタイプ";
+      desc = "まだ感覚の入口がはっきりしていない段階かもしれません。『感じない体質』と決めるより、拾える条件を探す方が大切です。";
+      advice = [
+        "ゼロか才能かではなく、条件で変わるものとしてみる",
+        "力み・緊張・急ぎすぎがあると入口が見えにくい",
+        "今は『感度不足』より『拾いにくい』として扱う方が合っています"
+      ];
 
-    actions = [
-      {
-        key:"self",
-        title:"中の気持ちよさの入口を知る",
-        desc:"まずは中の感覚そのものを少しずつ見つけていく段階です。",
-        href:LINKS.note_oil_reason,
-        label:"育て方を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"どこで止まっているか相談する",
-        desc:"まだ入口段階なのか、緊張で切れているのかを整理したい時はこちら。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で聞く",
-        desc:"まだ曖昧な状態でも、そのまま切り出して大丈夫です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
-    type = "感覚はあるけど薄いタイプ";
-    desc = "反応は出始めています。強くするより、今ある感覚を育てる段階です。";
-    advice = [
-      "『もっと強く』より『今ある反応を切らさない』を優先する",
-      "感じやすい条件を整理して再現性を上げる",
-      "くすぐったさや薄さは、触れ方の調整で変わる余地があります"
-    ];
+      actions = [
+        {
+          key:"self",
+          title:"まずは考え方から読む",
+          desc:"焦らず土台から知りたい人向けです。",
+          href:LINKS.note_policy,
+          label:"noteを読む",
+          priority:false
+        },
+        {
+          key:"anon",
+          title:"匿名で相談する",
+          desc:"まだDMや応募までは迷う時に使えます。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        },
+        {
+          key:"result_only",
+          title:"今回は結果だけ見る",
+          desc:"まずは今の位置だけ知っておきたい人向けです。",
+          href:"",
+          label:"このまま閉じる",
+          priority:false
+        }
+      ];
+    }
+    else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
+      type = "感覚の芽ありタイプ";
+      desc = "まったく無反応ではなく、拾い方がまだ安定していない段階かもしれません。";
+      advice = [
+        "少しでも感覚があるなら『ゼロ』ではない",
+        "刺激を足すより、緊張を減らしながら再現性を上げる方が近道",
+        "気分・状況・相手で変わるなら、身体は反応する余地があります"
+      ];
 
-    actions = [
-      {
-        key:"self",
-        title:"小さな感覚を育てる考え方",
-        desc:"この段階は『もっと強く』より、今ある小さな反応を育てる方が先です。",
-        href:LINKS.note_bikun,
-        label:"快感の育て方を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"薄さの原因を切り分ける",
-        desc:"準備・緊張・刺激のズレを整理したい時はこちら。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"詰まっている場所だけ軽く整理したい時に向いています。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else {
-    type = "現状整理タイプ";
-    desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
-    advice = [
-      "中の感覚は『ない』より『まだ安定していない』で捉える",
-      "条件ごとの違いを雑にせず観察する",
-      "準備・緊張・伝えやすさも感覚に影響します"
-    ];
+      actions = [
+        {
+          key:"consult",
+          title:"どこで止まるかを相談する",
+          desc:"あと少しを詰めたい人向けの入口です。",
+          href:LINKS.dm,
+          label:"DMで相談する",
+          priority:true
+        },
+        {
+          key:"apply",
+          title:"そのまま応募したい",
+          desc:"状態を見ながら進めたい場合はこちらです。",
+          href:LINKS.form_apply,
+          label:"応募フォームへ",
+          priority:false
+        },
+        {
+          key:"self",
+          title:"ひとりで整理したい",
+          desc:"まずは自分のペースで考えたい人向けです。",
+          href:LINKS.note_policy,
+          label:"noteを読む",
+          priority:false
+        }
+      ];
+    }
+    else {
+      type = "現状整理タイプ";
+      desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
+      advice = [
+        "中の感覚は『ない』より『まだ安定していない』で捉える",
+        "条件ごとの違いを雑にせず観察する",
+        "準備・緊張・伝えやすさも感覚に影響します"
+      ];
 
-    actions = [
-      {
-        key:"self",
-        title:"今の状態に近い記事を読む",
-        desc:"感覚の整理と次の一歩を掴むための導線です。",
-        href:LINKS.note_policy,
-        label:"考え方を読む",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"今の状態を整理して相談する",
-        desc:"曖昧なままでも十分です。止まる場所をそのまま送ってください。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で壁を確認する",
-        desc:"まだ相談までいかない時の軽い入口です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
+      actions = [
+        {
+          key:"self",
+          title:"今の状態に近い記事を読む",
+          desc:"感覚の整理と次の一歩を掴むための導線です。",
+          href:LINKS.note_policy,
+          label:"考え方を読む",
+          priority:false
+        },
+        {
+          key:"consult",
+          title:"今の状態を整理して相談する",
+          desc:"曖昧なままでも十分です。止まる場所をそのまま送ってください。",
+          href:LINKS.dm,
+          label:"DMを送る",
+          priority:false
+        },
+        {
+          key:"anon",
+          title:"匿名で壁を確認する",
+          desc:"まだ相談までいかない時の軽い入口です。",
+          href:LINKS.anon_qa,
+          label:"匿名で聞く",
+          priority:false
+        }
+      ];
+    }
   }
-}
     else {
       type = "現状整理タイプ";
       desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
