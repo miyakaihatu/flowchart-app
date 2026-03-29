@@ -509,17 +509,32 @@ const QUESTIONS =[
     ]
   },
   {
-    id:"frequency",
-    title:"1人でする時の傾向は？",
-    desc:"普段の癖や慣れ方を見ていきます。",
-    condition:a => a.rootTheme?.value==="self_dev",
+    id:"selfCheck",
+    title:"セルフではどう？",
+    desc:"外の感覚の土台があるかを見ていきます。",
+    condition:a =>
+      ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value) &&
+      ["self_only","weak","ticklish","none"].includes(a.outerExp?.value),
     options:[
-      {value:"regular", label:"定期的にしている", sub:"リラックスしてできる"},
-      {value:"ashipin", label:"力んで達しやすい", sub:"足ピンや息止めがある"},
-      {value:"vibrator", label:"強い刺激に慣れている", sub:"グッズがないと物足りない"},
-      {value:"sometimes", label:"たまにする", sub:"だいたい同じパターン"},
-      {value:"exploring", label:"模索中", sub:"最近始めた"},
-      {value:"never", label:"していない", sub:"抵抗がある・未経験"}
+      {value:"good", label:"セルフなら安定して気持ちいい", sub:"自分だと流れに乗りやすい"},
+      {value:"almost", label:"セルフでもあと一歩で止まる", sub:"気持ちいいけど抜けきらない"},
+      {value:"weak", label:"セルフでもぼんやりしている", sub:"感覚が弱くてつかみにくい"},
+      {value:"ticklish", label:"セルフでもくすぐったい", sub:"快感より違和感が先に来る"},
+      {value:"none", label:"セルフでもほぼ感じない", sub:"外の快感の土台がかなり薄い"},
+      {value:"never", label:"セルフはしていない・わからない", sub:"比較材料がまだない"}
+    ]
+  },
+  {
+    id:"selfPattern",
+    title:"セルフのやり方に近いものは？",
+    desc:"やり方の癖が感覚に影響していないかを見ます。",
+    condition:a => ["good","almost"].includes(a.selfCheck?.value),
+    options:[
+      {value:"relaxed", label:"リラックスしてできる", sub:"呼吸も止まりにくい"},
+      {value:"ashipin", label:"力んで達しやすい", sub:"足ピン・息止め・お腹に力が入りやすい"},
+      {value:"same_pattern", label:"毎回ほぼ同じやり方", sub:"刺激のパターンが固定されている"},
+      {value:"strong_only", label:"強い刺激じゃないと難しい", sub:"弱い刺激だと物足りない"},
+      {value:"exploring", label:"まだ模索中", sub:"安定した型はない"}
     ]
   },
   {
@@ -686,7 +701,8 @@ function calcScores(){
   const tension = ans.tension?.value || "";
   const arousal = ans.arousal?.value || "";
   const comm = ans.partnerComm?.value || "";
-  const freq = ans.frequency?.value || "";
+  const selfCheck = ans.selfCheck?.value || "";
+  const selfPattern = ans.selfPattern?.value || "";
 
   const outerMap = {good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5};
   const innerMap = {ik:100,deep_feel:70,urge:60,slight:35,pain_like:5,none:10,no_exp:5};
@@ -697,7 +713,8 @@ const tensionMap = {
   duty:15
 };
   const arousalMap = {easy:100,slow:60,head_ok:35,dry:10,unknown:30};
-  const freqMap = {regular:100,sometimes:60,vibrator:50,ashipin:40,exploring:35,never:5};
+  const selfCheckMap = {good:100,almost:70,weak:35,ticklish:20,none:5,never:10};
+  const selfPatternMap = {relaxed:100,ashipin:40,same_pattern:55,strong_only:35,exploring:70};
   const commMap = {open:100,some:60,no_partner:40,silent:15,afraid:10};
 
   return {
@@ -706,7 +723,7 @@ const tensionMap = {
     innerScore: innerMap[inner] ?? 20,
     relaxScore: tensionMap[tension] ?? 40,
     bodyScore: arousalMap[arousal] ?? 40,
-    selfKnowScore: freqMap[freq] ?? 30,
+    selfKnowScore: Math.round(((selfCheckMap[selfCheck] ?? 30) + (selfPatternMap[selfPattern] ?? 50)) / 2),
     commScore: commMap[comm] ?? 40
   };
 }
@@ -749,7 +766,8 @@ function computeResult(){
   const painTiming = ans.painTiming?.value || "";
   const painAnxiety = ans.painAnxiety?.value || "";
   const comm = ans.partnerComm?.value || "";
-  const freq = ans.frequency?.value || "";
+  const selfCheck = ans.selfCheck?.value || "";
+  const selfPattern = ans.selfPattern?.value || "";
 
   const scores = calcScores();
   const painFlag = theme === "pain";
@@ -863,9 +881,9 @@ if(painAnxiety==="some"){
       ];
     }
 
-    if(freq==="vibrator") advice.push("強い刺激に慣れている場合は、少しずつ刺激を弱める時間も作る");
-    if(freq==="ashipin") advice.push("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります");
-    if(freq==="never") advice.push("まずはセルフで触れること自体に慣れるところからで十分です");
+    if(selfPattern==="strong_only") advice.push("強い刺激じゃないと難しい時は、少しずつ弱い刺激でも拾える時間を作る");
+    if(selfPattern==="ashipin") advice.push("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります");
+    if(selfCheck==="never") advice.push("まずはセルフでの感覚確認を急がず、抵抗なく触れられるところからで十分です");
 
     actions = [
       {
@@ -1346,10 +1364,10 @@ if(painAnxiety==="some"){
     if(tension==="duty") advice.push("『相手のため』より『自分がどう感じるか』を優先してよい段階です");
     if(tension==="immersion") advice.push("没入しにくい時は、考え方を変えるより環境とリズムを固定する方が効きやすいです");
   }
-  if(freq==="vibrator" && !advice.includes("強い刺激に慣れている場合は、少しずつ刺激を弱める時間も作る")){
-    advice.push("強い刺激に慣れている場合は、少しずつ刺激を弱める練習も有効です");
+  if(selfPattern==="strong_only" && !advice.includes("強い刺激じゃないと難しい時は、少しずつ弱い刺激でも拾える時間を作る")){
+    advice.push("強い刺激だけに寄りすぎている時は、弱い刺激でも拾える時間を少しずつ増やすと土台が安定しやすいです");
   }
-  if(freq==="ashipin" && !advice.includes("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります")){
+  if(selfPattern==="ashipin" && !advice.includes("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります")){
     advice.push("力み癖があると、リラックスして感じる回路が育ちにくくなることがあります");
   }
   if((comm==="silent" || comm==="afraid") && !painFlag){
@@ -1414,7 +1432,8 @@ actions = actions.slice(0, 3);
 身体の準備：${ans.arousal?.label || "未回答"}
 頭の中：${ans.tension?.label || "未回答"}
 伝えやすさ：${ans.partnerComm?.label || "未回答"}
-セルフの傾向：${ans.frequency?.label || "未回答"}
+セルフの確認：${ans.selfCheck?.label || "未回答"}${ans.selfPattern ? "
+ ┗ セルフのやり方：" + ans.selfPattern.label : ""}
 希望：${ans.wish?.label || "未回答"}
 
 ※この結果は「感じ方チェック byミヤ」で作成されました`;
