@@ -310,37 +310,46 @@ const LINKS = {
   note_top: "https://note.com/miyaaromassage",
 
   // 1. 土台づくり向け
-  note_self_dev: "https://note.com/miyaaromassage/n/n80f59699f797",
+  mag_self_dev: "https://note.com/miyaaromassage/m/m3e152f256aa5",
 
   // 2. 未経験・入口向け
-  note_unexp: "https://note.com/miyaaromassage/n/n40982c2bc96e",
+  mag_inner: "https://note.com/miyaaromassage/m/m2d201588f87f",
 
   // 3. 深く味わう向け
-  note_ik_diff: "https://note.com/miyaaromassage/n/na0b115dcb34c",
+  mag_climax: "https://note.com/miyaaromassage/m/m70e2c4011a5b",
 
   // 4. 没入ブロック（相手がいるとダメ）向け
-  note_oil_ura: "https://note.com/miyaaromassage/n/ndf931abad04b",
+  mag_service: "https://note.com/miyaaromassage/m/mf2d704553cb3",
 
   // 5. 薄い・くすぐったい向け
-  note_oil_reason: "https://note.com/miyaaromassage/n/nb9f683b19e87",
+  mag_mental: "https://note.com/miyaaromassage/m/m8e56ecd81e42",
 
   // 6. ビクンビクンするけど分からない向け
-  note_bikun: "https://note.com/miyaaromassage/n/nfc20c4e1c9cd",
+  mag_body: "https://note.com/miyaaromassage/m/m6f090797dcb3",
 
   // 7. 力み・脱力できない向け
-  note_relax: "https://note.com/miyaaromassage/n/n9c5d9bdb62fe",
+  note_relax: "https://note.com/miyaaromassage/m/m6f090797dcb3",
 
   // 8. 尿意・奥の流れ安定向け
-  note_oshigama: "https://note.com/miyaaromassage/n/nf31f640b31fe",
+  note_oshigama: "https://note.com/miyaaromassage/m/m2d201588f87f",
 
   // 9. 痛み・濡れるけど気持ちよくない向け
-  note_pain: "https://note.com/miyaaromassage/n/n1c037906ed36",
+  note_pain: "https://note.com/miyaaromassage/m/m6f090797dcb3",
 
   // 10. 最適化・相談前向け
-  note_policy: "https://note.com/miyaaromassage/n/n1c037906ed36",
+  note_policy: "https://note.com/miyaaromassage/m/mf2d704553cb3",
+
+  // マガジン導線（6カテゴリ）
+  note_self_dev: "https://note.com/miyaaromassage/m/m3e152f256aa5",
+  note_unexp: "https://note.com/miyaaromassage/m/m2d201588f87f",
+  note_ik_diff: "https://note.com/miyaaromassage/m/m70e2c4011a5b",
+  note_oil_ura: "https://note.com/miyaaromassage/m/mf2d704553cb3",
+  note_oil_reason: "https://note.com/miyaaromassage/m/m8e56ecd81e42",
+  note_bikun: "https://note.com/miyaaromassage/m/m70e2c4011a5b",
 
 dm: "https://www.instagram.com/nakaikioilmassage/",
 anon_qa: "https://marshmallow-qa.com/miya_massage",
+form_apply: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/viewform",
 booking: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/viewform",
 apply: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X2QUs/viewform"
 };
@@ -804,8 +813,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"痛みの出方を整理する",
         desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
-        href:LINKS.note_pain,
-        label:"ケアの考え方を読む",
+        href:LINKS.mag_body,
+        label:"感じ方の整え方マガジンを見る",
         priority:false
       },
       {
@@ -863,8 +872,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"まずは自分で整える",
         desc:"自己開発の入口や、自分の感覚の探し方を整理する枠です。",
-        href:LINKS.note_self_dev,
-        label:"自己開発ノートを読む",
+        href:LINKS.mag_self_dev,
+        label:"自己開発マガジンを見る",
         priority:false
       },
       {
@@ -901,8 +910,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"ひとりで整える考え方を読む",
           desc:"安全感や緊張との向き合い方を先に整理したい人向けです。",
-          href:LINKS.note_policy,
-          label:"noteを読む",
+          href:LINKS.mag_mental,
+          label:"メンタル系のマガジンを見る",
           priority:false
         },
         {
@@ -917,8 +926,8 @@ if(painAnxiety==="some"){
           key:"result_only",
           title:"今回は結果だけ見る",
           desc:"急がず、今の状態だけ把握して閉じたい人向けです。",
-          href:"",
-          label:"このまま閉じる",
+          href:LINKS.note_top,
+          label:"noteトップを見る",
           priority:false
         }
       ];
@@ -937,8 +946,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"ひとりで整える考え方を読む",
           desc:"まずは自分で掴みたい人向けの入口です。",
-          href:LINKS.note_policy,
-          label:"noteを読む",
+          href:LINKS.mag_mental,
+          label:"メンタル系のマガジンを見る",
           priority:false
         },
         {
@@ -973,8 +982,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"まずは考え方から読む",
           desc:"焦らず土台から知りたい人向けです。",
-          href:LINKS.note_policy,
-          label:"noteを読む",
+          href:LINKS.mag_mental,
+          label:"メンタル系のマガジンを見る",
           priority:false
         },
         {
@@ -989,8 +998,8 @@ if(painAnxiety==="some"){
           key:"result_only",
           title:"今回は結果だけ見る",
           desc:"まずは今の位置だけ知っておきたい人向けです。",
-          href:"",
-          label:"このまま閉じる",
+          href:LINKS.note_top,
+          label:"noteトップを見る",
           priority:false
         }
       ];
@@ -1025,8 +1034,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"今のあなたにおすすめの記事",
           desc:"少し感じるけどそこまでな理由を見てみる",
-          href:LINKS.note_policy,
-          label:"noteを読む",
+          href:LINKS.mag_mental,
+          label:"メンタル系のマガジンを見る",
           priority:false
         }
       ];
@@ -1046,8 +1055,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"今の状態に近い記事を読む",
           desc:"感覚の整理と次の一歩を掴むための導線です。",
-          href:LINKS.note_policy,
-          label:"考え方を読む",
+          href:LINKS.mag_inner,
+          label:"中の感覚のマガジンを見る",
           priority:false
         },
         {
@@ -1085,8 +1094,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"痛みの出方を整理する",
         desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
-        href:LINKS.note_pain,
-        label:"ケアの考え方を読む",
+        href:LINKS.mag_body,
+        label:"感じ方の整え方マガジンを見る",
         priority:false
       },
       {
@@ -1124,8 +1133,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"『脱力』の誤解を解く",
         desc:"力を抜こうとするほど難しくなる理由と、流れを切らさない考え方を解説しています。",
-        href:LINKS.note_relax,
-        label:"味わうコツを読む",
+        href:LINKS.mag_body,
+        label:"感じ方の整え方マガジンを見る",
         priority:false
       },
       {
@@ -1160,8 +1169,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"奥の感覚を切らさない考え方を知る",
         desc:"うずきや高まりが出てきた時に、怖さや力みで流れを止めず受け取り続けるヒントを解説しています。",
-        href:LINKS.note_oshigama,
-        label:"流れを切らない考え方を読む",
+        href:LINKS.mag_inner,
+        label:"中の感覚のマガジンを見る",
         priority:false
       },
       {
@@ -1196,8 +1205,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"中イキとポルチオの違いを知る",
         desc:"さらに深さを追うために、感覚の種類と言葉を整理する記事です。",
-        href:LINKS.note_ik_diff,
-        label:"2つの違いを読む",
+        href:LINKS.mag_climax,
+        label:"中イキマガジンを見る",
         priority:false
       },
       {
@@ -1232,8 +1241,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"未経験の怖さをほどく",
         desc:"『中はまだ怖い』『中の快感がまだ弱い』人向けに、入口から整えるヒントです。",
-        href:LINKS.note_unexp,
-        label:"未経験向けの安心記事を読む",
+        href:LINKS.mag_inner,
+        label:"中の感覚のマガジンを見る",
         priority:false
       },
       {
@@ -1268,8 +1277,8 @@ if(painAnxiety==="some"){
           key:"self",
           title:"施術と身体の対話について",
           desc:"今の状態を急いで結論づけず、身体の反応を観察する考え方の記事です。",
-          href:LINKS.note_policy,
-          label:"施術の考え方を読む",
+          href:LINKS.mag_service,
+          label:"施術・相談のマガジンを見る",
           priority:false
         },
         {
@@ -1306,8 +1315,8 @@ if(painAnxiety==="some"){
         key:"self",
         title:"今の状態に近い記事を読む",
         desc:"状態整理から始めたい人向けの導線です。",
-        href:LINKS.note_policy,
-        label:"考え方を読む",
+        href:LINKS.mag_inner,
+        label:"中の感覚のマガジンを見る",
         priority:false
       },
       {
