@@ -6,18 +6,18 @@
   <title>感じ方チェック byミヤ</title>
   <style>
     :root{
-      --bg1:#fff3f7;
-      --bg2:#f4f6ff;
-      --ink:#1b1f2a;
-      --muted:#6b7280;
+      --bg1:#fff7f4;
+      --bg2:#f7f1ff;
+      --ink:#2b2026;
+      --muted:#7b6871;
       --card:#ffffff;
-      --line:rgba(18,23,37,.10);
-      --accent:#ff4fa3;
-      --accent2:#7c5cff;
+      --line:rgba(92,64,78,.12);
+      --accent:#d94f84;
+      --accent2:#9b6fda;
       --warn:#f59e0b;
       --danger:#ef4444;
-      --shadow:0 10px 30px rgba(16,24,40,.10);
-      --radius:18px;
+      --shadow:0 18px 46px rgba(86,54,70,.12);
+      --radius:22px;
       font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;
     }
 
@@ -26,7 +26,9 @@
     body{
       margin:0;
       color:var(--ink);
-      background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
+      background:
+        radial-gradient(circle at top left, rgba(255,222,229,.72), transparent 34rem),
+        linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
       min-height:100vh;
       position:relative;
       overflow-x:hidden;
@@ -48,36 +50,36 @@
       transform:translate(-50%,-50%) rotate(-20deg);
       font-size:8vw;
       font-weight:900;
-      color:rgba(255,79,163,.04);
+      color:rgba(217,79,132,.035);
       pointer-events:none;
       z-index:-1;
       white-space:nowrap;
       user-select:none;
     }
 
-    .wrap{max-width:980px;margin:0 auto;padding:16px;}
-    header{display:grid;gap:6px;margin-top:6px;}
-    h1{margin:0;font-size:24px;letter-spacing:.02em;line-height:1.3;}
-    .sub{margin:0;color:var(--muted);line-height:1.6;font-size:14px;}
+    .wrap{max-width:900px;margin:0 auto;padding:22px 16px 18px;}
+    header{display:grid;gap:8px;margin-top:8px;}
+    h1{margin:0;font-size:27px;letter-spacing:0;line-height:1.28;}
+    .sub{margin:0;color:var(--muted);line-height:1.75;font-size:15px;}
 
     .miya-header{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
     .miya-icon{
-      width:40px;height:40px;border-radius:50%;
+      width:44px;height:44px;border-radius:50%;
       background:linear-gradient(135deg,var(--accent),var(--accent2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-size:19px;font-weight:900;
-      box-shadow:0 6px 15px rgba(255,79,163,.25);
+      color:#fff;font-size:20px;font-weight:900;
+      box-shadow:0 10px 24px rgba(217,79,132,.22);
       flex-shrink:0;
     }
-    .miya-brand{font-size:11px;font-weight:900;color:var(--accent);letter-spacing:.05em;margin-bottom:2px;}
+    .miya-brand{font-size:11px;font-weight:900;color:var(--accent);letter-spacing:.05em;margin-bottom:3px;}
 
     .card{
       background:var(--card);
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:15px;
-      margin-top:12px;
+      padding:20px;
+      margin-top:16px;
     }
 
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
@@ -88,46 +90,49 @@
       flex:1;min-width:180px;
     }
     .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));}
-    .step{font-size:12px;color:var(--muted);white-space:nowrap;}
+    .step{font-size:13px;color:var(--muted);white-space:nowrap;}
 
-    .qTitle{margin:10px 0 6px;font-size:18px;font-weight:900;line-height:1.4;}
-    .hint{margin:0;color:var(--muted);font-size:12px;line-height:1.55;}
+    .qTitle{margin:14px 0 8px;font-size:21px;font-weight:900;line-height:1.45;letter-spacing:0;}
+    .hint{margin:0;color:var(--muted);font-size:13px;line-height:1.7;}
 
-    .optList{display:grid;gap:8px;margin-top:12px;}
+    .optList{display:grid;gap:10px;margin-top:16px;}
     .opt{
       appearance:none;
       width:100%;
       font-family:inherit;
       color:var(--ink);
       text-align:left;
-      padding:11px 12px;
-      border-radius:14px;
-      background:#fff;
-      border:1px solid rgba(27,31,42,.10);
+      padding:14px 15px;
+      border-radius:18px;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(92,64,78,.13);
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:10px;
       cursor:pointer;
+      box-shadow:0 8px 18px rgba(86,54,70,.055);
+      transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
     }
-    .optMain{display:grid;gap:3px;min-width:0;}
-    .optLabel{font-size:14px;font-weight:800;line-height:1.4;}
-    .optSub{font-size:11px;color:var(--muted);line-height:1.45;}
+    .opt:hover{transform:translateY(-1px);border-color:rgba(217,79,132,.28);box-shadow:0 12px 24px rgba(86,54,70,.09);}
+    .optMain{display:grid;gap:4px;min-width:0;}
+    .optLabel{font-size:15px;font-weight:850;line-height:1.48;}
+    .optSub{font-size:12px;color:var(--muted);line-height:1.55;}
     .opt small{color:var(--muted);font-weight:700;font-size:11px;white-space:nowrap;margin-top:2px;}
 
     .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
     button{
-      appearance:none;border:none;cursor:pointer;border-radius:14px;
-      padding:10px 12px;font-weight:900;
-      background:rgba(27,31,42,.06);color:var(--ink);
-      border:1px solid rgba(27,31,42,.10);
-      font-size:13px;
+      appearance:none;border:none;cursor:pointer;border-radius:16px;
+      padding:11px 15px;font-weight:900;
+      background:rgba(92,64,78,.07);color:var(--ink);
+      border:1px solid rgba(92,64,78,.12);
+      font-size:14px;
     }
     .primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;border:none;}
     .ghost{background:transparent;}
 
     .warnBox,.dangerBox{
-      margin-top:10px;border-radius:14px;padding:12px;line-height:1.6;font-size:13px;
+      margin-top:12px;border-radius:18px;padding:14px;line-height:1.75;font-size:14px;
     }
     .warnBox{
       background:rgba(245,158,11,.10);
@@ -145,25 +150,140 @@
       padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;
       color:white;background:linear-gradient(90deg,var(--accent),var(--accent2));
     }
-    .level{font-size:20px;font-weight:1000;margin:0;line-height:1.4;}
-    .divider{height:1px;background:rgba(27,31,42,.08);margin:12px 0;}
+    .level{font-size:24px;font-weight:1000;margin:0;line-height:1.38;}
+    .divider{height:1px;background:rgba(92,64,78,.10);margin:16px 0;}
     .kicker{font-weight:1000;margin:0 0 6px;}
-    .list{margin:0;padding-left:18px;line-height:1.75;color:#2a2f3a;font-size:14px;}
+    .list{margin:0;padding-left:18px;line-height:1.85;color:#3a2d34;font-size:15px;}
+    .resultLead{
+      margin:12px 0 0;
+      padding:15px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,247,250,.96), rgba(255,255,255,.96));
+      border:1px solid rgba(217,79,132,.16);
+      color:#3a2d34;
+      line-height:1.8;
+      font-size:15px;
+      font-weight:750;
+    }
+    .resultCards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+    .resultMiniCard{
+      border:1px solid rgba(92,64,78,.12);
+      border-radius:18px;
+      padding:14px;
+      background:#fff;
+      box-shadow:0 10px 24px rgba(86,54,70,.07);
+      display:grid;
+      gap:7px;
+    }
+    .resultMiniCardTitle{
+      margin:0;
+      color:var(--accent);
+      font-weight:1000;
+      font-size:13px;
+      line-height:1.45;
+    }
+    .resultMiniCardText{
+      margin:0;
+      color:#3a2d34;
+      font-size:14px;
+      line-height:1.7;
+    }
+    .sendPanel{
+      margin-top:16px;
+      border-radius:20px;
+      padding:16px;
+      background:linear-gradient(180deg, rgba(255,248,250,.98), rgba(249,245,255,.98));
+      border:1px solid rgba(217,79,132,.22);
+      box-shadow:0 14px 32px rgba(217,79,132,.10);
+    }
+    .sendHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .sendLabel{margin:0;font-weight:1000;font-size:17px;line-height:1.45;}
+    .sendNote{margin:0;color:var(--muted);font-size:12px;line-height:1.55;}
+    .copyActions{
+      position:sticky;
+      bottom:10px;
+      z-index:2;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:12px;
+      padding:8px;
+      border-radius:18px;
+      background:rgba(255,255,255,.90);
+      border:1px solid rgba(92,64,78,.10);
+      backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(86,54,70,.12);
+    }
+    .copyActions .primary{width:100%;font-size:15px;padding:13px 15px;border-radius:15px;}
+    .copyActions .instaBtn{
+      width:100%;
+      text-align:center;
+      padding:13px 15px;
+      border-radius:15px;
+      font-weight:1000;
+      font-size:15px;
+      color:var(--accent);
+      background:#fff;
+      border:1px solid rgba(217,79,132,.24);
+      box-shadow:0 8px 18px rgba(86,54,70,.07);
+    }
+    .copyActions .ghost{white-space:nowrap;background:transparent;box-shadow:none;}
+    .resultBottomActions{
+      margin-top:14px;
+      justify-content:center;
+    }
+    .resultDetails{
+      margin-top:16px;
+      padding-top:4px;
+    }
+    .resultDetails summary{
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:12px 16px;
+      border-radius:16px;
+      color:var(--ink);
+      background:#fff;
+      border:1px solid rgba(92,64,78,.14);
+      box-shadow:0 8px 18px rgba(86,54,70,.06);
+      font-weight:1000;
+      font-size:15px;
+      line-height:1.5;
+      list-style:none;
+    }
+    .resultDetails summary::-webkit-details-marker{
+      display:none;
+    }
+    .detailBlock{margin-top:14px;}
 
     .ctaGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr;margin-top:10px;}
     @media(max-width:920px){.ctaGrid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:760px){.resultCards{grid-template-columns:1fr;}}
     @media(max-width:560px){.ctaGrid{grid-template-columns:1fr;}}
 
     .ctaCard{
-      border:1px solid rgba(27,31,42,.10);
-      border-radius:16px;padding:12px;background:#fff;
-      box-shadow:0 8px 22px rgba(16,24,40,.08);
+      border:1px solid rgba(92,64,78,.12);
+      border-radius:18px;padding:14px;background:#fff;
+      box-shadow:0 12px 28px rgba(86,54,70,.08);
       display:grid;gap:7px;
     }
     .ctaCard.primaryCard{
-      border-color:rgba(124,92,255,.22);
-      box-shadow:0 10px 28px rgba(124,92,255,.14);
-      background:linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,245,255,1) 100%);
+      border-color:rgba(217,79,132,.24);
+      box-shadow:0 14px 32px rgba(217,79,132,.13);
+      background:linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,247,250,1) 100%);
     }
     .ctaEyebrow{
       display:inline-flex;
@@ -176,8 +296,8 @@
       font-weight:1000;
       letter-spacing:.04em;
     }
-    .ctaTitle{margin:0;font-weight:1000;font-size:14px;line-height:1.4;}
-    .ctaDesc{margin:0;color:var(--muted);font-size:12px;line-height:1.55;}
+    .ctaTitle{margin:0;font-weight:1000;font-size:15px;line-height:1.45;}
+    .ctaDesc{margin:0;color:var(--muted);font-size:13px;line-height:1.65;}
     .ctaBtn{
       width:100%;text-align:center;padding:10px 12px;border-radius:14px;
       font-weight:1000;background:rgba(27,31,42,.06);
@@ -187,10 +307,10 @@
     .ctaBtn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:none;}
 
     .copyBox{
-      background:rgba(124,92,255,.06);
-      border:1px solid rgba(124,92,255,.18);
-      border-radius:14px;padding:12px;white-space:pre-wrap;
-      line-height:1.6;color:#222;margin-top:10px;font-size:12px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(217,79,132,.18);
+      border-radius:18px;padding:14px;white-space:pre-wrap;
+      line-height:1.75;color:#2b2026;margin-top:10px;font-size:14px;
     }
 
     a{color:inherit;text-decoration:none;}
@@ -207,26 +327,32 @@
 
     .scoreBar{display:flex;align-items:center;gap:8px;margin-top:6px;}
     .scoreLabel{font-size:11px;color:var(--muted);min-width:68px;}
-    .scoreFill{height:8px;border-radius:999px;flex:1;background:rgba(27,31,42,.08);overflow:hidden;}
+    .scoreFill{height:8px;border-radius:999px;flex:1;background:rgba(92,64,78,.08);overflow:hidden;}
     .scoreFillInner{height:100%;border-radius:999px;}
 
     @media(max-width:560px){
-      .wrap{padding:12px;}
-      .card{padding:13px;margin-top:10px;border-radius:16px;}
+      .wrap{padding:14px;}
+      .card{padding:16px;margin-top:12px;border-radius:20px;}
       .miya-header{gap:10px;}
-      .miya-icon{width:36px;height:36px;font-size:17px;}
-      h1{font-size:22px;}
-      .sub{font-size:13px;line-height:1.55;}
-      .qTitle{font-size:17px;line-height:1.4;}
-      .hint{font-size:12px;line-height:1.5;}
-      .opt{padding:10px 11px;}
-      .optLabel{font-size:14px;}
-      .optSub{font-size:11px;}
+      .miya-icon{width:38px;height:38px;font-size:18px;}
+      h1{font-size:24px;}
+      .sub{font-size:14px;line-height:1.7;}
+      .qTitle{font-size:19px;line-height:1.45;}
+      .hint{font-size:13px;line-height:1.65;}
+      .opt{padding:13px 13px;border-radius:17px;}
+      .optLabel{font-size:15px;}
+      .optSub{font-size:12px;}
       .btns{gap:8px;}
-      button{padding:9px 11px;font-size:13px;}
-      .level{font-size:18px;}
-      .list{font-size:13px;line-height:1.7;}
-      .copyBox{font-size:12px;line-height:1.55;}
+      button{padding:10px 13px;font-size:14px;}
+      .level{font-size:20px;}
+      .resultLead{font-size:14px;padding:14px;}
+      .resultMiniCard{padding:13px;}
+      .sendPanel{padding:14px;border-radius:18px;}
+      .copyActions{grid-template-columns:1fr;}
+      .copyActions .primary,.copyActions .instaBtn{font-size:14px;padding:12px 14px;}
+      .copyActions .ghost{font-size:13px;padding:8px 10px;}
+      .list{font-size:14px;line-height:1.8;}
+      .copyBox{font-size:12px;line-height:1.65;}
     }
   </style>
 </head>
@@ -239,10 +365,10 @@
       <div class="miya-icon">M</div>
       <div>
         <div class="miya-brand">miya ORIGINAL METHOD</div>
-        <h1>今の感じ方整理ツール</h1>
+        <h1>今の感じ方チェック</h1>
       </div>
     </div>
-    <p class="sub">うまく言葉にできない今の感じ方を、数分でやさしく整理するためのチェックです。結果はそのままコピペして送れるので、相談もスムーズになります。</p>
+    <p class="sub">膣内側の感覚・緊張・呼吸・気持ちよさの広がりを、3分でやさしく整理するチェックです。</p>
   </header>
 
   <section class="card" id="screenIntro">
@@ -250,10 +376,10 @@
       <div class="progress"><div class="bar" id="barIntro"></div></div>
       <div class="step" id="stepIntro">ステップ 0</div>
     </div>
-    <h2 class="qTitle">使い方</h2>
-    <p class="hint">全10問前後です。回答によって質問が少し変わります。<br>直感でいちばん近いものを選んでください。</p>
+    <h2 class="qTitle">「私って感じにくいのかな」と決めつける前に</h2>
+    <p class="hint">今の身体がどこで止まりやすいのかを整理してみてください。<br>感度を点数で評価するものではありません。</p>
     <div class="warnBox"><b>安全優先：</b>痛み・出血・しみる感じ・強い乾燥・怖さがある場合は、無理に進めず休むか相談を優先してください。</div>
-    <div class="btns"><button class="primary" id="startBtn">はじめる</button></div>
+    <div class="btns"><button class="primary" id="startBtn">今の感じ方をチェックする</button></div>
     <p class="hint" style="margin-top:10px;">※18歳未満、または年齢不明の場合は利用できない設計です。</p>
   </section>
 
@@ -271,32 +397,59 @@
 
   <section class="card hidden" id="screenResult">
     <div class="resultTitle">
-      <span class="badge">結果</span>
+      <span class="badge">あなたの今の傾向</span>
       <p class="level" id="typeTitle">—</p>
     </div>
-    <p class="hint" id="typeDesc">—</p>
+    <p class="resultLead" id="typeDesc">—</p>
     <div id="safetyBox" class="hidden"></div>
 
-    <div class="divider"></div>
-    <p class="kicker">状態スコア</p>
-    <div id="scoreArea"></div>
+    <div class="resultCards">
+      <div class="resultMiniCard">
+        <p class="resultMiniCardTitle">今の傾向</p>
+        <p class="resultMiniCardText" id="summaryTrend">—</p>
+      </div>
+      <div class="resultMiniCard">
+        <p class="resultMiniCardTitle">大事にしたいこと</p>
+        <p class="resultMiniCardText" id="summaryCare">—</p>
+      </div>
+      <div class="resultMiniCard">
+        <p class="resultMiniCardTitle">次の一歩</p>
+        <p class="resultMiniCardText" id="summaryNext">—</p>
+      </div>
+    </div>
 
-    <div class="divider"></div>
-    <p class="kicker">おすすめの次の一手</p>
-    <ul class="list" id="adviceList"></ul>
+    <div class="sendPanel hidden" id="sendPanel">
+      <div class="sendHeader">
+        <div>
+          <p class="sendLabel">DMに貼る文章</p>
+          <p class="sendNote">相談したい時だけ使ってください。</p>
+        </div>
+      </div>
+      <div class="copyBox" id="copyPreview"></div>
+      <div class="copyActions">
+        <button class="primary" id="copyBtn">結果をコピー</button>
+        <a class="instaBtn" href="https://www.instagram.com/nakaikioilmassage/" target="_blank" rel="noopener">DMで直接相談する</a>
+      </div>
+    </div>
 
-    <div class="divider"></div>
-    <p class="kicker">次の行動</p>
-    <div class="ctaGrid" id="ctaGrid"></div>
-
-    <div class="divider"></div>
-    <p class="kicker">この結果をコピーする</p>
-    <p class="hint">ボタンを押すと、現在の状態の要約テキストがコピーされます。</p>
-    <div class="btns">
-      <button class="primary" id="copyBtn">結果をコピー</button>
+    <details class="resultDetails">
+      <summary>くわしい分析を見る</summary>
+      <div class="detailBlock">
+        <p class="kicker">今の感じ方の傾向</p>
+        <div id="scoreArea"></div>
+      </div>
+      <div class="detailBlock">
+        <p class="kicker">まず無理しなくていいこと</p>
+        <ul class="list" id="adviceList"></ul>
+      </div>
+      <div class="detailBlock">
+        <p class="kicker">ほかの行動</p>
+        <div class="ctaGrid" id="ctaGrid"></div>
+      </div>
+    </details>
+    <div class="btns resultBottomActions">
       <button class="ghost" id="restartBtn">もう一回</button>
     </div>
-    <div class="copyBox" id="copyPreview"></div>
   </section>
 
   <footer>※医療ツールではありません。痛みや炎症、強い不安がある場合は自己判断で無理をせず、必要に応じて受診や相談を優先してください。</footer>
@@ -355,199 +508,91 @@ apply: "https://docs.google.com/forms/d/1Z66g-mwSutls18mOXEv9DRIS83cDv1mK9pyOA1X
 };
 
 const QUESTIONS =[
-  {
-    id:"age",
-    title:"18歳以上ですか？",
-    desc:"安全のため、最初に確認しています。",
-    options:[
-      {value:"yes", label:"18歳以上", sub:"利用できます"},
-      {value:"no", label:"18歳未満", sub:"このツールは利用できません"}
-    ]
-  },
-  {
-    id:"rootTheme",
-    title:"今の悩みにいちばん近いものは？",
-    desc:"まずは、今どのテーマを整理したいか選んでください。",
-    options:[
-      {value:"self_dev", label:"自分で感覚を育てたい", sub:"自己開発の進め方を整理したい"},
-      {value:"inner_unknown", label:"中の気持ちよさがよくわからない", sub:"痛みより、快感がつかみにくい"},
-      {value:"pain", label:"中が痛い・不快感がある", sub:"まずは痛みやつらさを減らしたい"},
-      {value:"climax", label:"中イキできず途中で止まる", sub:"反応はあるのに最後までつながりにくい"}
-    ]
-  },
-  {
-    id:"outerExp",
-    title:"外の感覚にいちばん近いものは？",
-    desc:"今のベースの感じ方を見ていきます。",
-    condition:a => ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"good", label:"外で安定して気持ちいい", sub:"自分でも相手でもいける"},
-      {value:"self_only", label:"自分ならいける", sub:"相手だとイマイチ"},
-      {value:"almost", label:"あと一歩で止まる", sub:"気持ちいいけど達しきれない"},
-      {value:"weak", label:"ぼんやりしている", sub:"感覚はあるけど弱い"},
-      {value:"ticklish", label:"くすぐったい", sub:"集中しにくい"},
-      {value:"none", label:"ほぼ感じない", sub:"無感覚に近い"}
-    ]
-  },
-  {
-    id:"selfOnlyDetail",
-    title:"相手だとイマイチなのは、どれに近い？",
-    desc:"ギャップの原因を整理します。",
-    condition:a => a.outerExp?.value==="self_only" && ["inner_unknown","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"trust", label:"緊張する", sub:"相手の前だと身体が固い"},
-      {value:"rhythm", label:"リズムが合わない", sub:"強さやテンポが違う"},
-      {value:"head", label:"頭で考えてしまう", sub:"変に思われないか気になる"},
-      {value:"method", label:"やり方が違いすぎる", sub:"セルフと感覚が別物"},
-      {value:"env", label:"環境が落ち着かない", sub:"明るさや音などが気になる"}
-    ]
-  },
-  {
-    id:"almostDetail",
-    title:"あと一歩で止まる時はどんな感じ？",
-    desc:"壁になっているものを見ていきます。",
-    condition:a => a.outerExp?.value==="almost" && ["inner_unknown","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"breath", label:"呼吸が止まる", sub:"浅くなったり息を止めがち"},
-      {value:"tense", label:"力みすぎる", sub:"足・お腹・肩に力が入る"},
-      {value:"fear", label:"怖くなって止める", sub:"失禁しそうな感覚も含む"},
-      {value:"plateau", label:"頭打ちになる", sub:"そこから上がらない"},
-      {value:"focus", label:"集中が切れる", sub:"途中でゼロに戻る感じ"},
-      {value:"immersion_break", label:"没入が切れる", sub:"気持ちよさはあるのに現実に戻る"}
-    ]
-  },
-  {
-  id:"innerExp",
-  title:"中の感覚にいちばん近いものは？",
-  desc:"奥の刺激の受け取り方を見ていきます。",
-  condition:a => ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value),
-  options:[
-    {value:"ik", label:"中で達したことがある", sub:"さらに深めたい"},
-    {value:"deep_feel", label:"奥がうずく感じがある", sub:"内側からこみ上げる感じ"},
-    {value:"urge", label:"尿意っぽい感覚がある", sub:"トイレに行きたい感じ"},
-    {value:"slight", label:"何かは感じる", sub:"圧迫感や入ってる感じはあるけど、快感かは微妙"},
-    {value:"pain_like", label:"痛い・不快感がある", sub:"快感よりつらさが気になる"},
-    {value:"none", label:"何も感じない", sub:"単調な動きに感じる"},
-    {value:"no_exp", label:"試したことがない", sub:"経験なし"}
-  ]
-},
-  {
-    id:"painDetail",
-    title:"痛みはどれに近い？",
-    desc:"場所や出方で見直すポイントが変わります。",
-    condition:a => a.rootTheme?.value==="pain",
-    options:[
-      {value:"entry", label:"入口が痛い", sub:"入れ始めや浅いところがつらい"},
-      {value:"deep", label:"奥が痛い", sub:"深く当たるとズンと響く"},
-      {value:"back", label:"バックなど特定の体位で痛い", sub:"角度や深さで急につらくなる"},
-      {value:"overall", label:"全体的に痛い", sub:"どこがというより全部しんどい"},
-      {value:"dry", label:"こすれて痛い", sub:"滑りが足りない感じ"},
-      {value:"burning", label:"ヒリヒリする", sub:"しみる・灼熱感がある"},
-      {value:"sometimes", label:"日によって違う", sub:"痛い時と平気な時がある"}
-    ]
-  },
-  {
-    id:"painTiming",
-    title:"痛みの出方はどれに近い？",
-    desc:"毎回なのか、条件で変わるのかを見ます。",
-    condition:a => a.rootTheme?.value==="pain",
-    options:[
-      {value:"always", label:"ほぼ毎回ある", sub:"条件に関係なく出やすい"},
-      {value:"sometimes", label:"日によって違う", sub:"平気な日もある"},
-      {value:"position_only", label:"体位や深さで変わる", sub:"条件次第でかなり違う"}
-    ]
-  },
-
-  {
-  id:"painAnxiety",
-  title:"痛みへの不安はある？",
-  desc:"前に痛かった記憶が、今の力みや警戒につながっていることがあります。",
-  condition:a => a.rootTheme?.value==="pain",
-  options:[
-    {value:"strong", label:"かなりある", sub:"また痛いかもが先に浮かぶ"},
-    {value:"some", label:"少しある", sub:"不安はあるけど毎回ではない"},
-    {value:"none", label:"あまりない", sub:"不安より条件の問題が大きい"}
-  ]
-},
-  
-  {
-    id:"arousal",
-    title:"身体の準備状態はどう？",
-    desc:"濡れやすさや反応の出方を見ます。",
-    condition:a => ["inner_unknown","pain","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"easy", label:"自然に準備が整う", sub:"興奮すると十分濡れる"},
-      {value:"slow", label:"時間がかかる", sub:"すぐには足りない"},
-      {value:"head_ok", label:"気持ちはあるのに身体がついてこない", sub:"頭と身体にズレがある"},
-      {value:"dry", label:"かなり乾きやすい", sub:"潤い不足を感じる"},
-      {value:"unknown", label:"よくわからない", sub:"気にしたことがない"}
-    ]
-  },
-  {
-  id:"tension",
-  title:"行為中の頭の中に近いものは？",
-  desc:"思考や没入のしやすさを見ていきます。",
-  condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
-  options:[
-    {value:"overthink", label:"頭で考えすぎてしまう", sub:"見られている感じや演技っぽさも含めて、素で入りにくい"},
-    {value:"immersion", label:"没入しきれない", sub:"気持ちよさはあるのに流れに乗り切れない"},
-    {value:"duty", label:"相手優先になってしまう", sub:"自分の感覚より相手の反応を気にしやすい"},
-    {value:"low", label:"頭はそこまで邪魔していない", sub:"感覚にはある程度集中できる"}
-  ]
-},
-  {
-    id:"partnerComm",
-    title:"相手への伝えやすさはどう？",
-    desc:"感覚の共有のしやすさを見ます。",
-    condition:a => ["inner_unknown","climax"].includes(a.rootTheme?.value),
-    options:[
-      {value:"open", label:"かなり伝えられる", sub:"好き嫌いを自由に言える"},
-      {value:"some", label:"ある程度は言える", sub:"細かいことは言いにくい"},
-      {value:"silent", label:"ほぼ言えない", sub:"我慢しがち"},
-      {value:"no_partner", label:"今は相手がいない", sub:"セルフ中心"},
-      {value:"afraid", label:"言うのが怖い", sub:"空気が悪くなるのが不安"}
-    ]
-  },
-  {
-    id:"selfCheck",
-    title:"セルフではどう？",
-    desc:"外の感覚の土台があるかを見ていきます。",
-    condition:a =>
-      ["self_dev","inner_unknown","climax"].includes(a.rootTheme?.value) &&
-      ["self_only","weak","ticklish","none"].includes(a.outerExp?.value),
-    options:[
-      {value:"good", label:"セルフなら安定して気持ちいい", sub:"自分だと流れに乗りやすい"},
-      {value:"almost", label:"セルフでもあと一歩で止まる", sub:"気持ちいいけど抜けきらない"},
-      {value:"weak", label:"セルフでもぼんやりしている", sub:"感覚が弱くてつかみにくい"},
-      {value:"ticklish", label:"セルフでもくすぐったい", sub:"快感より違和感が先に来る"},
-      {value:"none", label:"セルフでもほぼ感じない", sub:"外の快感の土台がかなり薄い"},
-      {value:"never", label:"セルフはしていない・わからない", sub:"比較材料がまだない"}
-    ]
-  },
-  {
-    id:"selfPattern",
-    title:"セルフのやり方に近いものは？",
-    desc:"やり方の癖が感覚に影響していないかを見ます。",
-    condition:a => ["good","almost"].includes(a.selfCheck?.value),
-    options:[
-      {value:"relaxed", label:"リラックスしてできる", sub:"呼吸も止まりにくい"},
-      {value:"ashipin", label:"力んで達しやすい", sub:"足ピン・息止め・お腹に力が入りやすい"},
-      {value:"same_pattern", label:"毎回ほぼ同じやり方", sub:"刺激のパターンが固定されている"},
-      {value:"strong_only", label:"強い刺激じゃないと難しい", sub:"弱い刺激だと物足りない"},
-      {value:"exploring", label:"まだ模索中", sub:"安定した型はない"}
-    ]
-  },
-  {
-  id:"wish",
-  title:"今の気分に近いものは？",
-  desc:"結果を見るだけでも大丈夫です。",
-  options:[
+  {id:"age", group:"確認", title:"18歳以上ですか？", desc:"安全のため、最初に確認しています。", options:[
+    {value:"yes", label:"18歳以上", sub:"利用できます"},
+    {value:"no", label:"18歳未満", sub:"このツールは利用できません"}
+  ]},
+  {id:"safety", group:"安全確認", title:"今、痛み・怖さ・しみる感じ・強い乾燥感はありますか？", desc:"ある場合は、感じ方の分類より先に安全を優先します。", options:[
+    {value:"no", label:"ない", sub:"今は安全面の不安は少ない"},
+    {value:"unknown", label:"よくわからない", sub:"判断しきれない"},
+    {value:"some", label:"少しある", sub:"気になる違和感や不安がある"},
+    {value:"yes", label:"ある", sub:"痛み・怖さ・しみる感じなどがはっきりある"}
+  ]},
+  {id:"peakExp", group:"今の経験", title:"クリ側・膣内側で、強い快感のピークを感じたことはありますか？", desc:"できる／できないではなく、今の身体が覚えている感覚を見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"both", label:"どちらもある", sub:"クリ側でも膣内側でもピークの感覚がある"},
+    {value:"inner", label:"膣内側ではある", sub:"膣内側や奥の感覚でピークを感じたことがある"},
+    {value:"outer", label:"クリ側ではある", sub:"クリ側ではピークの感覚がある"},
+    {value:"self_not_partner", label:"自分ではあるけど、人とだとない", sub:"相手がいると止まりやすい"},
+    {value:"unknown", label:"よくわからない", sub:"ピークと言えるか判断しにくい"},
+    {value:"neither", label:"どちらもはっきりとはない", sub:"ピーク経験自体がまだ曖昧"}
+  ]},
+  {id:"soloPartner", group:"安心感", title:"ひとりの時と、人と一緒の時で感じ方は変わりますか？", desc:"相手・空気・安心感の影響を見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"partner_better", label:"人といる方が感じやすい", sub:"相手がいる方が高まりやすい"},
+    {value:"same", label:"あまり変わらない", sub:"相手の有無では大きく変わらない"},
+    {value:"solo_better", label:"ひとりの方が感じやすい", sub:"自分のペースだと入りやすい"},
+    {value:"unknown", label:"比べたことがない・よくわからない", sub:"まだ判断できない"},
+    {value:"partner_tense", label:"人といると緊張してわかりにくくなる", sub:"見られ方や空気で止まりやすい"}
+  ]},
+  {id:"innerExp", group:"感じ方", title:"膣内側の気持ちよさはありますか？", desc:"膣内側の感覚があるか、まだ曖昧かを見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"clear", label:"ある", sub:"膣内側の気持ちよさとしてわかる"},
+    {value:"slight", label:"少しある", sub:"気持ちいいような、圧のような感じはある"},
+    {value:"unknown", label:"よくわからない", sub:"言葉にしにくい"},
+    {value:"outer_only", label:"クリ側の気持ちよさに近い", sub:"膣内側というより鋭い快感に近い"},
+    {value:"none", label:"ほとんどない", sub:"快感としてはわかりにくい"}
+  ]},
+  {id:"innerQuality", group:"感じ方", title:"膣内側の気持ちよさは、どんな感じに近いですか？", desc:"一点なのか、奥の圧なのか、広がりなのかを見ます。", condition:a => ["clear","slight","outer_only","unknown"].includes(a.innerExp?.value), options:[
+    {value:"wholebody", label:"呼吸や背中まで広がる感じ", sub:"身体全体に波が広がる感じがある"},
+    {value:"warm_spread", label:"じわっと広がる感じ", sub:"膣内側で少し広がる"},
+    {value:"pressure", label:"奥に圧や重さがある感じ", sub:"ズンとした圧・重さがある"},
+    {value:"point", label:"一点に当たって気持ちいい感じ", sub:"点で強く入りやすい"},
+    {value:"sharp", label:"クリ側の快感に似た鋭い気持ちよさ", sub:"クリに近い鋭さがある"},
+    {value:"unknown", label:"まだよくわからない", sub:"近いものがない・判断しにくい"}
+  ]},
+  {id:"pleasureCenter", group:"感じ方", title:"膣内側を感じている時、気持ちよさの中心はどこにある感じがしますか？", desc:"膣内側でもクリ側の快感に引っ張られやすいかを見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"inner_spread", label:"奥から広がる感じが少しある", sub:"奥から広がる入口がある"},
+    {value:"deep_pressure", label:"奥の圧や重さに意識が向きやすい", sub:"奥の感覚を拾いやすい"},
+    {value:"unknown", label:"よくわからない", sub:"中心がまだ掴みにくい"},
+    {value:"outer_return", label:"クリ側の気持ちよさに意識が戻りやすい", sub:"膣内側よりクリ側に戻りやすい"},
+    {value:"sharp_pull", label:"鋭い快感の方に引っ張られる", sub:"膣内側のつもりでも点の快感へ寄る"}
+  ]},
+  {id:"bodyReaction", group:"身体の反応", title:"気持ちよさが強くなった時、身体はどうなりやすいですか？", desc:"力みや脱力の出方を見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"release", label:"逆に力が抜ける", sub:"身体に任せやすい"},
+    {value:"unknown", label:"よくわからない", sub:"反応を見たことがない"},
+    {value:"breath_stop", label:"息が止まる", sub:"高まるほど呼吸が浅くなる"},
+    {value:"legs_abs", label:"脚やお腹に力が入る", sub:"足・お腹・肩などに力が入りやすい"},
+    {value:"back_stiff", label:"腰や背中が固まる", sub:"身体が反る・固まる感じがある"}
+  ]},
+  {id:"breathFlow", group:"身体の反応", title:"気持ちよくなってきた時、呼吸はどうなりやすいですか？", desc:"呼吸が止まるか、流れが続くかを見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"deepen", label:"深くなる", sub:"呼吸と一緒に広がる感じがある"},
+    {value:"continue", label:"続けられる", sub:"吐く・ゆるむが保ちやすい"},
+    {value:"unknown", label:"よくわからない", sub:"意識したことがない"},
+    {value:"shallow", label:"浅くなる", sub:"呼吸が小さくなる"},
+    {value:"stop", label:"息が止まりやすい", sub:"無意識に止めてしまう"}
+  ]},
+  {id:"headMode", group:"安心感", title:"気持ちよくなってきた時、頭の中はどうなりやすいですか？", desc:"確認モードや見られ方のブレーキを見ます。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"body", label:"身体に任せやすい", sub:"頭より身体で受け取りやすい"},
+    {value:"blank", label:"何も考えられなくなる", sub:"感覚に入りやすい"},
+    {value:"unknown", label:"よくわからない", sub:"近いものがない"},
+    {value:"cool", label:"気持ちいいけど途中で冷静になる", sub:"途中で現実に戻りやすい"},
+    {value:"checking", label:"ちゃんと感じているか確認してしまう", sub:"自分を観察してしまう"},
+    {value:"looked", label:"相手にどう見えているか気になる", sub:"反応や見られ方が気になる"}
+  ]},
+  {id:"currentConcern", group:"今の悩み", title:"今いちばん近い悩みはどれですか？", desc:"最後に、本人の感覚に近い悩みを確認します。", condition:a => !["yes","some"].includes(a.safety?.value), options:[
+    {value:"inner_blur", label:"膣内側の感覚をもっとはっきりさせたい", sub:"圧や広がりを掴みたい"},
+    {value:"not_deepen", label:"気持ちいいけど深まらない", sub:"途中で止まりやすい"},
+    {value:"outer_pull", label:"クリ側の気持ちよさに引っ張られる", sub:"膣内側より鋭い快感に戻りやすい"},
+    {value:"pleasure_unknown", label:"気持ちよさ自体がよくわからない", sub:"快感の入口が曖昧"},
+    {value:"tense", label:"気持ちよくなると力が入る", sub:"呼吸や力みで止まりやすい"},
+    {value:"partner_tense", label:"相手がいると緊張する", sub:"人といると委ねにくい"},
+    {value:"unknown", label:"よくわからない", sub:"まだ言葉にしきれない"}
+  ]},
+  {id:"wish", group:"結果", title:"今の気分に近いものは？", desc:"結果を見るだけでも大丈夫です。", options:[
     {value:"just_result", label:"まずは結果だけ見たい", sub:"今は整理だけしたい"},
     {value:"self", label:"まず自分で試したい", sub:"自己解決寄り"},
     {value:"consult", label:"一度相談したい", sub:"原因を整理したい"},
-    {value:"apply", label:"施術に興味がある", sub:"フォームを見てみる"}
-  ]
-}
+    {value:"apply", label:"施術に興味がある", sub:"フォームを見てみる"},
+    {value:"unknown", label:"よくわからない", sub:"まだ決めなくて大丈夫"}
+  ]}
 ];
 
 let flowPath =[];
@@ -606,7 +651,7 @@ function renderQ(){
   const total = flowPath.length;
   const step = currentIdx + 1;
   barQuiz.style.width = Math.round((step / total) * 100) + "%";
-  stepQuiz.textContent = `ステップ ${step} / ${total}`;
+  stepQuiz.textContent = `${step} / ${total}　${q.group || "チェック"}`;
 
   const area = $("questionArea");
   area.innerHTML = "";
@@ -682,7 +727,7 @@ function showBlocked(){
   $("startBtn").onclick = () => {
     box.className = "warnBox";
     box.innerHTML = "<b>安全優先：</b>痛み・出血・しみる感じ・強い乾燥・怖さがある場合は、無理に進めず休むか相談を優先してください。";
-    $("startBtn").textContent = "はじめる";
+    $("startBtn").textContent = "今の感じ方をチェックする";
     $("startBtn").onclick = () => { resetAll(); showQuiz(); };
   };
 }
@@ -694,761 +739,215 @@ function showToast(t){
   setTimeout(() => el.classList.remove("show"), 1500);
 }
 
-function calcScores(){
-  const theme = ans.rootTheme?.value || "";
-  const outer = ans.outerExp?.value || "";
-  const inner = ans.innerExp?.value || "";
-  const tension = ans.tension?.value || "";
-  const arousal = ans.arousal?.value || "";
-  const comm = ans.partnerComm?.value || "";
-  const selfCheck = ans.selfCheck?.value || "";
-  const selfPattern = ans.selfPattern?.value || "";
+function clampScore(n){
+  return Math.max(0, Math.min(100, n));
+}
 
-  const outerMap = {good:100,self_only:70,almost:55,weak:30,ticklish:20,none:5};
-  const innerMap = {ik:100,deep_feel:70,urge:60,slight:35,pain_like:5,none:10,no_exp:5};
-const tensionMap = {
-  low:100,
-  immersion:35,
-  overthink:20,
-  duty:15
-};
-  const arousalMap = {easy:100,slow:60,head_ok:35,dry:10,unknown:30};
-  const selfCheckMap = {good:100,almost:70,weak:35,ticklish:20,none:5,never:10};
-  const selfPatternMap = {relaxed:100,ashipin:40,same_pattern:55,strong_only:35,exploring:70};
-  const commMap = {open:100,some:60,no_partner:40,silent:15,afraid:10};
+function calcScores(){
+  const safety = ans.safety?.value || "";
+  const peak = ans.peakExp?.value || "";
+  const solo = ans.soloPartner?.value || "";
+  const inner = ans.innerExp?.value || "";
+  const quality = ans.innerQuality?.value || "";
+  const center = ans.pleasureCenter?.value || "";
+  const body = ans.bodyReaction?.value || "";
+  const breath = ans.breathFlow?.value || "";
+  const head = ans.headMode?.value || "";
+  const concern = ans.currentConcern?.value || "";
+
+  let safetyScore = safety === "no" ? 100 : safety === "unknown" ? 55 : 10;
+  let peakScore = {both:100,inner:95,outer:72,self_not_partner:62,neither:20,unknown:32}[peak] ?? 35;
+  let innerScore = {clear:82,slight:58,outer_only:42,none:12,unknown:28}[inner] ?? 30;
+  let spreadScore = {wholebody:100,warm_spread:82,pressure:68,point:42,sharp:34,unknown:28}[quality] ?? 35;
+  let outerPullScore = {outer_return:18,sharp_pull:22,deep_pressure:68,inner_spread:86,unknown:38}[center] ?? 40;
+  let relaxScore = {release:90,breath_stop:30,legs_abs:24,back_stiff:26,unknown:45}[body] ?? 45;
+  let breathScore = {deepen:100,continue:82,shallow:42,stop:25,unknown:45}[breath] ?? 45;
+  let headScore = {body:92,blank:86,checking:35,looked:28,cool:38,unknown:45}[head] ?? 45;
+  let partnerScore = {partner_better:86,same:72,solo_better:44,partner_tense:24,unknown:48}[solo] ?? 50;
+
+  if(concern === "outer_pull") outerPullScore -= 12;
+  if(concern === "tense") relaxScore -= 10;
+  if(concern === "partner_tense") partnerScore -= 12;
+  if(concern === "pleasure_unknown") peakScore -= 8;
 
   return {
-    theme,
-    outerScore: outerMap[outer] ?? 30,
-    innerScore: innerMap[inner] ?? 20,
-    relaxScore: tensionMap[tension] ?? 40,
-    bodyScore: arousalMap[arousal] ?? 40,
-    selfKnowScore: Math.round(((selfCheckMap[selfCheck] ?? 30) + (selfPatternMap[selfPattern] ?? 50)) / 2),
-    commScore: commMap[comm] ?? 40
+    safetyScore: clampScore(safetyScore),
+    peakScore: clampScore(peakScore),
+    innerScore: clampScore(innerScore),
+    spreadScore: clampScore(spreadScore),
+    outerPullScore: clampScore(outerPullScore),
+    relaxScore: clampScore(Math.round((relaxScore + breathScore) / 2)),
+    headScore: clampScore(headScore),
+    partnerScore: clampScore(partnerScore)
   };
 }
 
 function scoreDrivenHints(scores){
-  const hints =[];
-  if(scores.relaxScore < 30) hints.push("脱力が低めなので、刺激を足すより呼吸と力みの整理を先に");
-  if(scores.commScore < 20) hints.push("共有が低めなので、感じ方以前に『伝えづらさ』がブレーキになりやすいです");
-  if(scores.bodyScore < 20) hints.push("準備が低めなので、前準備や潤いの工夫が先に効きやすいです");
+  const hints = [];
+  if(scores.safetyScore < 40) hints.push("痛み・怖さ・しみる感じがある時は、感度分類より安全確認を先にしてください");
+  if(scores.peakScore < 35) hints.push("強い快感のピークそのものがまだ曖昧なら、強さより安心して受け取れる状態づくりが入口です");
+  if(scores.outerPullScore < 35) hints.push("クリ側の鋭い快感に戻りやすい時は、一点の強さより奥の圧や重さを観察する方が合いやすいです");
+  if(scores.relaxScore < 40) hints.push("力みや呼吸の止まりやすさがある時は、刺激を足すより吐く・ゆるむを優先してください");
+  if(scores.headScore < 40) hints.push("頭が確認モードに戻りやすい時は、感じているかを判定するより身体に戻る時間を作る方が近道です");
+  if(scores.partnerScore < 40) hints.push("人といると緊張する時は、技術より安心感・空気・伝えやすさが大きく影響します");
   return hints;
 }
 
 function getDisplayType(type){
   const map = {
-    "入口ケア優先タイプ":"まずは入口のつらさを減らす段階",
-    "奥の当たり方調整タイプ":"奥のつらさを整理する段階",
-    "体位依存ケアタイプ":"体位や角度を見直す段階",
-    "全体緊張ケアタイプ":"まずは警戒や力みをほどく段階",
-    "摩擦・刺激ケアタイプ":"摩擦や刺激の負担を減らす段階",
-    "土台づくりタイプ":"まず感じる土台を整える段階",
-    "感覚はあるけど薄いタイプ":"小さな感覚を育てる段階",
-    "没入ブロックタイプ":"相手だと崩れやすい段階",
-    "奥の感覚育成タイプ":"奥の流れを育てる段階",
-    "深めていくタイプ":"もっと深く味わっていく段階",
-    "現状整理タイプ":"今の状態を整理していく段階"
+    "安全優先タイプ":"まず安心と安全を優先する段階",
+    "未経験・ピーク未形成タイプ":"強い快感のピークを育てる段階",
+    "クリ側快感に引っ張られやすいタイプ":"クリ側の鋭さに戻りやすい段階",
+    "一点集中・直線快感タイプ":"一点の快感を広げていく段階",
+    "圧・重さを拾い始めているタイプ":"奥の圧や重さを育てる段階",
+    "膣内側の広がり準備タイプ":"膣内側の広がりを深める段階",
+    "緊張・確認ブレーキタイプ":"頭と力みのブレーキをほどく段階",
+    "安心・相手依存タイプ":"安心感と委ねやすさを整える段階",
+    "言語化まだ曖昧タイプ":"感覚の言葉を探している段階"
   };
   return map[type] || type;
 }
 
+function compactText(text, max = 78){
+  if(!text) return "";
+  return text.length > max ? text.slice(0, max - 1) + "…" : text;
+}
+
+function buildResultSummary({displayType, desc, advice, painFlag, mentalFlag, wish}){
+  const firstAdvice = advice[0] || "無理に答えを出さず、今わかる感覚から見ていけば大丈夫です";
+  const lead = painFlag
+    ? "今は感度を高める方向より、まず安心・休む・痛みの確認を優先した方がよさそうです。"
+    : "これは能力の低さではなく、今どの感覚を拾いやすいかの違いです。";
+
+  const trend = compactText(desc, 86);
+  const care = painFlag
+    ? "無理に進めるより、身体が嫌がっていないかを先に見てください。"
+    : mentalFlag
+      ? "反応を作ろうとしなくて大丈夫です。確認するより、呼吸と身体の感覚に戻ることを大事にしてください。"
+      : compactText(firstAdvice, 86);
+  let next = "まずは結果だけ見て大丈夫です。気になるところがあれば、あとで見返せるようにしておいてください。";
+  if(wish === "self"){
+    next = "まずは自分で試して大丈夫です。くわしい分析に、今のタイプに合う試し方を入れています。";
+  } else if(wish === "consult"){
+    next = "相談したい時は、下の文章をコピーしてDMに貼れば、" + displayType + "に合わせて整理できます。";
+  } else if(wish === "apply"){
+    next = "施術に興味がある場合は、くわしい分析の中にあるフォーム導線から進めます。";
+  }
+
+  return { lead, trend, care, next };
+}
+
+function buildCopyText(displayType){
+  const concern = ans.currentConcern?.label || "まだうまく言葉にできない状態";
+  const peak = ans.peakExp?.label ? "\n強い快感のピーク経験は「" + ans.peakExp.label + "」が近いです。" : "";
+  const quality = ans.innerQuality?.label ? "\n膣内側の気持ちよさは「" + ans.innerQuality.label + "」が近いです。" : "";
+  const center = ans.pleasureCenter?.label ? "\n気持ちよさの中心は「" + ans.pleasureCenter.label + "」が近いです。" : "";
+  const body = ans.bodyReaction?.label ? "\n身体の反応は「" + ans.bodyReaction.label + "」が近いです。" : "";
+  const head = ans.headMode?.label ? "\n頭の中は「" + ans.headMode.label + "」が近いです。" : "";
+
+  return "ミヤさんへ\n感じ方チェックでは「" + displayType + "」でした。\n今いちばん近い悩みは「" + concern + "」です。" + peak + quality + center + body + head + "\nこの結果をもとに相談したいです。";
+}
+
+function makeAction(key, title, desc, href, label, priority = false){
+  return {key, title, desc, href, label, priority};
+}
+
+function baseActions(type){
+  const articleByType = {
+    "安全優先タイプ": [LINKS.mag_body, "痛み・怖さの整理を読む", "痛みや怖さがある時に、無理なく確認する視点です。"],
+    "未経験・ピーク未形成タイプ": [LINKS.mag_self_dev, "感じる土台の記事を読む", "安心感・脱力・受け取り方から整える入口です。"],
+    "クリ側快感に引っ張られやすいタイプ": [LINKS.mag_climax, "クリ側と膣内側の違いを読む", "クリ側の鋭さと奥の広がりを分けて整理します。"],
+    "一点集中・直線快感タイプ": [LINKS.mag_climax, "一点で止まる理由を読む", "強さより圧や重さを広げるための考え方です。"],
+    "圧・重さを拾い始めているタイプ": [LINKS.mag_inner, "奥の圧・重さの記事を読む", "これで合っているのか迷いやすい入口を整理します。"],
+    "膣内側の広がり準備タイプ": [LINKS.mag_climax, "広がる感覚を深める記事を読む", "呼吸や背中まで広がる入口を育てる視点です。"],
+    "緊張・確認ブレーキタイプ": [LINKS.mag_mental, "確認モードをほどく記事を読む", "頭で確認して止まりやすい時の整え方です。"],
+    "安心・相手依存タイプ": [LINKS.mag_service, "安心感と委ね方の記事を読む", "人といる時に止まりやすい理由を整理します。"],
+    "言語化まだ曖昧タイプ": [LINKS.mag_inner, "感覚の言葉を探す記事を読む", "まだ言葉にしにくい状態から整理する入口です。"]
+  };
+  const [href, title, desc] = articleByType[type] || articleByType["言語化まだ曖昧タイプ"];
+  return [
+    makeAction("self", title, desc, href, "まず読む記事を見る"),
+    makeAction("consult", "結果をもとにDMで相談する", "コピー文を貼るだけでも、今の状態を整理しやすいです。", LINKS.dm, "DMで相談する"),
+    makeAction("anon", "質問箱に匿名で送る", "DMまでは迷う時は、質問箱に匿名で送れます。", LINKS.anon_qa, "質問箱に送る")
+  ];
+}
+
 function computeResult(){
-  const theme = ans.rootTheme?.value || "";
-  const outer = ans.outerExp?.value || "";
+  const safety = ans.safety?.value || "";
+  const peak = ans.peakExp?.value || "";
+  const solo = ans.soloPartner?.value || "";
   const inner = ans.innerExp?.value || "";
-  const tension = ans.tension?.value || "";
+  const quality = ans.innerQuality?.value || "";
+  const center = ans.pleasureCenter?.value || "";
+  const body = ans.bodyReaction?.value || "";
+  const breath = ans.breathFlow?.value || "";
+  const head = ans.headMode?.value || "";
+  const concern = ans.currentConcern?.value || "";
   const wish = ans.wish?.value || "";
-  const arousal = ans.arousal?.value || "";
-  const selfDetail = ans.selfOnlyDetail?.value || "";
-  const almostD = ans.almostDetail?.value || "";
-  const painDetail = ans.painDetail?.value || "";
-  const painTiming = ans.painTiming?.value || "";
-  const painAnxiety = ans.painAnxiety?.value || "";
-  const comm = ans.partnerComm?.value || "";
-  const selfCheck = ans.selfCheck?.value || "";
-  const selfPattern = ans.selfPattern?.value || "";
 
   const scores = calcScores();
-  const painFlag = theme === "pain";
-  const mentalFlag = ["overthink","past","duty","immersion"].includes(tension);
-  let type = "";
-  let desc = "";
-  let advice = [];
-  let actions = [];
+  const painFlag = safety === "yes" || safety === "some";
+  const mentalFlag = ["checking","looked","cool"].includes(head) || ["breath_stop","legs_abs","back_stiff"].includes(body) || ["stop","shallow"].includes(breath);
+  const unknownCount = [peak, solo, inner, quality, center, body, breath, head, concern].filter(v => v === "unknown").length;
 
-  if(theme==="pain"){
-    if(painDetail==="entry"){
-      type = "入口ケア優先タイプ";
-      desc = "入れ始めや浅いところのつらさを先に減らしていく段階です。感じ方を育てるより、まずは入口の負担を下げることが先です。";
-    } else if(painDetail==="deep"){
-      type = "奥の当たり方調整タイプ";
-      desc = "奥の当たり方や深さを調整していく段階です。快感を育てる前に、奥で痛くならない条件探しが先です。";
-    } else if(painDetail==="back"){
-      type = "体位依存ケアタイプ";
-      desc = "特定の体位でのつらさを整理していく段階です。相性より、角度や深さの問題として見た方が進みやすいです。";
-    } else if(painDetail==="overall"){
-      type = "全体緊張ケアタイプ";
-      desc = "入口や奥だけでなく、全体的な警戒や力みをほどいていく段階です。感じることより先に、つらくない条件づくりが必要です。";
-    } else {
-      type = "摩擦・刺激ケアタイプ";
-      desc = "摩擦や刺激の負担を減らしていく段階です。まずはヒリヒリやこすれの少ない状態を作ることが先です。";
-    }
+  let type = "言語化まだ曖昧タイプ";
+  let desc = "まだ感覚の言葉がはっきりしていない状態です。無理に分類しきるより、どの場面でわかりにくくなるかを少しずつ見る段階です。";
+  let advice = ["よくわからないが多くても問題ありません。感覚を言葉にする前の段階として扱って大丈夫です", "まずは気持ちよさ・力み・呼吸・相手の有無を分けて見る", "近いものがない時は、結果を決めつけずメモとして使う"];
 
-    advice = [
-      "痛みがある日は無理に進めず、まず『痛くない接触』まで段階を下げる",
-      "場所・体位・乾きやすさ・緊張の有無を分けて見る",
-      "『感じる練習』より先に、『怖くない・つらくない』を作る"
-    ];
-
-    if(painDetail==="entry"){
-      advice.push("入口のつらさは、緊張や準備不足が重なっていることがあります。浅さ・呼吸・ペースを見直す");
-    }
-    if(painDetail==="deep"){
-      advice.push("奥のつらさは、深さや当たり方が影響していることがあります。角度や骨盤の向きを変えて確認する");
-    }
-    if(painDetail==="back"){
-      advice.push("バックなど特定の体位だけつらい場合は、体位を固定せず浅さや角度から調整する");
-    }
-    if(painDetail==="overall"){
-      advice.push("全体的に痛い時は、局所だけでなく怖さや力みが強くなっていないかを見る");
-    }
-    if(painDetail==="dry" || painDetail==="burning" || arousal==="dry" || arousal==="head_ok"){
-      advice.push("摩擦を減らす工夫や潤滑の見直しを先に。足りないのは異常ではなく、普通にある差です");
-    }
-    if(painTiming==="sometimes" || painDetail==="sometimes"){
-      advice.push("日によって変わるなら、体調・周期・ストレス・体位の差をメモしておくと整理しやすい");
-    }
-    if(painAnxiety==="strong"){
-  advice.push("前に痛かった記憶が強いと、入る前から身体が警戒して固くなりやすいです。まずは『大丈夫だった条件』を増やして、不安を少しずつ上書きするのが先です");
-}
-if(painAnxiety==="some"){
-  advice.push("少し不安がある時は、毎回ゼロから頑張るより、痛くなりにくい条件を固定した方が安心しやすいです");
-}
-
-    actions = [
-      {
-        key:"self",
-        title:"痛みの出方を整理する",
-        desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
-        href:LINKS.mag_body,
-        label:"感じ方の整え方マガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"状態を整理して相談する",
-        desc:"どこで、どんな時に、どんな痛みが出るかをそのまま伝えると整理しやすいです。",
-        href:LINKS.dm,
-        label:"DMで相談する",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"まだ深く話したくない時は、匿名からでも十分です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
+  if(painFlag){
+    type = "安全優先タイプ";
+    desc = "今は感度を高める方向より、まず安心・休む・痛みの確認を優先した方がよさそうです。";
+    advice = ["痛み・怖さ・しみる感じがある時は無理に進めない", "身体が嫌がっていないかを先に確認する", "強い乾燥や痛みが続く場合は、必要に応じて受診や相談を優先する"];
+  } else if((peak === "neither" || peak === "unknown") && (inner === "none" || concern === "pleasure_unknown" || unknownCount >= 4)){
+    type = "未経験・ピーク未形成タイプ";
+    desc = "今は『膣内側が弱い』というより、身体が強い快感のピークそのものをまだ覚えていない可能性があります。";
+    advice = ["刺激を強めるより、安心して受け取れる状態づくりを入口にする", "クリ側か膣内側かを急いで決めず、まず強い快感のピークの土台を作る", "力みや呼吸の止まりやすさを観察する"];
+  } else if(peak === "self_not_partner" || solo === "solo_better" || solo === "partner_tense" || concern === "partner_tense"){
+    type = "安心・相手依存タイプ";
+    desc = "感じ方そのものより、相手・空気・安心感の影響を受けやすいタイプです。";
+    advice = ["人といる時は、技術より安心感・呼吸・伝えやすさを先に整える", "ひとりでできることと相手がいる時の差を責めない", "身体が開く前に緊張が残っていないかを見る"];
+  } else if(["outer_return","sharp_pull"].includes(center) || inner === "outer_only" || concern === "outer_pull"){
+    type = "クリ側快感に引っ張られやすいタイプ";
+    desc = "膣内側を感じているつもりでも、気持ちよさの中心が鋭い快感の方に戻りやすいタイプです。";
+    advice = ["悪いことではありません。まずはクリ側の鋭さと奥の圧を分けて見る", "一点の強さより、奥の圧・重さ・広がりに意識を向ける", "クリ側に戻る瞬間を失敗ではなく、今の癖として観察する"];
+  } else if(quality === "point" || quality === "sharp"){
+    type = "一点集中・直線快感タイプ";
+    desc = "膣内側の気持ちよさは拾えていますが、感覚が一点に集まりやすい状態です。";
+    advice = ["強い刺激を追うより、呼吸を止めずに圧や重さを広げて受け取る", "点で上げ切ろうとせず、広がる余白を作る", "息を吐きながら奥の変化を観察する"];
+  } else if(quality === "wholebody" || center === "inner_spread" || breath === "deepen"){
+    type = "膣内側の広がり準備タイプ";
+    desc = "膣内側から呼吸や背中まで広がる入口がありそうです。まだ安定しなくても、深まりやすい土台があります。";
+    advice = ["広がりが出る時の呼吸・姿勢・安心感を覚えておく", "強さより、途中で切らさない流れを優先する", "身体全体に広がる感じを急いで評価しない"];
+  } else if(quality === "pressure" || quality === "warm_spread" || center === "deep_pressure" || concern === "inner_blur"){
+    type = "圧・重さを拾い始めているタイプ";
+    desc = "鋭い気持ちよさより、奥の圧・重さ・じんわり感を拾い始めている状態です。";
+    advice = ["派手な反応ではなくても、膣内側で深まる感覚の入口に近い可能性があります", "圧や重さを怖がらず、呼吸と一緒に観察する", "これで合ってるのかな、で止めずに少し続けてみる"];
+  } else if(mentalFlag || concern === "tense" || concern === "not_deepen"){
+    type = "緊張・確認ブレーキタイプ";
+    desc = "身体は反応しているのに、途中で頭が確認モードに戻りやすいタイプです。";
+    advice = ["感度不足というより、受け取る途中でブレーキが入っている可能性があります", "ちゃんと感じているかを確認するより、吐く・ゆるむ・任せるを優先する", "脚やお腹に力が入る瞬間を、止まりやすいサインとして見る"];
   }
 
-  else if(theme==="self_dev"){
-    if(inner==="none" || outer==="none" || inner==="no_exp"){
-      type = "土台づくりタイプ";
-      desc = "まだ感覚の地図がはっきりしていない段階です。焦らず、自分の中で感じやすい条件を見つけるところから始めます。";
-      advice = [
-        "いきなり答えを出そうとしない",
-        "強さより安心感、温かさ、落ち着きを優先する",
-        "まずは『何がダメか』より『少しマシな条件』を集める"
-      ];
-    } else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
-      type = "感覚はあるけど薄いタイプ";
-      desc = "小さな反応はあるので、刺激を強くするより『どの条件で入りやすいか』を育てていく段階です。";
-      advice = [
-        "強刺激に飛ばず、弱い反応を丁寧に拾う",
-        "触れ方・温度・タイミングの違いを試す",
-        "感じやすかった条件を自分の中で覚えていく"
-      ];
-    } else {
-      type = "現状整理タイプ";
-      desc = "自己開発の方向性は悪くありません。今は自分に合う進め方を整理していく段階です。";
-      advice = [
-        "自分のやり方の癖を知る",
-        "強い刺激頼みになっていないかを見る",
-        "続けやすい形でデータを取る"
-      ];
-    }
+  scoreDrivenHints(scores).forEach(h => { if(!advice.includes(h)) advice.push(h); });
 
-    if(selfPattern==="strong_only") advice.push("強い刺激じゃないと難しい時は、少しずつ弱い刺激でも拾える時間を作る");
-    if(selfPattern==="ashipin") advice.push("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります");
-    if(selfCheck==="never") advice.push("まずはセルフでの感覚確認を急がず、抵抗なく触れられるところからで十分です");
-
-    actions = [
-      {
-        key:"self",
-        title:"まずは自分で整える",
-        desc:"自己開発の入口や、自分の感覚の探し方を整理する枠です。",
-        href:LINKS.mag_self_dev,
-        label:"自己開発マガジンを見る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で壁だけ聞く",
-        desc:"自己流で詰まっている点だけ先に聞くこともできます。",
-        href:LINKS.anon_qa,
-        label:"質問する",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"今の状態を相談する",
-        desc:"一人で整理しきれない時は、そのまま送れば十分です。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      }
-    ];
+  let actions = baseActions(type);
+  if(wish === "just_result" || wish === "unknown"){
+    actions = actions.map(a => ({...a, priority:false}));
+  } else if(wish === "self"){
+    actions = actions.map(a => ({...a, priority:a.key === "self"}));
+  } else if(wish === "consult"){
+    actions = actions.map(a => ({...a, priority:a.key === "consult"}));
+  } else if(wish === "apply"){
+    actions = [makeAction("apply", "施術に興味がある", "今の状態をもとに進めたい場合はこちらです。", LINKS.apply, "フォームを見てみる", true), ...actions.map(a => ({...a, priority:false}))];
   }
+  actions = actions.slice(0, 3);
 
-  else if(theme==="inner_unknown"){
-    if(inner==="pain_like"){
-      type = "防御反応タイプ";
-      desc = "感度の問題というより、まずは身体が『危険かも』と判断しやすい状態かもしれません。無理に進めるより、安全感や脱力が優先です。";
-      advice = [
-        "痛みや怖さが出る時は『刺激不足』ではなく防御反応として考える",
-        "安心しにくい状況では感覚は育ちにくい",
-        "まずは緩める・止める・言えるが大切です"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"ひとりで整える考え方を読む",
-          desc:"安全感や緊張との向き合い方を先に整理したい人向けです。",
-          href:LINKS.mag_mental,
-          label:"メンタル系のマガジンを見る",
-          priority:false
-        },
-        {
-          key:"anon",
-          title:"匿名で確認する",
-          desc:"まだ応募までは考えていない時の軽い入口です。",
-          href:LINKS.anon_qa,
-          label:"匿名で聞く",
-          priority:false
-        },
-        {
-          key:"result_only",
-          title:"今回は結果だけ見る",
-          desc:"急がず、今の状態だけ把握して閉じたい人向けです。",
-          href:LINKS.note_top,
-          label:"noteトップを見る",
-          priority:false
-        }
-      ];
-    }
-    else if(outer==="self_only"){
-      type = "連動づくりタイプ";
-      desc = "外だけならわかるけど中がつながらない場合、刺激の強さより呼吸・力み・集中の連動が課題になりやすいです。";
-      advice = [
-        "強くすればいいではなく、抜けることと拾えることの両方が必要",
-        "外の気持ちよさと中の感覚は別回路としてズレることがある",
-        "連動が育つと『ただ押されてる感じ』が変わることがあります"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"ひとりで整える考え方を読む",
-          desc:"まずは自分で掴みたい人向けの入口です。",
-          href:LINKS.mag_mental,
-          label:"メンタル系のマガジンを見る",
-          priority:false
-        },
-        {
-          key:"consult",
-          title:"今の状態に合わせて相談する",
-          desc:"呼吸・力み・集中の崩れ方を見ながら整理したい人向けです。",
-          href:LINKS.dm,
-          label:"DMで相談する",
-          priority:true
-        },
-        {
-          key:"apply",
-          title:"そのまま応募したい",
-          desc:"状態を見ながら進めたい場合はこちらです。",
-          href:LINKS.apply,
-          label:"応募フォームへ",
-          priority:false
-        }
-      ];
-    }
-    else if(inner==="none" || inner==="no_exp"){
-      type = "入口づくりタイプ";
-      desc = "まだ感覚の入口がはっきりしていない段階かもしれません。『感じない体質』と決めるより、拾える条件を探す方が大切です。";
-      advice = [
-        "ゼロか才能かではなく、条件で変わるものとしてみる",
-        "力み・緊張・急ぎすぎがあると入口が見えにくい",
-        "今は『感度不足』より『拾いにくい』として扱う方が合っています"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"まずは考え方から読む",
-          desc:"焦らず土台から知りたい人向けです。",
-          href:LINKS.mag_mental,
-          label:"メンタル系のマガジンを見る",
-          priority:false
-        },
-        {
-          key:"anon",
-          title:"匿名で相談する",
-          desc:"まだDMや応募までは迷う時に使えます。",
-          href:LINKS.anon_qa,
-          label:"匿名で聞く",
-          priority:false
-        },
-        {
-          key:"result_only",
-          title:"今回は結果だけ見る",
-          desc:"まずは今の位置だけ知っておきたい人向けです。",
-          href:LINKS.note_top,
-          label:"noteトップを見る",
-          priority:false
-        }
-      ];
-    }
-    else if(inner==="slight" || outer==="weak" || outer==="ticklish"){
-      type = "感覚の芽ありタイプ";
-      desc = "まったく無反応ではなく、拾い方がまだ安定していない段階かもしれません。";
-      advice = [
-        "少しでも感覚があるなら『ゼロ』ではない",
-        "刺激を足すより、緊張を減らしながら再現性を上げる方が近道",
-        "気分・状況・相手で変わるなら、身体は反応する余地があります"
-      ];
-
-      actions = [
-        {
-          key:"consult",
-          title:"どこで止まるかを相談する",
-          desc:"あと少しを詰めたい人向けの入口です。",
-          href:LINKS.dm,
-          label:"DMで相談する",
-          priority:true
-        },
-        {
-          key:"apply",
-          title:"そのまま応募したい",
-          desc:"状態を見ながら進めたい場合はこちらです。",
-          href:LINKS.form_apply,
-          label:"応募フォームへ",
-          priority:false
-        },
-        {
-          key:"self",
-          title:"今のあなたにおすすめの記事",
-          desc:"少し感じるけどそこまでな理由を見てみる",
-          href:LINKS.mag_mental,
-          label:"メンタル系のマガジンを見る",
-          priority:false
-        }
-      ];
-    }
-
-    else {
-      type = "現状整理タイプ";
-      desc = "感覚はゼロではありません。今はどこで止まっているかを整理すると進みやすい段階です。";
-      advice = [
-        "中の感覚は『ない』より『まだ安定していない』で捉える",
-        "条件ごとの違いを雑にせず観察する",
-        "準備・緊張・伝えやすさも感覚に影響します"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"今の状態に近い記事を読む",
-          desc:"感覚の整理と次の一歩を掴むための導線です。",
-          href:LINKS.mag_inner,
-          label:"中の感覚のマガジンを見る",
-          priority:false
-        },
-        {
-          key:"consult",
-          title:"今の状態を整理して相談する",
-          desc:"曖昧なままでも十分です。止まる場所をそのまま送ってください。",
-          href:LINKS.dm,
-          label:"DMを送る",
-          priority:false
-        },
-        {
-          key:"anon",
-          title:"匿名で壁を確認する",
-          desc:"まだ相談までいかない時の軽い入口です。",
-          href:LINKS.anon_qa,
-          label:"匿名で聞く",
-          priority:false
-        }
-      ];
-    }
-  }
-
-  else if(theme==="climax"){
-  if(inner==="pain_like"){
-    type = "痛み・不快感の整理が先のタイプ";
-    desc = "途中で止まる前に、まずは中の痛みや不快感を減らしていく段階です。高まりを追うより、つらさを整理した方が進みやすいです。";
-    advice = [
-      "最後までつながらない原因が、快感不足より不快感にないかを見る",
-      "痛みや違和感が出る条件を先に減らす",
-      "高まりを追うより『止まらない条件』を作る方が先です"
-    ];
-
-    actions = [
-      {
-        key:"self",
-        title:"痛みの出方を整理する",
-        desc:"入口・奥・体位・摩擦など、今のつらさを見直す視点です。",
-        href:LINKS.mag_body,
-        label:"感じ方の整え方マガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"状態を整理して相談する",
-        desc:"どこで、どんな時に止まりやすいかをそのまま伝えると整理しやすいです。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"まだ深く話したくない時は、匿名からでも十分です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-  else if(outer==="almost" || almostD==="breath" || almostD==="tense" || almostD==="focus" || almostD==="immersion_break"){
-    type = "奥の感覚育成タイプ";
-    desc = "準備はかなり整っています。今は呼吸、脱力、没入の維持など、最後の流れを切らさないことが鍵です。";
-    advice = [
-      "気持ちよさを上げるより、途中で切らないことを優先する",
-      "呼吸と力みの変化を止めどころとして観察する",
-      "ピーク前に冷静になる癖があるなら、流れを固定して崩れにくくする"
-    ];
-    if(almostD==="breath") advice.push("呼吸が止まるなら、気持ちよさが上がるほど『吐く』を意識する");
-    if(almostD==="tense") advice.push("足・お腹・肩に力が入るなら、そこが切れ目になっていないか確認する");
-    if(almostD==="fear") advice.push("怖さで止めるなら、失禁感や未知の感覚を危険と結びつけすぎていないか見る");
-
-    actions = [
-      {
-        key:"self",
-        title:"『脱力』の誤解を解く",
-        desc:"力を抜こうとするほど難しくなる理由と、流れを切らさない考え方を解説しています。",
-        href:LINKS.mag_body,
-        label:"感じ方の整え方マガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"途中で崩れる理由を相談する",
-        desc:"呼吸・力み・怖さのどれが壁か、本人だと見分けにくい時の導線です。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"apply",
-        title:"施術に興味がある",
-        desc:"今の反応を活かして進めたいなら、そのまま次へ進めます。",
-        href:LINKS.apply,
-        label:"フォームを見てみる",
-        priority:false
-      }
-    ];
-  }
-  else if(inner==="deep_feel" || inner==="urge"){
-    type = "奥の感覚育成タイプ";
-    desc = "奥の感覚は出ています。途中で流れを切らずに受け取り続けることが鍵です。";
-    advice = [
-      "『もっと強く』より『切らさない』を優先する",
-      "うずきや高まりが出た時に怖さや力みで止めない",
-      "尿意っぽさがあっても、毎回危険とは限らないので条件を見分ける"
-    ];
-
-    actions = [
-      {
-        key:"self",
-        title:"奥の感覚を切らさない考え方を知る",
-        desc:"うずきや高まりが出てきた時に、怖さや力みで流れを止めず受け取り続けるヒントを解説しています。",
-        href:LINKS.mag_inner,
-        label:"中の感覚のマガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"途中で崩れる理由を相談する",
-        desc:"怖さか力みか、本人だと見分けにくい時の導線です。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"apply",
-        title:"施術に興味がある",
-        desc:"今の反応を活かして進めたいなら、ここからそのまま進めます。",
-        href:LINKS.apply,
-        label:"フォームを見てみる",
-        priority:false
-      }
-    ];
-  }
-  else if(inner==="ik"){
-    type = "深めていくタイプ";
-    desc = "基本の回路は整っています。ここからは質や深さを追求していく段階です。";
-    advice = [
-      "今ある感覚を再現できる条件を言語化する",
-      "感覚の違いを整理して、自分に合う深まり方を掴む",
-      "深さを追う時ほど、雑に強くしない"
-    ];
-
-    actions = [
-      {
-        key:"self",
-        title:"中イキとポルチオの違いを知る",
-        desc:"さらに深さを追うために、感覚の種類と言葉を整理する記事です。",
-        href:LINKS.mag_climax,
-        label:"中イキマガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"今の段階から深める相談をする",
-        desc:"何が伸びしろかを整理したい時はこちら。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"apply",
-        title:"施術に興味がある",
-        desc:"今の状態から次へ進みたいなら、そのまま案内へ進めます。",
-        href:LINKS.apply,
-        label:"フォームを見てみる",
-        priority:false
-      }
-    ];
-  }
-  else if(inner==="no_exp" || inner==="none"){
-    type = "土台づくりタイプ";
-    desc = "中イキの前に、まずは中の感覚そのものを育てる土台が必要な段階です。";
-    advice = [
-      "『できるかどうか』より、まず中の感覚の入口を作る",
-      "未経験や無感覚の状態からすぐ先を目指しすぎない",
-      "未経験は遅れているのではなく、まだ入口に慣れていないだけです"
-    ];
-
-    actions = [
-      {
-        key:"self",
-        title:"未経験の怖さをほどく",
-        desc:"『中はまだ怖い』『中の快感がまだ弱い』人向けに、入口から整えるヒントです。",
-        href:LINKS.mag_inner,
-        label:"中の感覚のマガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"入口から相談する",
-        desc:"まだ土台段階でも、そのまま整理して大丈夫です。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"今の段階を言葉にしにくい時の軽い入口です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-    else {
-      type = "現状整理タイプ";
-      desc = "反応はあるけど、どこで止まっているかを整理すると進みやすい段階です。";
-      advice = [
-        "最後まで行けないこと自体を失敗と見なしすぎない",
-        "止まるポイントを『怖さ』『力み』『没入切れ』で見分ける",
-        "今の段階に合う次の一手を選ぶ"
-      ];
-
-      actions = [
-        {
-          key:"self",
-          title:"施術と身体の対話について",
-          desc:"今の状態を急いで結論づけず、身体の反応を観察する考え方の記事です。",
-          href:LINKS.mag_service,
-          label:"施術・相談のマガジンを見る",
-          priority:false
-        },
-        {
-          key:"consult",
-          title:"今の状態を整理して相談する",
-          desc:"途中で止まる場所をそのまま送るだけでも整理できます。",
-          href:LINKS.dm,
-          label:"DMを送る",
-          priority:false
-        },
-        {
-          key:"apply",
-          title:"応募する",
-          desc:"今の状態から進めたいなら、そのまま次へ進めます。",
-          href:LINKS.apply,
-          label:"応募フォームへ",
-          priority:false
-        }
-      ];
-    }
-  }
-
-  else {
-    type = "現状整理タイプ";
-    desc = "いくつかの要素が重なっている可能性があります。順番を整理すると進みやすくなります。";
-    advice = [
-      "今は答えを急がず、どこで止まりやすいかを見る",
-      "身体の準備・頭の中・相手とのズレを分けて考える",
-      "最初の一歩は、いちばん抵抗が少ないものからで十分です"
-    ];
-
-    actions = [
-      {
-        key:"self",
-        title:"今の状態に近い記事を読む",
-        desc:"状態整理から始めたい人向けの導線です。",
-        href:LINKS.mag_inner,
-        label:"中の感覚のマガジンを見る",
-        priority:false
-      },
-      {
-        key:"consult",
-        title:"結果をそのまま送って相談する",
-        desc:"整理しきれない時は、そのまま送れば十分です。",
-        href:LINKS.dm,
-        label:"DMを送る",
-        priority:false
-      },
-      {
-        key:"anon",
-        title:"匿名で先に聞く",
-        desc:"まだ深く話したくない時の軽い入口です。",
-        href:LINKS.anon_qa,
-        label:"匿名で聞く",
-        priority:false
-      }
-    ];
-  }
-
-  if((arousal==="dry" || arousal==="head_ok") && !painFlag){
-    advice.push("身体が乾きやすい時は、前準備や潤滑の工夫から始めると変わりやすいです");
-  }
-  if(mentalFlag && !painFlag){
-    if(tension==="past") advice.push("過去の経験が強く響く場合は、無理せず心のケアも視野に");
-    if(tension==="duty") advice.push("『相手のため』より『自分がどう感じるか』を優先してよい段階です");
-    if(tension==="immersion") advice.push("没入しにくい時は、考え方を変えるより環境とリズムを固定する方が効きやすいです");
-  }
-  if(selfPattern==="strong_only" && !advice.includes("強い刺激じゃないと難しい時は、少しずつ弱い刺激でも拾える時間を作る")){
-    advice.push("強い刺激だけに寄りすぎている時は、弱い刺激でも拾える時間を少しずつ増やすと土台が安定しやすいです");
-  }
-  if(selfPattern==="ashipin" && !advice.includes("力み癖が強いと、ゆるく感じる回路が育ちにくくなることがあります")){
-    advice.push("力み癖があると、リラックスして感じる回路が育ちにくくなることがあります");
-  }
-  if((comm==="silent" || comm==="afraid") && !painFlag){
-    advice.push("伝えにくさも大きなブレーキになります。短い一言からで十分です");
-  }
-
-  scoreDrivenHints(scores).forEach(h => {
-    if(!advice.includes(h)) advice.push(h);
-  });
-
-  if(wish==="just_result"){
-  actions = actions.map(a => ({ ...a, priority:false }));
-} else if(wish==="self"){
-  let found = false;
-  actions = actions.map(a => {
-    const priority = !found && a.key==="self";
-    if(priority) found = true;
-    return { ...a, priority };
-  });
-} else if(wish==="consult"){
-  let found = false;
-  actions = actions.map(a => {
-    const priority = !found && a.key==="consult";
-    if(priority) found = true;
-    return { ...a, priority };
-  });
-} else if(wish==="apply"){
-  if(!actions.some(a => a.key==="apply")){
-    actions.push({
-      key:"apply",
-      title:"応募する",
-      desc:"そのまま施術応募に進みたい場合はこちら。",
-      href:LINKS.apply,
-      label:"応募フォームへ",
-      priority:true
-    });
-  }
-
-  let found = false;
-  actions = actions.map(a => {
-    const priority = !found && a.key==="apply";
-    if(priority) found = true;
-    return { ...a, priority };
-  });
-
-  actions.sort((a,b) => {
-    if(a.key==="apply") return -1;
-    if(b.key==="apply") return 1;
-    return 0;
-  });
-}
-
-actions = actions.slice(0, 3);
   const displayType = getDisplayType(type);
+  const showSendPanel = wish === "consult";
+  const summary = buildResultSummary({displayType, desc, advice, painFlag, mentalFlag, wish});
+  const copyText = buildCopyText(displayType);
 
-  const copyText = `【感じ方チェック結果】
-表示結果：${displayType}
-内部判定：${type}
-今の悩みのテーマ：${ans.rootTheme?.label || "未回答"}
-外の状態：${ans.outerExp?.label || "未回答"}${ans.selfOnlyDetail ? "\n ┗ 詳細：" + ans.selfOnlyDetail.label : ""}${ans.almostDetail ? "\n ┗ 詳細：" + ans.almostDetail.label : ""}
-中の状態：${ans.innerExp?.label || "未回答"}${ans.painDetail ? "\n ┗ 痛みの詳細：" + ans.painDetail.label : ""}${ans.painAnxiety ? "\n ┗ 痛みの不安：" + ans.painAnxiety.label : ""}
-身体の準備：${ans.arousal?.label || "未回答"}
-頭の中：${ans.tension?.label || "未回答"}
-伝えやすさ：${ans.partnerComm?.label || "未回答"}
-セルフの確認：${ans.selfCheck?.label || "未回答"}${ans.selfPattern ? "\n ┗ セルフのやり方：" + ans.selfPattern.label : ""}
-希望：${ans.wish?.label || "未回答"}
-
-※この結果は「感じ方チェック byミヤ」で作成されました`;
-
-  return {
-    type,
-    displayType,
-    desc,
-    advice,
-    copyText,
-    actions,
-    painFlag,
-    mentalFlag,
-    scores,
-    painDetail
-  };
+  return {type, displayType, desc, summary, advice, copyText, actions, showSendPanel, painFlag, mentalFlag, scores};
 }
 
 function renderActions(actions =[]){
@@ -1481,18 +980,23 @@ function showResult(){
   const r = computeResult();
 
   $("typeTitle").textContent = r.displayType;
-  $("typeDesc").textContent = r.desc;
+  $("typeDesc").textContent = r.summary.lead;
+  $("summaryTrend").textContent = r.summary.trend;
+  $("summaryCare").textContent = r.summary.care;
+  $("summaryNext").textContent = r.summary.next;
 
   const sa = $("scoreArea");
   sa.innerHTML = "";
 
   const bars =[
-    {label:"外",score:r.scores.outerScore,color:"linear-gradient(90deg,#ff4fa3,#ff7eb3)"},
-    {label:"中",score:r.scores.innerScore,color:"linear-gradient(90deg,#7c5cff,#a78bfa)"},
-    {label:"脱力",score:r.scores.relaxScore,color:"linear-gradient(90deg,#10b981,#34d399)"},
-    {label:"準備",score:r.scores.bodyScore,color:"linear-gradient(90deg,#f59e0b,#fbbf24)"},
-    {label:"理解",score:r.scores.selfKnowScore,color:"linear-gradient(90deg,#ec4899,#f472b6)"},
-    {label:"共有",score:r.scores.commScore,color:"linear-gradient(90deg,#6366f1,#818cf8)"}
+    {label:"安全",score:r.scores.safetyScore,color:"linear-gradient(90deg,#d94f84,#f0a2b5)"},
+    {label:"ピーク経験",score:r.scores.peakScore,color:"linear-gradient(90deg,#9b6fda,#c7a8f3)"},
+    {label:"膣内側",score:r.scores.innerScore,color:"linear-gradient(90deg,#776fc4,#a9a3df)"},
+    {label:"膣内中心",score:r.scores.outerPullScore,color:"linear-gradient(90deg,#b05f9c,#e5a3c9)"},
+    {label:"広がり",score:r.scores.spreadScore,color:"linear-gradient(90deg,#c65f91,#e9a6c2)"},
+    {label:"脱力・呼吸",score:r.scores.relaxScore,color:"linear-gradient(90deg,#4f9d88,#8bd1bd)"},
+    {label:"頭の静けさ",score:r.scores.headScore,color:"linear-gradient(90deg,#d88a4a,#f1c37d)"},
+    {label:"安心感",score:r.scores.partnerScore,color:"linear-gradient(90deg,#8b7cc8,#b8ace6)"}
   ];
 
   bars.forEach(b=>{
@@ -1522,14 +1026,11 @@ function showResult(){
     sb.classList.remove("hidden");
     sb.classList.add("dangerBox");
     sb.innerHTML = "<b>安全優先：</b>痛みや違和感がある時は、感じ方を追うより無理をしないことが先です。";
-  } else if(r.mentalFlag){
-    sb.classList.remove("hidden");
-    sb.classList.remove("dangerBox");
-    sb.classList.add("warnBox");
-    sb.innerHTML = "<b>ヒント：</b>焦り・自意識・没入の切れやすさがブレーキになっている可能性があります。強い刺激を足すより、流れが切れにくい状態を作る方が有効です。";
   }
 
   renderActions(r.actions);
+  const sendPanel = $("sendPanel");
+  sendPanel.classList.toggle("hidden", !r.showSendPanel);
   $("copyPreview").textContent = r.copyText;
 }
 
