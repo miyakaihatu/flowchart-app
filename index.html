@@ -1,5 +1,14 @@
 <!doctype html>
 <html lang="ja"><head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3PC49857MW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3PC49857MW');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>感じ方チェック byミヤ</title><meta name="description" content="2人だといけない、途中で怖くなる、中イキできない。悩みを選ぶと6〜7問で、今の身体がどこで止まりやすいかがわかるチェックです。施術者ミヤ監修。"><meta property="og:type" content="website"><meta property="og:title" content="今の感じ方チェック｜by ミヤ"><meta property="og:description" content="悩みを選ぶと6〜7問で、今の身体がどこで止まりやすいかがわかります。"><meta property="og:url" content="https://miyakaihatu.github.io/flowchart-app/"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://miyakaihatu.github.io/flowchart-app/">
@@ -17,7 +26,7 @@
 <section class="card introCard" id="intro"><div class="q">まずは、今の傾向を見てみる</div><p class="hint">最初に悩みを選ぶと、そこに合った質問だけが出ます。</p><ul class="steps"><li>全部で6〜7問・タップで答えるだけ</li><li>回答はこの端末の中だけで使われ、送信されません</li></ul><div id="resumeBox"></div><div class="btns"><button class="primary" id="start">18歳以上・はじめる</button></div><p class="smallNote">※18歳未満の方は利用できません。</p></section>
 <section class="card hidden" id="quiz" aria-live="polite"><div class="meta"><div class="progress"><div class="bar" id="bar"></div></div><span id="step"></span></div><span class="group" id="group"></span><div id="qa"></div><div class="btns"><button id="back">← 戻る</button><button class="ghost" id="reset">最初からやり直す</button></div></section>
 <section class="card hidden" id="result"><span class="badge">あなたの今の傾向</span><div class="level" id="typeTitle" tabindex="-1"></div><div class="lead" id="lead"></div><div class="meaning" id="meaning"></div><div id="safeBox"></div><div class="cards"><div class="mini"><h3>あなたに起きやすいこと</h3><p id="trend"></p></div><div class="mini"><h3>知っておいてほしいこと</h3><p id="care"></p></div><div class="mini"><h3>次に見てほしいこと</h3><p id="next"></p></div></div><div id="notesBox"></div><div id="noteBox"></div><div class="btns"><a class="linkBtn primary" id="relLink" href="https://miyakaihatu.github.io/nakaiki/themes.html" target="_blank" rel="noopener">このタイプの解説を読む</a><a class="linkBtn" href="https://marshmallow-qa.com/miya_massage" target="_blank" rel="noopener">質問箱に匿名で送る</a></div><div class="send" id="send"><div class="sendClosed"><div><b>相談したい時の文章も作れます</b><p class="hint">結果を見て、相談したいと思った時だけ開いてください。</p></div><button id="showCopy">相談文を表示する</button></div><div class="hidden" id="copyPanel"><div class="copyBox" id="copyText"></div><div class="copyActions"><button class="primary" id="copy">相談文をコピーする</button><a class="linkBtn" href="https://www.instagram.com/nakaikioilmassage/" target="_blank" rel="noopener">DMで相談する</a></div></div></div><button class="detailBtn" id="detailBtn" aria-expanded="false">詳しい分析を見る</button><div class="details hidden" id="details"><div id="scores"></div><ul class="list" id="advice"></ul><div class="copyBox" id="answers"></div></div><div class="btns"><button id="again">もう一回</button></div></section>
-<footer>※医療ツールではありません。痛みや炎症、強い不安、続く不眠や動悸がある場合は自己判断で無理をせず、必要に応じて受診や相談を優先してください。</footer>
+<footer>このサイトでは、アクセス解析に Google アナリティクスを使っています。個人を特定する情報は集めていません。<br>※医療ツールではありません。痛みや炎症、強い不安、続く不眠や動悸がある場合は自己判断で無理をせず、必要に応じて受診や相談を優先してください。</footer>
 </div>
 <script>
 const MODE=[['restless','落ち着こうとしても落ち着けない','瞑想やぼーっとするのが苦手・じっとしているとそわそわする',{on:1}],['sleep','寝つきが悪い・眠りが浅い','目が冴える・途中で目が覚める',{on:1}],['phone','スマホをずっと見てしまう','寝る直前まで・気づくと何時間も',{on:1}],['tense','肩・顎・お腹に力が入りっぱなし','歯を食いしばっていることがある',{on:1}],['heart','ドキドキしやすい・呼吸が浅い','せかせかする',{on:1}],['none','当てはまるものはない','',{}]];
